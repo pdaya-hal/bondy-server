@@ -235,7 +235,7 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
 <div id="splash" class="screen active">
   <div class="logo a1">bon<span>dy</span></div>
   <div class="logo-tag a1">בניית קשר הורה–ילד</div>
-  <div class="headline a2">הילד שלך לא צריך<br>עוד מסך.<br><strong>הוא צריך אותך.</strong></div>
+  <div class="headline a2">' + T.splash_headline1 + '<br>עוד מסך.<br><strong>הוא צריך אותך.</strong></div>
   <div style="width:100%" class="a3">
     <button class="btn bp" onclick="go('ob1')">בואו נתחיל במסע ←</button>
     <button class="btn bg" onclick="go('ob1')">יש לי כבר חשבון</button>
@@ -342,7 +342,7 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
   <div class="hhead">
     <div class="htop">
       <div><div class="hgreet">שלום,</div><div class="hname" id="hpName">—</div></div>
-      <div class="av" id="hAv">?</div>
+      <div class="av" id="hAv" onclick="go('profile')" style="cursor:pointer">?</div>
     </div>
     <div class="sbar">
       <div style="font-size:20px">🔥</div>
@@ -380,7 +380,6 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
     <div class="ni on"><div class="ni-ic">🏠</div>בית</div>
     <div class="ni" onclick="go('journal')"><div class="ni-ic">📸</div>זיכרונות</div>
     <div class="ni" onclick="go('questions')"><div class="ni-ic">💬</div>שאלות</div>
-    <div class="ni" onclick="go('profile')"><div class="ni-ic">👤</div>פרופיל</div>
   </div>
 </div>
 
@@ -429,13 +428,12 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
       <div class="card-stack" id="cardStack"></div>
     </div>
     <div class="card-counter" id="cardCounter">טוען שאלות...</div>
-    <div class="swipe-hint">← העבר לשאלה הבאה</div>
+    <div class="swipe-hint" id="swipeHint">← ' + (isHE ? 'העבר לשאלה הבאה' : 'Swipe for next') + '</div>
   </div>
   <div class="bnav">
     <div class="ni" onclick="go('home')"><div class="ni-ic">🏠</div>בית</div>
     <div class="ni" onclick="go('journal')"><div class="ni-ic">📸</div>זיכרונות</div>
     <div class="ni on"><div class="ni-ic">💬</div>שאלות</div>
-    <div class="ni" onclick="go('profile')"><div class="ni-ic">👤</div>פרופיל</div>
   </div>
 </div>
 
@@ -443,6 +441,7 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
 <div id="profile" class="screen">
   <div class="phead">
     <div style="position:absolute;bottom:-1px;left:0;right:0;height:28px;background:var(--cream);border-radius:28px 28px 0 0"></div>
+    <div class="back" onclick="go('home')" style="position:absolute;top:52px;left:16px;background:rgba(255,255,255,.15)">→</div>
     <div class="pav a1" id="pAvatar">?</div>
     <div class="pname a2" id="pPname">—</div>
     <div class="ptag a2" id="pPtag">—</div>
@@ -483,7 +482,7 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
     <div class="ni" onclick="go('home')"><div class="ni-ic">🏠</div>בית</div>
     <div class="ni" onclick="go('journal')"><div class="ni-ic">📸</div>זיכרונות</div>
     <div class="ni" onclick="go('questions')"><div class="ni-ic">💬</div>שאלות</div>
-    <div class="ni on"><div class="ni-ic">👤</div>פרופיל</div>
+
   </div>
 </div>
 
@@ -536,12 +535,145 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
     <div class="ni" onclick="go('home')"><div class="ni-ic">🏠</div>בית</div>
     <div class="ni on"><div class="ni-ic">📸</div>זיכרונות</div>
     <div class="ni" onclick="go('questions')"><div class="ni-ic">💬</div>שאלות</div>
-    <div class="ni" onclick="go('profile')"><div class="ni-ic">👤</div>פרופיל</div>
   </div>
 </div>
 
 </div><!-- /phone -->
 <script>
+// ══════════════ LANGUAGE ══════════════
+const urlLang = new URLSearchParams(window.location.search).get('lang');
+const browserLang = navigator.language?.toLowerCase().startsWith('he') ? 'he' : 'en';
+const LANG = urlLang || (browserLang === 'he' ? 'he' : 'en');
+const isHE = LANG === 'he';
+
+const T = {
+  // Splash
+  splash_start: isHE ? 'בואו נתחיל במסע ←' : 'Start the journey ←',
+  splash_login: isHE ? 'יש לי כבר חשבון' : 'I already have an account',
+  splash_headline1: isHE ? 'הילד שלך לא צריך' : 'Your child doesn't need',
+  splash_headline2: isHE ? 'עוד מסך.' : 'another screen.',
+  splash_headline3: isHE ? 'הוא צריך אותך.' : 'They need you.',
+  // Onboarding
+  ob1_step: isHE ? 'שלב 1 מתוך 4' : 'Step 1 of 4',
+  ob1_q: isHE ? 'היי! איך קוראים לך?' : 'Hi! What's your name?',
+  ob1_placeholder: isHE ? 'השם שלך...' : 'Your name...',
+  ob1_dad: isHE ? '👨 אבא' : '👨 Dad',
+  ob1_mom: isHE ? '👩 אמא' : '👩 Mom',
+  ob1_next: isHE ? 'המשך ←' : 'Continue ←',
+  ob2_step: isHE ? 'שלב 2 מתוך 4' : 'Step 2 of 4',
+  ob2_q: isHE ? 'מה אתה אוהב?' : 'What do you enjoy?',
+  ob2_hint: isHE ? 'בחר כמה שרוצה' : 'Choose as many as you like',
+  ob2_hike: isHE ? 'טיולים' : 'Hiking',
+  ob2_cook: isHE ? 'בישול' : 'Cooking',
+  ob2_sport: isHE ? 'ספורט' : 'Sports',
+  ob2_art: isHE ? 'אמנות' : 'Art',
+  ob2_science: isHE ? 'מדע' : 'Science',
+  ob2_music: isHE ? 'מוזיקה' : 'Music',
+  ob3_step: isHE ? 'שלב 3 מתוך 4' : 'Step 3 of 4',
+  ob3_q: isHE ? 'ספר לי על הילד שלך' : 'Tell me about your child',
+  ob3_child_placeholder: isHE ? 'שם הילד...' : 'Child's name...',
+  ob3_age: isHE ? 'גיל' : 'Age',
+  ob3_rel_q: isHE ? 'מצב הקשר היום?' : 'How is your connection today?',
+  ob3_great: isHE ? '🏔️  מצוין — קרובים מאוד' : '🏔️  Great — very close',
+  ob3_good: isHE ? '🛤️  טוב — אבל אפשר יותר' : '🛤️  Good — but could be better',
+  ob3_distant: isHE ? '🧭  קצת מרוחק לאחרונה' : '🧭  A bit distant lately',
+  ob4_step: isHE ? 'שלב 4 מתוך 4' : 'Step 4 of 4',
+  ob4_q: isHE ? 'מה החיבור שלך למסורת?' : 'What is your connection to tradition?',
+  ob4_hint: isHE ? 'זה ישפיע על סוג הפעילויות' : 'This will shape your activities',
+  ob4_sec: isHE ? '🌿 כיפת השמיים' : '🌿 Nature & Mindfulness',
+  ob4_sec_sub: isHE ? 'חיבור לטבע, לרגע, לאנשים' : 'Connection to nature, moments, people',
+  ob4_trad: isHE ? '🕯️ מחובר למסורת' : '🕯️ Traditional',
+  ob4_trad_sub: isHE ? 'בית מסורתי חם — ארוחות, חגים, סיפורים' : 'Warm traditional home — meals, holidays, stories',
+  ob4_rel: isHE ? '✡️ שורשים' : '✡️ Religious',
+  ob4_rel_sub: isHE ? 'תורה, שבת, מידות — חיים לפי ערכים יהודיים' : 'Torah, Shabbat, values — living by Jewish principles',
+  ob4_seek: isHE ? '🔍 בדרך' : '🔍 Exploring',
+  ob4_seek_sub: isHE ? 'שואל שאלות, מחפש חיבור' : 'Asking questions, seeking connection',
+  ob4_go: isHE ? 'בואו נתחיל! 🚀' : "Let's go! 🚀",
+  // Loading
+  load_msg: isHE ? 'מכין פעילות מותאמת אישית...' : 'Preparing your personalized activity...',
+  load_title: isHE ? 'Bondy לומד
+על המשפחה שלך' : 'Bondy is learning
+about your family',
+  // Home
+  home_greet: isHE ? 'שלום,' : 'Hello,',
+  home_streak: isHE ? 'שבוע {n} ברצף' : 'Week {n} streak',
+  home_keep: isHE ? 'תמשיך כך!' : 'Keep it up!',
+  home_weekly: isHE ? 'הפעילות השבועית שלך' : 'Your weekly activity',
+  home_badge: isHE ? '✨ מותאם אישית · AI' : '✨ Personalized · AI',
+  home_do: isHE ? 'בוא נעשה את זה! ←' : "Let's do it! ←",
+  home_dinner: isHE ? 'שאלה לארוחת ערב הערב' : "Tonight's dinner question",
+  home_nearby: isHE ? 'קרוב אליך עכשיו 📍' : 'Near you right now 📍',
+  home_refresh: isHE ? 'רענן' : 'Refresh',
+  home_find: isHE ? T.home_find : '📍 Find nearby places',
+  home_other: isHE ? T.home_other : '✨ Surprise me with another',
+  // Nav
+  nav_home: isHE ? 'בית' : 'Home',
+  nav_memories: isHE ? 'זיכרונות' : 'Memories',
+  nav_questions: isHE ? 'שאלות' : 'Questions',
+  nav_profile: isHE ? 'פרופיל' : 'Profile',
+  // Questions
+  q_title: isHE ? 'שאלות לשיחה' : 'Conversation Questions',
+  q_sub: isHE ? 'לארוחת ערב ולכל רגע' : 'For dinner and every moment',
+  q_dinner: isHE ? T.q_dinner : '🍽️ Dinner Question',
+  q_swipe: isHE ? 'העבר קלף לשאלה הבאה' : 'Swipe card for next question',
+  q_refresh: isHE ? '🔄 רענן' : '🔄 Refresh',
+  q_left: isHE ? ' שאלות נותרו' : ' questions left',
+  q_done_title: isHE ? 'כל הכבוד!' : 'Well done!',
+  q_done_sub: isHE ? 'עברתם על כל השאלות ביחד.
+כל שאלה היא עוד שלב בקשר.' : 'You went through all questions together.
+Each one brings you closer.',
+  q_premium: isHE ? '⭐ בונדי פרמיום' : '⭐ Bondy Premium',
+  q_premium_sub: isHE ? 'שאלות ללא הגבלה,
+מותאמות לכל שלב בגיל הילד' : 'Unlimited questions,
+tailored to every stage of childhood',
+  q_more: isHE ? '✨ קבל עוד שאלות' : '✨ Get more questions',
+  q_restart: isHE ? 'חזור להתחלה' : 'Start over',
+  // Memory save
+  mem_title: isHE ? 'שמור זיכרון 💚' : 'Save a Memory 💚',
+  mem_photo: isHE ? 'לחץ להוספת תמונה' : 'Tap to add a photo',
+  mem_optional: isHE ? 'אופציונלי' : 'Optional',
+  mem_feeling: isHE ? 'איך הרגשת?' : 'How did it feel?',
+  mem_save: isHE ? 'שמור זיכרון ✨' : 'Save Memory ✨',
+  // Saved
+  saved_title: isHE ? 'זיכרון נשמר!' : 'Memory Saved!',
+  saved_streak: isHE ? 'רצף שבועי' : 'Weekly Streak',
+  saved_share: isHE ? '📤 שתף את הזיכרון' : '📤 Share this memory',
+  saved_back: isHE ? 'חזרה לבית' : 'Back home',
+  // Journal
+  j_title: isHE ? 'הזיכרונות שלנו' : 'Our Memories',
+  j_activities: isHE ? ' פעילויות' : ' activities',
+  j_all: isHE ? 'כל הפעילויות' : 'All Activities',
+  j_empty: isHE ? 'עדיין אין זיכרונות' : 'No memories yet',
+  j_first: isHE ? 'עשו פעילות ראשונה!' : 'Do your first activity!',
+  // Profile
+  p_parent: isHE ? 'הורה ל' : 'Parent of ',
+  p_age: isHE ? 'גיל' : 'Age ',
+  p_my: isHE ? 'פרופיל שלי' : 'My Profile',
+  p_name: isHE ? 'שם' : 'Name',
+  p_interests: isHE ? 'תחומי עניין' : 'Interests',
+  p_trad: isHE ? 'חיבור למסורת' : 'Tradition',
+  p_child: isHE ? 'הילד שלי' : 'My Child',
+  p_rel: isHE ? 'מצב קשר' : 'Connection',
+  p_settings: isHE ? 'הגדרות' : 'Settings',
+  p_remind: isHE ? '🔔 תזכורות' : '🔔 Reminders',
+  p_reset: isHE ? '🔄 התחל מחדש' : '🔄 Reset app',
+  p_upgrade: isHE ? 'שדרג לפרמיום' : 'Upgrade to Premium',
+  p_upgrade_sub: isHE ? 'פעילויות לפי מיקום, מסלול בר/בת מצווה' : 'Location activities, Bar/Bat Mitzvah track',
+  p_memories: isHE ? 'זיכרונות' : 'Memories',
+  p_streak: isHE ? 'רצף שבועות 🔥' : 'Week streak 🔥',
+  p_weeks: isHE ? 'שבועות בשנה' : 'weeks/year',
+  // Activity detail
+  d_how: isHE ? 'איך עושים את זה' : 'How to do it',
+  d_questions: isHE ? 'שאלות לשיחה' : 'Conversation starters',
+  d_save: isHE ? '✓  סיימנו! שמור זיכרון' : '✓  Done! Save this memory',
+  // Load msg
+  loading_sub: isHE ? 'מכין פעילות מותאמת אישית...' : 'Crafting your personalized activity...',
+};
+
+// direction
+document.documentElement.dir = isHE ? 'rtl' : 'ltr';
+document.documentElement.lang = isHE ? 'he' : 'en';
+
 // ══════════════ STATE ══════════════
 const DEF = {
   parent:{name:'',gender:'dad',interests:[],tradition:'secular'},
@@ -584,10 +716,10 @@ function selEm(el,em){ document.querySelectorAll('.embtn').forEach(b=>b.classLis
 
 function getNewActivity(){
   const btn = event.target;
-  btn.textContent = '🔮 מחפש קסם חדש...';
+  btn.textContent = isHE ? '🔮 מחפש קסם חדש...' : '🔮 Finding something new...';
   btn.disabled = true;
   generateActivity().then(() => {
-    btn.textContent = '✨ קסום לי פעילות אחרת';
+    btn.textContent = T.home_other;
     btn.disabled = false;
   });
 }
@@ -640,7 +772,7 @@ async function generateActivity(){
   const pastTitles = S.memories.map(m=>m.title).concat(S.activity?.title ? [S.activity.title] : []);
   const result = await callServer('/api/activity', {
     parentName: p.name, interests: p.interests, tradition: p.tradition,
-    childName: c.name, childAge: c.age, relation: c.relation,
+    childName: c.name, childAge: c.age, relation: c.relation, lang: LANG,
     pastActivities: pastTitles
   });
   const act = result?.activity || FALLBACK_ACTS[Math.floor(Math.random()*FALLBACK_ACTS.length)];
@@ -731,7 +863,7 @@ function updateCounter(){
   const el = document.getElementById('cardCounter');
   const stack = document.getElementById('cardStack');
   if(remaining > 0){
-    if(el) el.textContent = remaining + ' שאלות נותרו';
+    if(el) el.textContent = remaining + T.q_left;
     return;
   }
   // Show empty state with upsell
@@ -799,7 +931,7 @@ async function genQuestions(){
   const btn = document.querySelector('.gen-btn-small') || document.querySelector('.gen-btn');
   if(btn){ btn.innerHTML='⏳...'; btn.disabled=true; }
   const c=S.child;
-  const result = await callServer('/api/questions', { childAge: c.age, childName: c.name });
+  const result = await callServer('/api/questions', { childAge: c.age, childName: c.name, lang: LANG });
   if(result?.questions?.length){
     const newQs=result.questions.map(q=>({text:q.text||q,cat:q.cat||'dream'}));
     QBANK.unshift(...newQs);
@@ -866,7 +998,9 @@ function updateProfile(){
   document.getElementById('pPname').textContent=n;
   document.getElementById('pPtag').textContent=`הורה ל${c.name||'—'} · גיל ${c.age}`;
   document.getElementById('ppName').textContent=n;
-  document.getElementById('ppInterests').textContent=p.interests.join(', ')||'לא נבחר';
+  const intMap = {hike:'טיולים',cook:'בישול',sport:'ספורט',art:'אמנות',science:'מדע',music:'מוזיקה'};
+    const translatedInterests = (p.interests||[]).map(i=>intMap[i]||i).join(', ');
+    document.getElementById('ppInterests').textContent=translatedInterests||'לא נבחר';
   const tMap={secular:'כיפת השמיים',traditional:'מחובר למסורת',religious:'שורשים',seeking:'בדרך'};
   document.getElementById('ppTrad').textContent=tMap[p.tradition]||'—';
   document.getElementById('pcName').textContent=c.name||'—';
@@ -939,6 +1073,30 @@ function loadNearby(){
       list.innerHTML = '<div class="ncard" style="cursor:pointer" onclick="loadNearby()"><div style="font-size:13px;color:var(--soft)">⚠️ אפשר גישה למיקום ולחץ שוב</div></div>';
     }
   );
+}
+
+// ══════════════ TRANSLATIONS ══════════════
+function applyTranslations(){
+  // Nav labels
+  document.querySelectorAll('.ni').forEach(el => {
+    const ic = el.querySelector('.ni-ic');
+    if(!ic) return;
+    const emoji = ic.textContent;
+    if(emoji.includes('🏠')) el.lastChild.textContent = T.nav_home;
+    if(emoji.includes('📸')) el.lastChild.textContent = T.nav_memories;
+    if(emoji.includes('💬')) el.lastChild.textContent = T.nav_questions;
+  });
+  // Home screen
+  const greet = document.querySelector('.hgreeting');
+  if(greet) greet.textContent = T.home_greet;
+  // Questions screen
+  const qtitle = document.querySelector('#questions .stitle');
+  if(qtitle) qtitle.textContent = T.q_title;
+  const qsub = document.querySelector('#questions .ssub');
+  if(qsub) qsub.textContent = T.q_sub;
+  // Loading
+  const loadMsg = document.getElementById('loadMsg');
+  if(loadMsg) loadMsg.textContent = T.loading_sub;
 }
 
 // ══════════════ INIT ══════════════
