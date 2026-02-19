@@ -126,15 +126,23 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
 .cat-btn.on{background:var(--forest);color:#fff;border-color:var(--forest)}
 .gen-btn{background:var(--forest);color:#fff;border:none;border-radius:12px;padding:13px 20px;font-size:14px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;display:flex;align-items:center;gap:8px;width:100%;justify-content:center;margin-bottom:14px}
 .gen-btn-small{background:rgba(45,80,22,.08);color:var(--forest);border:none;border-radius:100px;padding:7px 14px;font-size:12px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer}
-.card-stack-wrap{position:relative;height:300px;margin-bottom:8px}
+.card-stack-wrap{position:relative;height:380px;margin-bottom:8px}
 .card-stack{position:relative;width:100%;height:100%}
-.qcard-swipe{position:absolute;inset:0;background:#fff;border-radius:22px;box-shadow:0 8px 32px rgba(0,0,0,.10);padding:24px 22px 20px;display:flex;flex-direction:column;cursor:grab;user-select:none;border:1.5px solid var(--warm);will-change:transform;}
+.qcard-swipe{
+  position:absolute;inset:0;background:#fff;border-radius:24px;
+  box-shadow:0 10px 40px rgba(0,0,0,.12);
+  padding:28px 24px 24px;
+  display:flex;flex-direction:column;align-items:center;
+  cursor:grab;user-select:none;border:1.5px solid var(--warm);
+  will-change:transform;text-align:center;
+}
 .qcard-swipe:active{cursor:grabbing}
-.qcard-logo{font-size:13px;font-weight:900;color:var(--earth);letter-spacing:-0.5px;margin-bottom:12px}
+.qcard-logo{font-size:15px;font-weight:900;color:var(--earth);letter-spacing:-0.5px;margin-bottom:18px}
 .qcard-logo span{color:var(--forest)}
-.qcard-q{font-size:19px;font-weight:800;color:var(--dark);line-height:1.45;margin-bottom:14px;flex:1;display:flex;align-items:center}
-.qcard-hint{font-size:12px;color:var(--soft);line-height:1.6;background:rgba(45,80,22,.05);border-radius:10px;padding:9px 12px;margin-bottom:10px}
-.qcard-cat{display:inline-block;background:var(--warm);color:var(--soft);font-size:11px;padding:4px 10px;border-radius:100px}
+.qcard-divider{width:40px;height:2px;background:var(--warm);border-radius:2px;margin-bottom:18px}
+.qcard-q{font-size:20px;font-weight:800;color:var(--dark);line-height:1.5;margin-bottom:18px;flex:1;display:flex;align-items:center;justify-content:center}
+.qcard-hint{font-size:12px;color:var(--soft);line-height:1.6;background:rgba(45,80,22,.05);border-radius:10px;padding:10px 14px;margin-bottom:12px;width:100%}
+.qcard-cat{display:inline-block;background:var(--warm);color:var(--soft);font-size:11px;padding:4px 12px;border-radius:100px}
 .card-counter{text-align:center;font-size:12px;color:var(--soft);margin-top:10px}
 .swipe-hint{display:flex;justify-content:center;gap:6px;margin-top:5px;font-size:11px;color:var(--soft)}
 
@@ -698,6 +706,7 @@ function buildCardStack(){
     const hint = HINTS[q.cat] || 'שאלה מעמיקה לשיחה';
     card.innerHTML =
       '<div class="qcard-logo">bon<span>dy</span></div>' +
+      '<div class="qcard-divider"></div>' +
       '<div class="qcard-q">' + q.text + '</div>' +
       '<div class="qcard-hint">💡 ' + hint + '</div>' +
       '<div class="qcard-cat">' + getCatLabel(q.cat) + '</div>';
@@ -790,14 +799,20 @@ function updateHome(){
   if(act){
     document.getElementById('aEm').textContent=act.emoji||'🎯';
     document.getElementById('aTit').textContent=act.title||'—';
-    document.getElementById('aDesc').textContent=act.description||'';
+    const gender = S.parent.gender;
+    const parentTitle = gender === 'mom' ? 'אמא' : 'אבא';
+    const desc = (act.description||'').replace(new RegExp(S.parent.name, 'g'), parentTitle);
+    document.getElementById('aDesc').textContent=desc;
     document.getElementById('aDur').textContent=`⏱ ${act.duration||'—'}`;
     document.getElementById('aAge').textContent=`👧 גיל ${S.child.age}`;
     document.getElementById('dQ').textContent=act.dailyQuestion||'—';
     // detail
     document.getElementById('dEm').textContent=act.emoji||'🎯';
     document.getElementById('dTit').textContent=act.title||'—';
-    document.getElementById('dWhy').textContent=act.why||'';
+    const gender2 = S.parent.gender;
+    const parentTitle2 = gender2 === 'mom' ? 'אמא' : 'אבא';
+    const why = (act.why||'').replace(new RegExp(S.parent.name, 'g'), parentTitle2);
+    document.getElementById('dWhy').textContent=why;
     document.getElementById('memSub').textContent=act.title||'—';
     document.getElementById('memQLabel').textContent=`מה ${S.child.name||'הילד'} אמר/ה שתזכור?`;
     document.getElementById('stepsList').innerHTML=(act.steps||[]).map((s,i)=>
