@@ -360,7 +360,7 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
       <div class="achips"><div class="achip" id="aDur">⏱ —</div><div class="achip" id="aAge">👧 —</div></div>
       <button class="btn bp" style="margin:0" onclick="event.stopPropagation();go('actdetail')">בוא נעשה את זה! ←</button>
     </div>
-    <button class="btn" style="background:rgba(45,80,22,.08);color:var(--forest);margin-bottom:16px" onclick="getNewActivity()">🔀 רוצה פעילות אחרת</button>
+    <button class="btn" style="background:rgba(45,80,22,.08);color:var(--forest);margin-bottom:16px;font-size:14px" onclick="getNewActivity()">✨ קסום לי פעילות אחרת</button>
     <div class="lbl a3">שאלה לארוחת ערב הערב</div>
     <div class="qcard a3" onclick="go('questions')">
       <div class="qhead"><div class="qicon">💬</div><div style="font-size:11px;color:var(--soft)">שאלת היום</div></div>
@@ -469,7 +469,6 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
     </div>
     <div class="pcard a5">
       <div class="pcard-title">הגדרות</div>
-      <div class="prow" onclick="go('apikey')"><div class="prow-label">🔑 מפתח Claude AI</div><div class="prow-val" id="keyStatus">לא מוגדר</div><div class="prow-arrow">›</div></div>
       <div class="prow"><div class="prow-label">🔔 תזכורות</div><div class="prow-val">17:30 בכל יום</div><div class="prow-arrow">›</div></div>
       <div class="prow" onclick="resetApp()"><div class="prow-label" style="color:var(--rust)">🔄 התחל מחדש</div><div class="prow-val"></div><div class="prow-arrow">›</div></div>
     </div>
@@ -579,12 +578,10 @@ function selEm(el,em){ document.querySelectorAll('.embtn').forEach(b=>b.classLis
 
 function getNewActivity(){
   const btn = event.target;
-  btn.textContent = '⏳ מחפש פעילות...';
+  btn.textContent = '🔮 מחפש קסם חדש...';
   btn.disabled = true;
-  S.activity = null;
-  save();
   generateActivity().then(() => {
-    btn.textContent = '🔀 רוצה פעילות אחרת';
+    btn.textContent = '✨ קסום לי פעילות אחרת';
     btn.disabled = false;
   });
 }
@@ -634,9 +631,11 @@ const FALLBACK_ACTS=[
 async function generateActivity(){
   document.getElementById('loadMsg').textContent='מכין פעילות מותאמת אישית...';
   const p=S.parent, c=S.child;
+  const pastTitles = S.memories.map(m=>m.title).concat(S.activity?.title ? [S.activity.title] : []);
   const result = await callServer('/api/activity', {
     parentName: p.name, interests: p.interests, tradition: p.tradition,
-    childName: c.name, childAge: c.age, relation: c.relation
+    childName: c.name, childAge: c.age, relation: c.relation,
+    pastActivities: pastTitles
   });
   const act = result?.activity || FALLBACK_ACTS[Math.floor(Math.random()*FALLBACK_ACTS.length)];
   S.activity=act; save(); go('home');
