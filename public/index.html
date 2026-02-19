@@ -343,6 +343,7 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
       <div class="achips"><div class="achip" id="aDur">⏱ —</div><div class="achip" id="aAge">👧 —</div></div>
       <button class="btn bp" style="margin:0" onclick="event.stopPropagation();go('actdetail')">בוא נעשה את זה! ←</button>
     </div>
+    <button class="btn" style="background:rgba(45,80,22,.08);color:var(--forest);margin-bottom:16px" onclick="getNewActivity()">🔀 רוצה פעילות אחרת</button>
     <div class="lbl a3">שאלה לארוחת ערב הערב</div>
     <div class="qcard a3" onclick="go('questions')">
       <div class="qhead"><div class="qicon">💬</div><div style="font-size:11px;color:var(--soft)">שאלת היום</div></div>
@@ -392,7 +393,7 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
       <div class="dinner-tag" id="dinnerCat1">—</div>
     </div>
     <button class="gen-btn a2" onclick="genQuestions()">
-      <span>✨</span> צור שאלות חדשות עם AI
+      🔄 רוצה לרענן את השאלות
     </button>
     <!-- Categories -->
     <div class="cat-row a3">
@@ -557,6 +558,18 @@ function selAge(el,val){ document.querySelectorAll('.age-btn').forEach(b=>b.clas
 function selTrad(el,val){ document.querySelectorAll('.trad').forEach(t=>t.classList.remove('sel')); el.classList.add('sel'); tradSel=val; }
 function selEm(el,em){ document.querySelectorAll('.embtn').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); S.selectedEmoji=em; }
 
+function getNewActivity(){
+  const btn = event.target;
+  btn.textContent = '⏳ מחפש פעילות...';
+  btn.disabled = true;
+  S.activity = null;
+  save();
+  generateActivity().then(() => {
+    btn.textContent = '🔀 רוצה פעילות אחרת';
+    btn.disabled = false;
+  });
+}
+
 function saveOb1(){
   const n=document.getElementById('pName').value.trim();
   if(!n){alert('נא להזין שם');return;}
@@ -653,7 +666,7 @@ async function genQuestions(){
     renderQBank();
     document.getElementById('dinnerQ1').textContent=newQs[0].text;
   }
-  btn.innerHTML='<span>✨</span> צור שאלות חדשות עם AI';
+  btn.innerHTML='🔄 רוצה לרענן את השאלות';
   btn.disabled=false;
 }
 
@@ -723,7 +736,11 @@ function updateProfile(){
 
 function updateQuestions(){
   const act=S.activity;
-  document.getElementById('dinnerQ1').textContent=act?.dailyQuestion||'אם יכולת לגור בכל מקום בעולם — לאן היית הולך/ת?';
+  const todayKey = new Date().toDateString();
+  const savedDQ = localStorage.getItem('bondy_dq_date');
+  if(savedDQ !== todayKey && act?.dailyQuestion){ localStorage.setItem('bondy_dq', act.dailyQuestion); localStorage.setItem('bondy_dq_date', todayKey); }
+  const dq = localStorage.getItem('bondy_dq') || act?.dailyQuestion;
+  document.getElementById('dinnerQ1').textContent=dq||'אם יכולת לגור בכל מקום בעולם — לאן היית הולך/ת?';
   document.getElementById('dinnerCat1').textContent='שאלת היום 💬';
   renderQBank();
 }
