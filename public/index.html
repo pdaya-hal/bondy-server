@@ -124,10 +124,19 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
 .cat-row::-webkit-scrollbar{display:none}
 .cat-btn{flex-shrink:0;padding:8px 14px;background:#fff;border:1.5px solid var(--warm);border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Heebo',sans-serif;color:var(--dark);transition:all .15s;white-space:nowrap}
 .cat-btn.on{background:var(--forest);color:#fff;border-color:var(--forest)}
-.sq-card{background:#fff;border:1.5px solid var(--warm);border-radius:13px;padding:15px;margin-bottom:9px;display:flex;gap:12px;align-items:flex-start}
-.sq-num{width:28px;height:28px;background:rgba(45,80,22,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--forest);flex-shrink:0}
-.sq-text{font-size:14px;color:var(--dark);line-height:1.6;padding-top:2px}
 .gen-btn{background:var(--forest);color:#fff;border:none;border-radius:12px;padding:13px 20px;font-size:14px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;display:flex;align-items:center;gap:8px;width:100%;justify-content:center;margin-bottom:14px}
+.gen-btn-small{background:rgba(45,80,22,.08);color:var(--forest);border:none;border-radius:100px;padding:7px 14px;font-size:12px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer}
+.card-stack-wrap{position:relative;height:300px;margin-bottom:8px}
+.card-stack{position:relative;width:100%;height:100%}
+.qcard-swipe{position:absolute;inset:0;background:#fff;border-radius:22px;box-shadow:0 8px 32px rgba(0,0,0,.10);padding:24px 22px 20px;display:flex;flex-direction:column;cursor:grab;user-select:none;border:1.5px solid var(--warm);will-change:transform;}
+.qcard-swipe:active{cursor:grabbing}
+.qcard-logo{font-size:13px;font-weight:900;color:var(--earth);letter-spacing:-0.5px;margin-bottom:12px}
+.qcard-logo span{color:var(--forest)}
+.qcard-q{font-size:19px;font-weight:800;color:var(--dark);line-height:1.45;margin-bottom:14px;flex:1;display:flex;align-items:center}
+.qcard-hint{font-size:12px;color:var(--soft);line-height:1.6;background:rgba(45,80,22,.05);border-radius:10px;padding:9px 12px;margin-bottom:10px}
+.qcard-cat{display:inline-block;background:var(--warm);color:var(--soft);font-size:11px;padding:4px 10px;border-radius:100px}
+.card-counter{text-align:center;font-size:12px;color:var(--soft);margin-top:10px}
+.swipe-hint{display:flex;justify-content:center;gap:6px;margin-top:5px;font-size:11px;color:var(--soft)}
 
 /* ══ PROFILE ══ */
 #profile{background:var(--cream);padding-bottom:72px}
@@ -386,17 +395,15 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
     <div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:3px;position:relative;z-index:1" class="a2">לארוחת ערב ולכל רגע</div>
   </div>
   <div class="qscreen-scroll">
-    <!-- Dinner Mode -->
     <div class="dinner-card a1">
-      <div class="dinner-title">🍽️ מצב ארוחת ערב</div>
+      <div class="dinner-title">🍽️ שאלת ארוחת ערב</div>
       <div class="dinner-q" id="dinnerQ1">טוען שאלה...</div>
-      <div class="dinner-tag" id="dinnerCat1">—</div>
     </div>
-    <button class="gen-btn a2" onclick="genQuestions()">
-      🔄 רוצה לרענן את השאלות
-    </button>
-    <!-- Categories -->
-    <div class="cat-row a3">
+    <div class="a2" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="lbl" style="margin:0">העבר קלף לשאלה הבאה</div>
+      <button class="gen-btn-small" onclick="genQuestions()">🔄 רענן</button>
+    </div>
+    <div class="cat-row a2">
       <div class="cat-btn on" onclick="filterCat(this,'all')">הכל</div>
       <div class="cat-btn" onclick="filterCat(this,'dream')">חלומות</div>
       <div class="cat-btn" onclick="filterCat(this,'fun')">מצחיק</div>
@@ -404,7 +411,11 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
       <div class="cat-btn" onclick="filterCat(this,'future')">עתיד</div>
       <div class="cat-btn" onclick="filterCat(this,'past')">עבר</div>
     </div>
-    <div id="qBankList" class="a3"></div>
+    <div class="card-stack-wrap a3">
+      <div class="card-stack" id="cardStack"></div>
+    </div>
+    <div class="card-counter" id="cardCounter">טוען שאלות...</div>
+    <div class="swipe-hint">← העבר לשאלה הבאה</div>
   </div>
   <div class="bnav">
     <div class="ni" onclick="go('home')"><div class="ni-ic">🏠</div>בית</div>
@@ -640,18 +651,116 @@ const QBANK=[
 ];
 let currentCat='all';
 
+// ── HINTS per category ──
+const HINTS = {
+  dream: 'פותח דמיון ומגלה עולמות פנימיים',
+  fun: 'מביא צחוק וקלילות לארוחה',
+  values: 'מחזק ערכים ומה שחשוב לכם',
+  future: 'פותח שיחה על חלומות ותכניות',
+  past: 'מחבר לזיכרונות ולסיפור המשפחתי',
+  imagine: 'מפעיל דמיון ויצירתיות'
+};
+
+let cardIndex = 0;
+let filteredCards = [];
+
 function filterCat(el,cat){
   document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('on'));
   el.classList.add('on');
   currentCat=cat;
-  renderQBank();
+  renderCards();
 }
 
-function renderQBank(){
-  const filtered=currentCat==='all'?QBANK:QBANK.filter(q=>q.cat===currentCat);
-  document.getElementById('qBankList').innerHTML=filtered.map((q,i)=>
-    `<div class="sq-card"><div class="sq-num">${i+1}</div><div class="sq-text">${q.text}</div></div>`
-  ).join('');
+function renderQBank(){ renderCards(); }
+
+function renderCards(){
+  filteredCards = currentCat==='all' ? [...QBANK] : QBANK.filter(q=>q.cat===currentCat);
+  cardIndex = 0;
+  buildCardStack();
+}
+
+function buildCardStack(){
+  const stack = document.getElementById('cardStack');
+  if(!stack) return;
+  stack.innerHTML = '';
+  // Show up to 3 cards stacked (back cards slightly offset)
+  const visible = filteredCards.slice(cardIndex, cardIndex + 3);
+  visible.reverse().forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'qcard-swipe';
+    const isTop = i === visible.length - 1;
+    // Stack effect for background cards
+    if(!isTop){
+      card.style.transform = 'scale(' + (0.95 - (visible.length - 1 - i) * 0.03) + ') translateY(' + ((visible.length - 1 - i) * 8) + 'px)';
+      card.style.opacity = 0.7 - (visible.length - 1 - i) * 0.15;
+      card.style.pointerEvents = 'none';
+    }
+    const hint = HINTS[q.cat] || 'שאלה מעמיקה לשיחה';
+    card.innerHTML =
+      '<div class="qcard-logo">bon<span>dy</span></div>' +
+      '<div class="qcard-q">' + q.text + '</div>' +
+      '<div class="qcard-hint">💡 ' + hint + '</div>' +
+      '<div class="qcard-cat">' + getCatLabel(q.cat) + '</div>';
+    if(isTop) addSwipe(card);
+    stack.appendChild(card);
+  });
+  updateCounter();
+}
+
+function getCatLabel(cat){
+  const m = {dream:'חלומות',fun:'מצחיק',values:'ערכים',future:'עתיד',past:'עבר',imagine:'דמיון'};
+  return m[cat] || cat;
+}
+
+function updateCounter(){
+  const remaining = filteredCards.length - cardIndex;
+  const el = document.getElementById('cardCounter');
+  if(el) el.textContent = remaining > 0 ? remaining + ' שאלות נותרו' : 'סיימת את כל השאלות! 🎉';
+}
+
+function addSwipe(card){
+  let startX = 0, startY = 0, isDragging = false, currentX = 0;
+
+  const onStart = (e) => {
+    isDragging = true;
+    const touch = e.touches ? e.touches[0] : e;
+    startX = touch.clientX;
+    startY = touch.clientY;
+    card.style.transition = 'none';
+  };
+  const onMove = (e) => {
+    if(!isDragging) return;
+    e.preventDefault();
+    const touch = e.touches ? e.touches[0] : e;
+    currentX = touch.clientX - startX;
+    const rotate = currentX * 0.08;
+    card.style.transform = 'translateX(' + currentX + 'px) rotate(' + rotate + 'deg)';
+  };
+  const onEnd = () => {
+    if(!isDragging) return;
+    isDragging = false;
+    if(Math.abs(currentX) > 80){
+      // Swipe away
+      const dir = currentX > 0 ? 1 : -1;
+      card.style.transition = 'transform 0.3s ease, opacity 0.3s';
+      card.style.transform = 'translateX(' + (dir * 500) + 'px) rotate(' + (dir * 20) + 'deg)';
+      card.style.opacity = '0';
+      cardIndex++;
+      setTimeout(() => buildCardStack(), 280);
+    } else {
+      card.style.transition = 'transform 0.3s ease';
+      card.style.transform = 'translateX(0) rotate(0deg)';
+    }
+    currentX = 0;
+  };
+
+  card.addEventListener('touchstart', onStart, {passive:true});
+  card.addEventListener('touchmove', onMove, {passive:false});
+  card.addEventListener('touchend', onEnd);
+  card.addEventListener('mousedown', onStart);
+  card.addEventListener('mousemove', onMove);
+  card.addEventListener('mouseup', onEnd);
+  card.addEventListener('mouseleave', onEnd);
 }
 
 async function genQuestions(){
@@ -735,6 +844,7 @@ function updateProfile(){
 }
 
 function updateQuestions(){
+  renderCards();
   const act=S.activity;
   const todayKey = new Date().toDateString();
   const savedDQ = localStorage.getItem('bondy_dq_date');
