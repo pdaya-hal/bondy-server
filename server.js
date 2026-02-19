@@ -12,13 +12,12 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANO
 
 app.post('/api/activity', async (req, res) => {
   try {
-    const { parentName, interests, tradition, childName, childAge, relation, pastActivities } = req.body;
+    const { parentName, interests, tradition, childName, childAge, childGender, relation, pastActivities, lang } = req.body;
     const pastStr = (pastActivities && pastActivities.length) ? 'Do not repeat: ' + pastActivities.join(', ') + '. ' : '';
-    const { lang } = req.body;
     const outputLang = lang === 'en' ? 'English' : 'Hebrew';
     const prompt = 'You are Bondy. Design a parent-child bonding activity in ' + outputLang + '.\n' +
       'Parent: ' + (parentName||'') + ', interests: ' + (interests||[]).join(',') + ', tradition: ' + (tradition||'') + '\n' +
-      'Child: name=' + (childName||'') + ' age=' + (childAge||'') + ' relation=' + (relation||'') + '\n' +
+      'Child: name=' + (childName||'') + ' age=' + (childAge||'') + ' gender=' + (childGender==='girl' ? 'girl/bat' : 'boy/ben') + ' relation=' + (relation||'') + '\n' +
       pastStr + '\n' +
       'Rules: use child name and the word for dad/mom in Hebrew. Only these emojis: 🌿 🔥 🌊 🏔 🌙 ⭐ 🍃 🌻 🕊 🪵 🌾 🍳 🎣 🌲 🧺 🪴 🏕 🌅 🍂 🌈\n' +
       'Return ONLY valid JSON in Hebrew with no extra text:\n' +
@@ -42,7 +41,6 @@ app.post('/api/activity', async (req, res) => {
 app.post('/api/questions', async (req, res) => {
   try {
     const { childAge } = req.body;
-    const { lang } = req.body;
     const outputLang = lang === 'en' ? 'English' : 'Hebrew';
     const prompt = 'Create 6 ' + outputLang + ' conversation questions for family dinner, child age ' + (childAge||'8') + '.\n' +
       'Return ONLY valid JSON:\n' +
