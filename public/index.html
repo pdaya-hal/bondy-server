@@ -689,6 +689,7 @@ function go(id){
   if(id==='journal') updateJournal();
   if(id==='profile') updateProfile();
   if(id==='questions') updateQuestions();
+  try { applyTranslations(); } catch(e) {}
 }
 
 // ══════════════ OB HELPERS ══════════════
@@ -1081,9 +1082,13 @@ function applyTranslations(){
     const ic = el.querySelector('.ni-ic');
     if(!ic) return;
     const emoji = ic.textContent;
-    if(emoji.includes('🏠')) el.lastChild.textContent = T.nav_home;
-    if(emoji.includes('📸')) el.lastChild.textContent = T.nav_memories;
-    if(emoji.includes('💬')) el.lastChild.textContent = T.nav_questions;
+    // Get text node (last child after icon div)
+    const nodes = [...el.childNodes].filter(n => n.nodeType === 3);
+    if(!nodes.length) return;
+    const tn = nodes[nodes.length-1];
+    if(emoji.includes('🏠')) tn.textContent = T.nav_home;
+    if(emoji.includes('📸')) tn.textContent = T.nav_memories;
+    if(emoji.includes('💬')) tn.textContent = T.nav_questions;
   });
   // Home screen
   const greet = document.querySelector('.hgreeting');
