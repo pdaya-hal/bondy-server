@@ -17,9 +17,15 @@ app.post('/api/activity', async (req, res) => {
   try {
     const { parentName, interests, tradition, childName, childAge, relation } = req.body;
     const tradMap = { secular: 'חילוני', traditional: 'מסורתי', religious: 'דתי', seeking: 'מחפש' };
+    const { pastActivities } = req.body;
+    const pastStr = pastActivities && pastActivities.length 
+      ? 'אל תחזור על הפעילויות הבאות שכבר הוצעו: ' + pastActivities.join(', ') + '.\n'
+      : '';
     const prompt = 'אתה Bondy — עוזר שמעצב פעילויות לחיזוק קשר הורה–ילד בעברית.\n' +
       'פרופיל הורה: שם ' + parentName + ', תחומי עניין: ' + (interests || []).join(', ') + ', מסורת: ' + (tradMap[tradition] || 'חילוני') + '\n' +
       'פרופיל ילד: שם ' + childName + ', גיל ' + childAge + ', מצב קשר: ' + relation + '\n' +
+      pastStr +
+      'חשוב: השתמש בשם הילד (' + childName + ') ובמילה "אבא" או "אמא" — לא בשם ההורה. השתמש רק באמוג\u05d9ים מהטבע, בית, משפחה, אוכל — לא טכנולוגיה.\n' +
       'צור פעילות שבועית אחת מותאמת אישית. החזר JSON בלבד בעברית, ללא טקסט נוסף:\n' +
       '{"emoji":"","title":"","description":"","why":"","duration":"","steps":["","","",""],"questions":["","",""],"tip":"","dailyQuestion":""}';
 
