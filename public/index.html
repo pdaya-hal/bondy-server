@@ -366,9 +366,15 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
       <div class="qhead"><div class="qicon">💬</div><div style="font-size:11px;color:var(--soft)">שאלת היום</div></div>
       <div class="qtext" id="dQ">טוען שאלה...</div>
     </div>
-    <div class="lbl a4">קרוב אליך עכשיו 📍</div>
-    <div class="ncard a4"><div class="nicon">🌿</div><div><div style="font-weight:700;font-size:14px">פארק קרוב לבית</div><div style="font-size:11px;color:var(--soft)">עד 5 ק"מ · חינם · שעה</div></div><div style="margin-right:auto;font-size:12px;color:var(--forest);font-weight:600">פרטים ←</div></div>
-    <div class="ncard a4"><div class="nicon">🔭</div><div><div style="font-weight:700;font-size:14px">מוזיאון המדע</div><div style="font-size:11px;color:var(--soft)">פתוח היום · גיל 6+</div></div><div style="margin-right:auto;font-size:12px;color:var(--forest);font-weight:600">פרטים ←</div></div>
+    <div class="lbl a4" style="display:flex;justify-content:space-between;align-items:center">
+      <span>קרוב אליך עכשיו 📍</span>
+      <span style="font-size:10px;color:var(--earth);cursor:pointer;font-weight:600" onclick="loadNearby()">רענן</span>
+    </div>
+    <div id="nearbyList" class="a4">
+      <div class="ncard" onclick="loadNearby()" style="cursor:pointer;justify-content:center;border-style:dashed">
+        <div style="font-size:13px;color:var(--forest);font-weight:600">📍 מצא מקומות קרובים</div>
+      </div>
+    </div>
   </div>
   <div class="bnav">
     <div class="ni on"><div class="ni-ic">🏠</div>בית</div>
@@ -723,7 +729,25 @@ function getCatLabel(cat){
 function updateCounter(){
   const remaining = filteredCards.length - cardIndex;
   const el = document.getElementById('cardCounter');
-  if(el) el.textContent = remaining > 0 ? remaining + ' שאלות נותרו' : 'סיימת את כל השאלות! 🎉';
+  const stack = document.getElementById('cardStack');
+  if(remaining > 0){
+    if(el) el.textContent = remaining + ' שאלות נותרו';
+    return;
+  }
+  // Show empty state with upsell
+  if(stack) stack.innerHTML = `
+    <div style="position:absolute;inset:0;background:var(--forest);border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center">
+      <div style="font-size:42px;margin-bottom:14px">🌿</div>
+      <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:8px">כל הכבוד!</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:20px">עברתם על כל השאלות ביחד.<br>כל שאלה היא עוד שלב בקשר.</div>
+      <div style="background:rgba(255,255,255,.1);border:1px solid rgba(196,168,130,.4);border-radius:14px;padding:14px 16px;margin-bottom:16px;width:100%">
+        <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--earth);margin-bottom:6px">⭐ בונדי פרמיום</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.6">שאלות ללא הגבלה,<br>מותאמות לכל שלב בגיל הילד</div>
+      </div>
+      <button onclick="genQuestions()" style="background:var(--earth);color:var(--dark);border:none;border-radius:12px;padding:13px 24px;font-size:14px;font-weight:800;font-family:'Heebo',sans-serif;cursor:pointer;width:100%;margin-bottom:8px">✨ קבל עוד שאלות</button>
+      <button onclick="cardIndex=0;buildCardStack()" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);border:none;border-radius:12px;padding:10px 24px;font-size:13px;font-weight:600;font-family:'Heebo',sans-serif;cursor:pointer;width:100%">חזור להתחלה</button>
+    </div>`;
+  if(el) el.textContent = '';
 }
 
 function addSwipe(card){
@@ -772,19 +796,18 @@ function addSwipe(card){
 }
 
 async function genQuestions(){
-  const btn=document.querySelector('.gen-btn');
-  btn.innerHTML='⏳ מייצר שאלות...';
-  btn.disabled=true;
+  const btn = document.querySelector('.gen-btn-small') || document.querySelector('.gen-btn');
+  if(btn){ btn.innerHTML='⏳...'; btn.disabled=true; }
   const c=S.child;
   const result = await callServer('/api/questions', { childAge: c.age, childName: c.name });
   if(result?.questions?.length){
     const newQs=result.questions.map(q=>({text:q.text||q,cat:q.cat||'dream'}));
     QBANK.unshift(...newQs);
-    renderQBank();
-    document.getElementById('dinnerQ1').textContent=newQs[0].text;
+    if(newQs[0]) document.getElementById('dinnerQ1').textContent=newQs[0].text;
   }
-  btn.innerHTML='🔄 רוצה לרענן את השאלות';
-  btn.disabled=false;
+  cardIndex=0;
+  renderCards();
+  if(btn){ btn.innerHTML='🔄 רענן'; btn.disabled=false; }
 }
 
 // ══════════════ UPDATE SCREENS ══════════════
@@ -884,6 +907,38 @@ function resetApp(){
     localStorage.removeItem('bondy2');
     location.reload();
   }
+}
+
+// ══════════════ LOCATION ══════════════
+function loadNearby(){
+  const list = document.getElementById('nearbyList');
+  if(!list) return;
+  list.innerHTML = '<div class="ncard" style="justify-content:center"><div style="font-size:13px;color:var(--soft)">🔍 מחפש מקומות קרובים...</div></div>';
+
+  if(!navigator.geolocation){
+    list.innerHTML = '<div class="ncard"><div style="font-size:13px;color:var(--soft)">מיקום לא זמין במכשיר זה</div></div>';
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+      const result = await callServer('/api/nearby', { lat, lng, childAge: S.child.age });
+      if(result?.places?.length){
+        list.innerHTML = result.places.map(p =>
+          '<div class="ncard"><div class="nicon">' + p.emoji + '</div>' +
+          '<div><div style="font-weight:700;font-size:14px">' + p.name + '</div>' +
+          '<div style="font-size:11px;color:var(--soft)">' + p.distance + ' · ' + p.tip + '</div></div>' +
+          '<div style="margin-right:auto;font-size:12px;color:var(--forest);font-weight:600">פרטים ←</div></div>'
+        ).join('');
+      } else {
+        list.innerHTML = '<div class="ncard"><div style="font-size:13px;color:var(--soft)">לא נמצאו מקומות קרובים</div></div>';
+      }
+    },
+    () => {
+      list.innerHTML = '<div class="ncard" style="cursor:pointer" onclick="loadNearby()"><div style="font-size:13px;color:var(--soft)">⚠️ אפשר גישה למיקום ולחץ שוב</div></div>';
+    }
+  );
 }
 
 // ══════════════ INIT ══════════════
