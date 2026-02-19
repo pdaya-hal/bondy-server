@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Bondy</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --forest:#2D5016; --forest2:#3A6B1E; --cream:#FAF7F2;
+  --warm:#EDE5D8; --earth:#C4A882; --rust:#B85C38;
+  --dark:#1A1410; --soft:#8B7B6B; --white:#fff;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.phone{width:390px;height:844px;background:var(--cream);border-radius:48px;overflow:hidden;position:relative;box-shadow:0 40px 120px rgba(0,0,0,.7)}
+@media(max-width:420px){
+  body{background:var(--cream);align-items:flex-start}
+  .phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}
+}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.a1{animation:fadeUp .45s ease .08s both}
+.a2{animation:fadeUp .45s ease .18s both}
+.a3{animation:fadeUp .45s ease .3s both}
+.a4{animation:fadeUp .45s ease .42s both}
+.a5{animation:fadeUp .45s ease .55s both}
+
+/* GLOBAL */
+.btn{width:100%;padding:17px;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;transition:transform .15s;margin-bottom:10px}
+.btn:active{transform:scale(.97)}
+.bp{background:var(--earth);color:var(--dark)}
+.bf{background:var(--forest);color:#fff}
+.br{background:var(--rust);color:#fff}
+.bg{background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2)}
+.inp{width:100%;padding:15px 18px;background:#fff;border:1.5px solid var(--warm);border-radius:12px;font-size:16px;font-family:'Heebo',sans-serif;color:var(--dark);outline:none;text-align:right;margin-bottom:14px}
+.inp:focus{border-color:var(--forest)}
+.lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:12px}
+
+/* ══ SPLASH ══ */
+#splash{background:var(--forest);justify-content:center;align-items:center;padding:40px;text-align:center}
+#splash::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 25% 75%,rgba(196,168,130,.12),transparent);pointer-events:none}
+.logo{font-size:88px;font-weight:900;color:#fff;line-height:1;margin-bottom:4px;letter-spacing:-3px}
+.logo span{color:var(--earth)}
+.logo-tag{font-size:11px;letter-spacing:4px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:52px}
+.headline{font-size:19px;color:rgba(255,255,255,.85);line-height:1.9;margin-bottom:60px;font-weight:300}
+.headline strong{color:#fff;font-weight:700}
+
+/* ══ ONBOARDING ══ */
+.ob{background:var(--cream);padding:52px 22px 28px;overflow-y:auto}
+.prog{display:flex;gap:5px;margin-bottom:34px}
+.pd{height:4px;flex:1;background:var(--warm);border-radius:2px;transition:background .3s}
+.pd.done{background:var(--forest)}.pd.act{background:var(--rust)}
+.ob-step{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--rust);margin-bottom:7px}
+.ob-q{font-size:24px;font-weight:800;color:var(--dark);line-height:1.3;margin-bottom:6px}
+.ob-hint{font-size:13px;color:var(--soft);margin-bottom:20px}
+.opt-row{display:flex;gap:8px;margin-bottom:14px}
+.opt{flex:1;padding:14px 10px;background:#fff;border:1.5px solid var(--warm);border-radius:12px;font-size:14px;color:var(--dark);cursor:pointer;text-align:center;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Heebo',sans-serif}
+.opt.sel{border-color:var(--forest);background:rgba(45,80,22,.06);color:var(--forest);font-weight:600}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+.chip{padding:14px 10px;background:#fff;border:1.5px solid var(--warm);border-radius:12px;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:13px;font-family:'Heebo',sans-serif}
+.chip.sel{border-color:var(--forest);background:rgba(45,80,22,.06);color:var(--forest);font-weight:600}
+.chip-em{font-size:22px}
+.age-row{display:flex;gap:5px;margin-bottom:18px}
+.age-btn{flex:1;padding:12px 2px;background:#fff;border:1.5px solid var(--warm);border-radius:10px;font-size:11px;font-weight:600;cursor:pointer;text-align:center;transition:all .15s;font-family:'Heebo',sans-serif}
+.age-btn.sel{border-color:var(--forest);background:rgba(45,80,22,.06);color:var(--forest)}
+.trad{padding:14px 15px;background:#fff;border:1.5px solid var(--warm);border-radius:12px;display:flex;gap:11px;align-items:center;cursor:pointer;margin-bottom:8px;transition:all .15s}
+.trad.sel{border-color:var(--forest);background:rgba(45,80,22,.05)}
+.trad-radio{width:20px;height:20px;border:2px solid var(--warm);border-radius:50%;flex-shrink:0;transition:all .15s}
+.trad.sel .trad-radio{background:var(--forest);border-color:var(--forest)}
+.trad-name{font-size:14px;font-weight:600;color:var(--dark)}
+.trad-sub{font-size:11px;color:var(--soft);margin-top:1px}
+
+/* ══ LOADING ══ */
+#loading{background:var(--forest);justify-content:center;align-items:center;padding:40px;text-align:center}
+.spin{width:70px;height:70px;border:3px solid rgba(255,255,255,.15);border-top-color:var(--earth);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 26px}
+
+/* ══ HOME ══ */
+#home{background:var(--cream);padding-bottom:72px}
+.hhead{background:var(--forest);padding:52px 20px 34px;position:relative;overflow:hidden}
+.hhead::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:28px;background:var(--cream);border-radius:28px 28px 0 0}
+.hhead::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 85% 15%,rgba(196,168,130,.15),transparent 55%)}
+.htop{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;position:relative;z-index:1}
+.hgreet{font-size:12px;color:rgba(255,255,255,.55)}
+.hname{font-size:21px;font-weight:800;color:#fff}
+.av{width:42px;height:42px;background:var(--earth);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff}
+.sbar{background:rgba(255,255,255,.1);border-radius:12px;padding:10px 13px;display:flex;align-items:center;gap:9px;position:relative;z-index:1}
+.snum{margin-right:auto;font-size:26px;font-weight:900;color:var(--earth)}
+.hscroll{padding:15px 17px;overflow-y:auto;flex:1}
+.acard{background:var(--forest);border-radius:20px;padding:20px;margin-bottom:15px;cursor:pointer;position:relative;overflow:hidden;transition:transform .15s}
+.acard:active{transform:scale(.98)}
+.acard::before{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(196,168,130,.1);border-radius:50%}
+.abadge{display:inline-block;background:rgba(255,255,255,.12);color:var(--earth);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:3px 9px;border-radius:100px;margin-bottom:11px}
+.aem{font-size:36px;margin-bottom:9px;display:block}
+.atitle{font-size:20px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:6px}
+.adesc{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:13px}
+.achips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px}
+.achip{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);padding:3px 9px;border-radius:100px;font-size:11px}
+.qcard{background:#fff;border:1.5px solid var(--warm);border-radius:15px;padding:16px;margin-bottom:14px;cursor:pointer}
+.qhead{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.qicon{width:32px;height:32px;background:rgba(45,80,22,.08);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.qtext{font-size:15px;color:var(--dark);font-weight:600;line-height:1.55}
+.ncard{background:#fff;border:1.5px solid var(--warm);border-radius:13px;padding:13px 15px;display:flex;gap:11px;align-items:center;margin-bottom:8px}
+.nicon{width:40px;height:40px;background:rgba(45,80,22,.08);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.bnav{position:absolute;bottom:0;left:0;right:0;height:72px;background:#fff;border-top:1px solid var(--warm);display:flex;align-items:center;padding:0 4px 12px}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px;cursor:pointer;color:var(--soft);font-size:10px;transition:color .15s}
+.ni.on{color:var(--forest)}
+.ni-ic{font-size:20px}
+
+/* ══ QUESTIONS ══ */
+#questions{background:var(--cream);padding-bottom:72px}
+.qscreen-head{background:var(--forest);padding:52px 20px 34px;position:relative;overflow:hidden}
+.qscreen-head::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:28px;background:var(--cream);border-radius:28px 28px 0 0}
+.qscreen-scroll{padding:16px 17px;overflow-y:auto;flex:1}
+.dinner-card{background:var(--forest);border-radius:18px;padding:20px;margin-bottom:14px}
+.dinner-title{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--earth);margin-bottom:12px}
+.dinner-q{font-size:17px;font-weight:700;color:#fff;line-height:1.5;margin-bottom:14px}
+.dinner-tag{display:inline-block;background:rgba(255,255,255,.12);color:rgba(255,255,255,.6);font-size:11px;padding:3px 10px;border-radius:100px}
+.cat-row{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none}
+.cat-row::-webkit-scrollbar{display:none}
+.cat-btn{flex-shrink:0;padding:8px 14px;background:#fff;border:1.5px solid var(--warm);border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Heebo',sans-serif;color:var(--dark);transition:all .15s;white-space:nowrap}
+.cat-btn.on{background:var(--forest);color:#fff;border-color:var(--forest)}
+.sq-card{background:#fff;border:1.5px solid var(--warm);border-radius:13px;padding:15px;margin-bottom:9px;display:flex;gap:12px;align-items:flex-start}
+.sq-num{width:28px;height:28px;background:rgba(45,80,22,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--forest);flex-shrink:0}
+.sq-text{font-size:14px;color:var(--dark);line-height:1.6;padding-top:2px}
+.gen-btn{background:var(--forest);color:#fff;border:none;border-radius:12px;padding:13px 20px;font-size:14px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;display:flex;align-items:center;gap:8px;width:100%;justify-content:center;margin-bottom:14px}
+
+/* ══ PROFILE ══ */
+#profile{background:var(--cream);padding-bottom:72px}
+.phead{background:var(--forest);padding:52px 20px 40px;position:relative;overflow:hidden;align-items:center;text-align:center}
+.phead::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:28px;background:var(--cream);border-radius:28px 28px 0 0}
+.pav{width:72px;height:72px;background:var(--earth);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#fff;margin:0 auto 10px;position:relative;z-index:1}
+.pname{font-size:22px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ptag{font-size:13px;color:rgba(255,255,255,.5);position:relative;z-index:1;margin-top:2px}
+.pscroll{padding:16px 17px;overflow-y:auto;flex:1}
+.pcard{background:#fff;border:1.5px solid var(--warm);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.pcard-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--soft);padding:14px 16px 0}
+.prow{padding:13px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--warm)}
+.prow:last-child{border-bottom:none}
+.prow-label{font-size:14px;color:var(--dark);font-weight:500}
+.prow-val{font-size:13px;color:var(--soft)}
+.prow-arrow{font-size:14px;color:var(--soft)}
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.stat-box{background:#fff;border:1.5px solid var(--warm);border-radius:12px;padding:14px;text-align:center}
+.stat-n{font-size:26px;font-weight:900;color:var(--forest)}
+.stat-l{font-size:11px;color:var(--soft);margin-top:2px}
+.upgrade-card{background:var(--forest);border-radius:14px;padding:18px;margin-bottom:10px;display:flex;gap:14px;align-items:center}
+.upgrade-em{font-size:32px}
+.upgrade-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:3px}
+.upgrade-sub{font-size:12px;color:rgba(255,255,255,.55)}
+.upgrade-btn{margin-right:auto;background:var(--earth);color:var(--dark);border:none;padding:8px 14px;border-radius:9px;font-size:12px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;flex-shrink:0}
+
+/* ══ ACTIVITY DETAIL ══ */
+#actdetail{background:var(--cream);padding-bottom:20px}
+.dhead{background:var(--forest);padding:52px 20px 38px;position:relative;overflow:hidden}
+.dhead::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:28px;background:var(--cream);border-radius:28px 28px 0 0}
+.back{position:absolute;top:52px;left:16px;width:34px;height:34px;background:rgba(255,255,255,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;z-index:2}
+.dem{font-size:46px;margin-bottom:11px;position:relative;z-index:1}
+.dtitle{font-size:25px;font-weight:800;color:#fff;position:relative;z-index:1;margin-bottom:6px;line-height:1.3}
+.dwhy{font-size:13px;color:rgba(255,255,255,.6);position:relative;z-index:1;line-height:1.7}
+.dbody{padding:20px 17px;overflow-y:auto;flex:1}
+.step-row{display:flex;gap:12px;margin-bottom:13px;align-items:flex-start}
+.step-n{width:29px;height:29px;background:var(--forest);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.step-t{padding-top:3px;font-size:14px;color:var(--dark);line-height:1.6}
+.qbox{background:#fff;border:1.5px solid var(--warm);border-radius:13px;padding:16px;margin:16px 0}
+.qitem{font-size:13px;color:var(--dark);line-height:1.6;padding:8px 0;border-bottom:1px solid var(--warm)}
+.qitem:last-child{border-bottom:none}
+.tip{background:rgba(196,168,130,.12);border-right:3px solid var(--earth);padding:13px 15px;border-radius:0 12px 12px 0;margin-bottom:18px;font-size:13px;color:var(--soft);line-height:1.6}
+
+/* ══ MEMORY SAVE ══ */
+#memsave{background:var(--cream);padding:52px 22px 30px;overflow-y:auto}
+.photo-box{background:#fff;border:2px dashed var(--earth);border-radius:17px;height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:5px;margin-bottom:18px}
+.em-row{display:flex;gap:11px;justify-content:center;margin-bottom:18px}
+.embtn{width:56px;height:56px;background:#fff;border:2px solid var(--warm);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;transition:all .15s}
+.embtn.sel{border-color:var(--forest);background:rgba(45,80,22,.08);transform:scale(1.1)}
+.memta{width:100%;padding:13px 15px;background:#fff;border:1.5px solid var(--warm);border-radius:12px;font-size:14px;font-family:'Heebo',sans-serif;color:var(--dark);outline:none;text-align:right;resize:none;height:75px;margin-bottom:18px}
+.memta:focus{border-color:var(--forest)}
+
+/* ══ SAVED ══ */
+#memsaved{background:var(--forest);justify-content:center;align-items:center;padding:40px;text-align:center}
+.sc{width:94px;height:94px;background:rgba(255,255,255,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;margin:0 auto 22px;animation:pulse 2s ease infinite}
+.ssbar{background:rgba(196,168,130,.18);border:1px solid rgba(196,168,130,.35);border-radius:13px;padding:13px 18px;margin-bottom:26px;display:flex;align-items:center;gap:11px}
+
+/* ══ JOURNAL ══ */
+#journal{background:var(--cream);padding-bottom:72px}
+.jhead{background:var(--forest);padding:52px 20px 32px;position:relative;overflow:hidden}
+.jhead::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:28px;background:var(--cream);border-radius:28px 28px 0 0}
+.jscroll{padding:16px 17px;overflow-y:auto;flex:1}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.mitem{border-radius:13px;padding:14px;cursor:pointer}
+.mf{background:var(--forest)} .mr{background:#fff;border:1.5px solid var(--warm)}
+.mf .miname{color:#fff} .mf .midate{color:rgba(255,255,255,.45)}
+.mr .miname{color:var(--dark)} .mr .midate{color:var(--soft)}
+.miem{font-size:24px;margin-bottom:7px}
+.miname{font-weight:700;font-size:13px;margin-bottom:2px}
+.midate{font-size:11px}
+.statbox{background:rgba(45,80,22,.07);border:1px solid rgba(45,80,22,.15);border-radius:12px;padding:13px;text-align:center}
+
+/* API KEY screen */
+#apikey{background:var(--cream);padding:52px 22px 30px;overflow-y:auto}
+.key-hero{background:var(--forest);border-radius:18px;padding:24px;text-align:center;margin-bottom:20px}
+.key-icon{font-size:44px;margin-bottom:10px}
+.key-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:6px}
+.key-sub{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7}
+.key-inp{width:100%;padding:15px 16px;background:#fff;border:1.5px solid var(--warm);border-radius:12px;font-size:13px;font-family:monospace;color:var(--dark);outline:none;margin-bottom:10px;direction:ltr;text-align:left}
+.key-inp:focus{border-color:var(--forest)}
+.key-note{font-size:12px;color:var(--soft);line-height:1.7;margin-bottom:20px;background:rgba(196,168,130,.1);padding:12px;border-radius:10px}
+</style>
+</head>
+<body>
+<div class="phone">
+
+<!-- ══ SPLASH ══ -->
+<div id="splash" class="screen active">
+  <div class="logo a1">bon<span>dy</span></div>
+  <div class="logo-tag a1">בניית קשר הורה–ילד</div>
+  <div class="headline a2">הילד שלך לא צריך<br>עוד מסך.<br><strong>הוא צריך אותך.</strong></div>
+  <div style="width:100%" class="a3">
+    <button class="btn bp" onclick="go('ob1')">בואו נתחיל במסע ←</button>
+    <button class="btn bg" onclick="go('ob1')">יש לי כבר חשבון</button>
+  </div>
+</div>
+
+<!-- ══ OB1 ══ -->
+<div id="ob1" class="screen ob">
+  <div class="prog a1"><div class="pd done"></div><div class="pd act"></div><div class="pd"></div><div class="pd"></div><div class="pd"></div></div>
+  <div class="ob-step a1">שלב 1 מתוך 4</div>
+  <div class="ob-q a2">היי! איך קוראים לך?</div>
+  <input class="inp a2" id="pName" placeholder="השם שלך..." />
+  <div class="ob-q a3" style="font-size:19px;margin-bottom:12px">את/ה...</div>
+  <div class="opt-row a3">
+    <div class="opt sel" onclick="selOpt(this,'g','dad')">👨 אבא</div>
+    <div class="opt" onclick="selOpt(this,'g','mom')">👩 אמא</div>
+  </div>
+  <button class="btn bf a4" onclick="saveOb1()">המשך ←</button>
+</div>
+
+<!-- ══ OB2 ══ -->
+<div id="ob2" class="screen ob">
+  <div class="prog a1"><div class="pd done"></div><div class="pd done"></div><div class="pd act"></div><div class="pd"></div><div class="pd"></div></div>
+  <div class="ob-step a1">שלב 2 מתוך 4</div>
+  <div class="ob-q a2">מה אתה אוהב?</div>
+  <div class="ob-hint a2">בחר כמה שרוצה</div>
+  <div class="grid2 a3">
+    <div class="chip" onclick="tChip(this,'hike')"><span class="chip-em">🥾</span>טיולים</div>
+    <div class="chip" onclick="tChip(this,'cook')"><span class="chip-em">🍳</span>בישול</div>
+    <div class="chip" onclick="tChip(this,'sport')"><span class="chip-em">⚽</span>ספורט</div>
+    <div class="chip" onclick="tChip(this,'art')"><span class="chip-em">🎨</span>אמנות</div>
+    <div class="chip" onclick="tChip(this,'science')"><span class="chip-em">🔬</span>מדע</div>
+    <div class="chip" onclick="tChip(this,'music')"><span class="chip-em">🎵</span>מוזיקה</div>
+  </div>
+  <button class="btn bf a4" onclick="saveOb2()">המשך ←</button>
+</div>
+
+<!-- ══ OB3 ══ -->
+<div id="ob3" class="screen ob">
+  <div class="prog a1"><div class="pd done"></div><div class="pd done"></div><div class="pd done"></div><div class="pd act"></div><div class="pd"></div></div>
+  <div class="ob-step a1">שלב 3 מתוך 4</div>
+  <div class="ob-q a2">ספר לי על הילד שלך</div>
+  <input class="inp a2" id="cName" placeholder="שם הילד..." />
+  <div style="font-size:13px;color:var(--soft);margin-bottom:9px" class="a3">גיל</div>
+  <div class="age-row a3">
+    <div class="age-btn" onclick="selAge(this,'5-6')">5-6</div>
+    <div class="age-btn" onclick="selAge(this,'7-8')">7-8</div>
+    <div class="age-btn sel" onclick="selAge(this,'9-10')">9-10</div>
+    <div class="age-btn" onclick="selAge(this,'11-12')">11-12</div>
+    <div class="age-btn" onclick="selAge(this,'13-14')">13-14</div>
+  </div>
+  <div class="ob-q a4" style="font-size:17px;margin-bottom:10px">מצב הקשר היום?</div>
+  <div class="a4">
+    <div class="opt" style="justify-content:flex-start;margin-bottom:7px" onclick="selOpt(this,'r','great')">🏔️&nbsp; מצוין — קרובים מאוד</div>
+    <div class="opt sel" style="justify-content:flex-start;margin-bottom:7px" onclick="selOpt(this,'r','good')">🛤️&nbsp; טוב — אבל אפשר יותר</div>
+    <div class="opt" style="justify-content:flex-start;margin-bottom:7px" onclick="selOpt(this,'r','distant')">🧭&nbsp; קצת מרוחק לאחרונה</div>
+  </div>
+  <button class="btn bf a5" onclick="saveOb3()">המשך ←</button>
+</div>
+
+<!-- ══ OB4 ══ -->
+<div id="ob4" class="screen ob">
+  <div class="prog a1"><div class="pd done"></div><div class="pd done"></div><div class="pd done"></div><div class="pd done"></div><div class="pd act"></div></div>
+  <div class="ob-step a1">שלב 4 מתוך 4</div>
+  <div class="ob-q a2">מה החיבור שלך למסורת?</div>
+  <div class="ob-hint a2">זה ישפיע על סוג הפעילויות</div>
+  <div class="a3">
+    <div class="trad sel" onclick="selTrad(this,'secular')"><div class="trad-radio"></div><div><div class="trad-name">🌿 כיפת השמיים</div><div class="trad-sub">חיבור לטבע, לרגע, לאנשים</div></div></div>
+    <div class="trad" onclick="selTrad(this,'traditional')"><div class="trad-radio"></div><div><div class="trad-name">🕯️ מחובר למסורת</div><div class="trad-sub">בית מסורתי חם — ארוחות, חגים, סיפורים</div></div></div>
+    <div class="trad" onclick="selTrad(this,'religious')"><div class="trad-radio"></div><div><div class="trad-name">✡️ שורשים</div><div class="trad-sub">תורה, שבת, מידות — חיים לפי ערכים יהודיים</div></div></div>
+    <div class="trad" onclick="selTrad(this,'seeking')"><div class="trad-radio"></div><div><div class="trad-name">🔍 בדרך</div><div class="trad-sub">שואל שאלות, מחפש חיבור</div></div></div>
+  </div>
+  <button class="btn bf a4" style="margin-top:18px" onclick="saveOb4()">בואו נתחיל! 🚀</button>
+</div>
+
+<!-- ══ API KEY ══ -->
+<div id="apikey" class="screen">
+  <div class="key-hero a1">
+    <div class="key-icon">🔑</div>
+    <div class="key-title">מפתח Claude AI</div>
+    <div class="key-sub">כדי לקבל פעילויות אמיתיות<br>מותאמות אישית, הזן מפתח API</div>
+  </div>
+  <div class="key-note a2">
+    <strong>איך מקבלים מפתח?</strong><br>
+    1. לך ל: console.anthropic.com<br>
+    2. הירשם בחינם<br>
+    3. לחץ "API Keys" ← "Create Key"<br>
+    4. העתק ורגיסם כאן 👇
+  </div>
+  <input class="key-inp a3" id="apiKeyInput" placeholder="sk-ant-api03-..." />
+  <button class="btn bf a3" onclick="saveApiKey()">שמור והתחל ←</button>
+  <button class="btn" style="background:rgba(45,80,22,.08);color:var(--forest)" onclick="go('loading')">המשך בלי AI (פעילות קבועה)</button>
+</div>
+
+<!-- ══ LOADING ══ -->
+<div id="loading" class="screen" style="background:var(--forest);justify-content:center;align-items:center;padding:40px;text-align:center">
+  <div class="spin a1"></div>
+  <div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:10px;line-height:1.4" class="a2">Bondy לומד<br>על המשפחה שלך</div>
+  <div style="font-size:14px;color:rgba(255,255,255,.5);line-height:1.7" class="a3" id="loadMsg">מכין פעילות מותאמת אישית...</div>
+</div>
+
+<!-- ══ HOME ══ -->
+<div id="home" class="screen">
+  <div class="hhead">
+    <div class="htop">
+      <div><div class="hgreet">שלום,</div><div class="hname" id="hpName">—</div></div>
+      <div class="av" id="hAv">?</div>
+    </div>
+    <div class="sbar">
+      <div style="font-size:20px">🔥</div>
+      <div><div style="font-size:13px;font-weight:600;color:#fff" id="sTxt">שבוע 1 ברצף</div><div style="font-size:11px;color:rgba(255,255,255,.45)">תמשיך כך!</div></div>
+      <div class="snum" id="sNum">1</div>
+    </div>
+  </div>
+  <div class="hscroll">
+    <div class="lbl a1">הפעילות השבועית שלך</div>
+    <div class="acard a2" id="aCard" onclick="go('actdetail')">
+      <div class="abadge">✨ מותאם אישית · AI</div>
+      <span class="aem" id="aEm">🎯</span>
+      <div class="atitle" id="aTit">טוען...</div>
+      <div class="adesc" id="aDesc">Bondy מכין לך פעילות מותאמת אישית</div>
+      <div class="achips"><div class="achip" id="aDur">⏱ —</div><div class="achip" id="aAge">👧 —</div></div>
+      <button class="btn bp" style="margin:0" onclick="event.stopPropagation();go('actdetail')">בוא נעשה את זה! ←</button>
+    </div>
+    <div class="lbl a3">שאלה לארוחת ערב הערב</div>
+    <div class="qcard a3" onclick="go('questions')">
+      <div class="qhead"><div class="qicon">💬</div><div style="font-size:11px;color:var(--soft)">שאלת היום</div></div>
+      <div class="qtext" id="dQ">טוען שאלה...</div>
+    </div>
+    <div class="lbl a4">קרוב אליך עכשיו 📍</div>
+    <div class="ncard a4"><div class="nicon">🌿</div><div><div style="font-weight:700;font-size:14px">פארק קרוב לבית</div><div style="font-size:11px;color:var(--soft)">עד 5 ק"מ · חינם · שעה</div></div><div style="margin-right:auto;font-size:12px;color:var(--forest);font-weight:600">פרטים ←</div></div>
+    <div class="ncard a4"><div class="nicon">🔭</div><div><div style="font-weight:700;font-size:14px">מוזיאון המדע</div><div style="font-size:11px;color:var(--soft)">פתוח היום · גיל 6+</div></div><div style="margin-right:auto;font-size:12px;color:var(--forest);font-weight:600">פרטים ←</div></div>
+  </div>
+  <div class="bnav">
+    <div class="ni on"><div class="ni-ic">🏠</div>בית</div>
+    <div class="ni" onclick="go('journal')"><div class="ni-ic">📸</div>זיכרונות</div>
+    <div class="ni" onclick="go('questions')"><div class="ni-ic">💬</div>שאלות</div>
+    <div class="ni" onclick="go('profile')"><div class="ni-ic">👤</div>פרופיל</div>
+  </div>
+</div>
+
+<!-- ══ ACTIVITY DETAIL ══ -->
+<div id="actdetail" class="screen">
+  <div class="dhead">
+    <div class="back" onclick="go('home')">→</div>
+    <div class="dem a1" id="dEm">🎯</div>
+    <div class="dtitle a2" id="dTit">—</div>
+    <div class="dwhy a3" id="dWhy">—</div>
+  </div>
+  <div class="dbody">
+    <div class="lbl a1">איך עושים את זה</div>
+    <div id="stepsList" class="a2"></div>
+    <div class="qbox a3"><div class="lbl">שאלות לשיחה</div><div id="qList"></div></div>
+    <div class="tip a4" id="tipBox">—</div>
+    <button class="btn bf a5" onclick="go('memsave')">✓ &nbsp;סיימנו! שמור זיכרון</button>
+  </div>
+</div>
+
+<!-- ══ QUESTIONS SCREEN ══ -->
+<div id="questions" class="screen">
+  <div class="qscreen-head">
+    <div style="position:absolute;bottom:-1px;left:0;right:0;height:28px;background:var(--cream);border-radius:28px 28px 0 0"></div>
+    <div style="font-size:24px;font-weight:800;color:#fff;position:relative;z-index:1" class="a1">שאלות לשיחה</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:3px;position:relative;z-index:1" class="a2">לארוחת ערב ולכל רגע</div>
+  </div>
+  <div class="qscreen-scroll">
+    <!-- Dinner Mode -->
+    <div class="dinner-card a1">
+      <div class="dinner-title">🍽️ מצב ארוחת ערב</div>
+      <div class="dinner-q" id="dinnerQ1">טוען שאלה...</div>
+      <div class="dinner-tag" id="dinnerCat1">—</div>
+    </div>
+    <button class="gen-btn a2" onclick="genQuestions()">
+      <span>✨</span> צור שאלות חדשות עם AI
+    </button>
+    <!-- Categories -->
+    <div class="cat-row a3">
+      <div class="cat-btn on" onclick="filterCat(this,'all')">הכל</div>
+      <div class="cat-btn" onclick="filterCat(this,'dream')">חלומות</div>
+      <div class="cat-btn" onclick="filterCat(this,'fun')">מצחיק</div>
+      <div class="cat-btn" onclick="filterCat(this,'values')">ערכים</div>
+      <div class="cat-btn" onclick="filterCat(this,'future')">עתיד</div>
+      <div class="cat-btn" onclick="filterCat(this,'past')">עבר</div>
+    </div>
+    <div id="qBankList" class="a3"></div>
+  </div>
+  <div class="bnav">
+    <div class="ni" onclick="go('home')"><div class="ni-ic">🏠</div>בית</div>
+    <div class="ni" onclick="go('journal')"><div class="ni-ic">📸</div>זיכרונות</div>
+    <div class="ni on"><div class="ni-ic">💬</div>שאלות</div>
+    <div class="ni" onclick="go('profile')"><div class="ni-ic">👤</div>פרופיל</div>
+  </div>
+</div>
+
+<!-- ══ PROFILE ══ -->
+<div id="profile" class="screen">
+  <div class="phead">
+    <div style="position:absolute;bottom:-1px;left:0;right:0;height:28px;background:var(--cream);border-radius:28px 28px 0 0"></div>
+    <div class="pav a1" id="pAvatar">?</div>
+    <div class="pname a2" id="pPname">—</div>
+    <div class="ptag a2" id="pPtag">—</div>
+  </div>
+  <div class="pscroll">
+    <!-- Stats -->
+    <div class="stat-row a1">
+      <div class="stat-box"><div class="stat-n" id="stMem">0</div><div class="stat-l">זיכרונות</div></div>
+      <div class="stat-box"><div class="stat-n" id="stStr">1</div><div class="stat-l">רצף שבועות 🔥</div></div>
+      <div class="stat-box"><div class="stat-n">52</div><div class="stat-l">שבועות בשנה</div></div>
+    </div>
+    <!-- Upgrade -->
+    <div class="upgrade-card a2">
+      <div class="upgrade-em">⭐</div>
+      <div><div class="upgrade-title">שדרג לפרמיום</div><div class="upgrade-sub">פעילויות לפי מיקום, מסלול בר/בת מצווה</div></div>
+      <button class="upgrade-btn">₪12/חודש</button>
+    </div>
+    <!-- Profile info -->
+    <div class="pcard a3">
+      <div class="pcard-title">פרופיל שלי</div>
+      <div class="prow"><div class="prow-label">שם</div><div class="prow-val" id="ppName">—</div><div class="prow-arrow">›</div></div>
+      <div class="prow"><div class="prow-label">תחומי עניין</div><div class="prow-val" id="ppInterests">—</div><div class="prow-arrow">›</div></div>
+      <div class="prow"><div class="prow-label">חיבור למסורת</div><div class="prow-val" id="ppTrad">—</div><div class="prow-arrow">›</div></div>
+    </div>
+    <div class="pcard a4">
+      <div class="pcard-title">הילד שלי</div>
+      <div class="prow"><div class="prow-label">שם</div><div class="prow-val" id="pcName">—</div><div class="prow-arrow">›</div></div>
+      <div class="prow"><div class="prow-label">גיל</div><div class="prow-val" id="pcAge">—</div><div class="prow-arrow">›</div></div>
+      <div class="prow"><div class="prow-label">מצב קשר</div><div class="prow-val" id="pcRel">—</div><div class="prow-arrow">›</div></div>
+    </div>
+    <div class="pcard a5">
+      <div class="pcard-title">הגדרות</div>
+      <div class="prow" onclick="go('apikey')"><div class="prow-label">🔑 מפתח Claude AI</div><div class="prow-val" id="keyStatus">לא מוגדר</div><div class="prow-arrow">›</div></div>
+      <div class="prow"><div class="prow-label">🔔 תזכורות</div><div class="prow-val">17:30 בכל יום</div><div class="prow-arrow">›</div></div>
+      <div class="prow" onclick="resetApp()"><div class="prow-label" style="color:var(--rust)">🔄 התחל מחדש</div><div class="prow-val"></div><div class="prow-arrow">›</div></div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="ni" onclick="go('home')"><div class="ni-ic">🏠</div>בית</div>
+    <div class="ni" onclick="go('journal')"><div class="ni-ic">📸</div>זיכרונות</div>
+    <div class="ni" onclick="go('questions')"><div class="ni-ic">💬</div>שאלות</div>
+    <div class="ni on"><div class="ni-ic">👤</div>פרופיל</div>
+  </div>
+</div>
+
+<!-- ══ MEMORY SAVE ══ -->
+<div id="memsave" class="screen">
+  <div class="back" style="position:relative;top:0;left:0;margin-bottom:16px;width:34px;height:34px;background:var(--warm);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="go('actdetail')">→</div>
+  <div style="font-size:26px;font-weight:800;color:var(--dark);margin-bottom:3px" class="a1">שמור זיכרון 💚</div>
+  <div style="font-size:13px;color:var(--soft);margin-bottom:20px" class="a1" id="memSub">—</div>
+  <div class="photo-box a2"><div style="font-size:30px">📷</div><div style="font-size:13px;color:var(--soft)">לחץ להוספת תמונה</div><div style="font-size:11px;color:var(--earth)">אופציונלי</div></div>
+  <div style="font-size:13px;color:var(--soft);margin-bottom:11px;text-align:center" class="a3">איך הרגשת?</div>
+  <div class="em-row a3">
+    <div class="embtn" onclick="selEm(this,'😄')">😄</div>
+    <div class="embtn sel" onclick="selEm(this,'❤️')">❤️</div>
+    <div class="embtn" onclick="selEm(this,'🤩')">🤩</div>
+    <div class="embtn" onclick="selEm(this,'🥹')">🥹</div>
+  </div>
+  <div style="font-size:13px;color:var(--soft);margin-bottom:7px" class="a4" id="memQLabel">מה הילד אמר שתזכור?</div>
+  <textarea class="memta a4" id="memQuote" placeholder="ציטוט קצר..."></textarea>
+  <button class="btn br a5" onclick="saveMemory()">שמור זיכרון ✨</button>
+</div>
+
+<!-- ══ MEMORY SAVED ══ -->
+<div id="memsaved" class="screen">
+  <div class="sc a1">💚</div>
+  <div style="font-size:28px;font-weight:800;color:#fff;margin-bottom:9px" class="a2">זיכרון נשמר!</div>
+  <div style="font-size:14px;color:rgba(255,255,255,.55);line-height:1.8;margin-bottom:28px" class="a2" id="savedSub">הרגע הזה שמור לתמיד.</div>
+  <div class="ssbar a3">
+    <div style="font-size:24px">🔥</div>
+    <div><div style="color:var(--earth);font-weight:600;font-size:14px">רצף שבועי</div></div>
+    <div style="margin-right:auto;font-size:28px;font-weight:900;color:#fff" id="savedSN">1</div>
+  </div>
+  <button class="btn bp a4" style="width:100%" onclick="go('home')">📤 &nbsp;שתף את הזיכרון</button>
+  <button class="btn bg a5" style="width:100%" onclick="go('home')">חזרה לבית</button>
+</div>
+
+<!-- ══ JOURNAL ══ -->
+<div id="journal" class="screen">
+  <div class="jhead">
+    <div style="position:absolute;bottom:-1px;left:0;right:0;height:28px;background:var(--cream);border-radius:28px 28px 0 0"></div>
+    <div class="back" onclick="go('home')">→</div>
+    <div style="font-size:24px;font-weight:800;color:#fff;position:relative;z-index:1" class="a1">הזיכרונות שלנו</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:3px;position:relative;z-index:1" class="a2" id="jSub">—</div>
+  </div>
+  <div class="jscroll">
+    <div class="lbl" style="margin-bottom:11px">כל הפעילויות</div>
+    <div class="mgrid" id="memGrid"></div>
+    <div class="statbox"><div style="font-size:30px;font-weight:900;color:var(--forest)" id="statN">0</div><div style="font-size:13px;color:var(--soft)">פעילויות עד היום 🔥</div></div>
+  </div>
+  <div class="bnav">
+    <div class="ni" onclick="go('home')"><div class="ni-ic">🏠</div>בית</div>
+    <div class="ni on"><div class="ni-ic">📸</div>זיכרונות</div>
+    <div class="ni" onclick="go('questions')"><div class="ni-ic">💬</div>שאלות</div>
+    <div class="ni" onclick="go('profile')"><div class="ni-ic">👤</div>פרופיל</div>
+  </div>
+</div>
+
+</div><!-- /phone -->
+<script>
+// ══════════════ STATE ══════════════
+const DEF = {
+  parent:{name:'',gender:'dad',interests:[],tradition:'secular'},
+  child:{name:'',age:'9-10',relation:'good'},
+  streak:1, activity:null, memories:[], apiKey:'', selectedEmoji:'❤️'
+};
+let S = {...DEF};
+try{ const s=localStorage.getItem('bondy2');if(s) S=JSON.parse(s); }catch(e){}
+const save=()=>{ try{localStorage.setItem('bondy2',JSON.stringify(S));}catch(e){} };
+
+// ══════════════ NAV ══════════════
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const sc=document.getElementById(id);
+  sc.classList.add('active');
+  if(sc.scrollTop!==undefined) sc.scrollTop=0;
+  if(id==='loading') setTimeout(generateActivity,300);
+  if(id==='home') updateHome();
+  if(id==='journal') updateJournal();
+  if(id==='profile') updateProfile();
+  if(id==='questions') updateQuestions();
+}
+
+// ══════════════ OB HELPERS ══════════════
+let gSel='dad', rSel='good', ageSel='9-10', tradSel='secular';
+const interests=new Set();
+
+function selOpt(el,type,val){
+  const grp=el.closest('[class*="ob"]')||el.closest('.screen');
+  // find siblings with same group
+  el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  if(type==='g') gSel=val;
+  if(type==='r') rSel=val;
+}
+function tChip(el,val){ el.classList.toggle('sel'); interests.has(val)?interests.delete(val):interests.add(val); }
+function selAge(el,val){ document.querySelectorAll('.age-btn').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); ageSel=val; }
+function selTrad(el,val){ document.querySelectorAll('.trad').forEach(t=>t.classList.remove('sel')); el.classList.add('sel'); tradSel=val; }
+function selEm(el,em){ document.querySelectorAll('.embtn').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); S.selectedEmoji=em; }
+
+function saveOb1(){
+  const n=document.getElementById('pName').value.trim();
+  if(!n){alert('נא להזין שם');return;}
+  S.parent.name=n; S.parent.gender=gSel; save(); go('ob2');
+}
+function saveOb2(){ S.parent.interests=[...interests]; save(); go('ob3'); }
+function saveOb3(){
+  const n=document.getElementById('cName').value.trim();
+  if(!n){alert('נא להזין שם הילד');return;}
+  S.child.name=n; S.child.age=ageSel; S.child.relation=rSel; save(); go('ob4');
+}
+function saveOb4(){ S.parent.tradition=tradSel; save(); go('loading'); }
+function saveApiKey(){
+  const k=document.getElementById('apiKeyInput').value.trim();
+  if(k) S.apiKey=k;
+  save(); go('loading');
+}
+
+// ══════════════ SERVER API ══════════════
+const SERVER = window.location.hostname === 'localhost'
+  ? 'http://localhost:3000'
+  : 'https://bondy-server-production.up.railway.app';
+
+async function callServer(endpoint, body){
+  try{
+    const r=await fetch(`${SERVER}${endpoint}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    return await r.json();
+  }catch(e){
+    console.error('Server error:',e);
+    return null;
+  }
+}
+
+const FALLBACK_ACTS=[
+  {emoji:'🥾',title:'טיול גילוי בטבע',description:'יציאה לגלות את הטבע הקרוב ביחד',why:'הטבע פותח שיחות שלא קורות בתוך הבית',duration:'שעה-שעתיים',steps:['תנו לילד לבחור כיוון — ימין או שמאל','אספו 5 דברים מעניינים בדרך','שבו ביחד במקום יפה ותשתו משהו, בלי טלפונים','כל אחד מספר מה היה הרגע הכי טוב שלו'],questions:['אם היית עץ — איזה עץ היית?','מה הדבר הכי יפה שראית היום?','אם יכולת לגור בטבע — מה היית מתגעגע/ת מהבית?'],tip:'אם הילד לא רוצה לצאת — הציעו לו/לה להביא חבר/ה',dailyQuestion:'אם יכולת לטייל לכל מקום בעולם — לאן היית בוחר/ת?'},
+  {emoji:'🍳',title:'ארוחת ערב שהילד מבשל',description:'הילד הוא השף הערב',why:'נתינת אחריות בונה ביטחון עצמי וגאווה',duration:'שעה',steps:['בחרו ביחד מה לבשל — הילד מחליט','הילד קורא את המתכון בקול רם','כל שלב — הילד עושה בעצמו, אתם תומכים','אוכלים ביחד ומשבחים את השף'],questions:['מאיפה הרעיון למאכל הזה?','מה הייתם מוסיפים בפעם הבאה?','מה הדבר הכי קשה בלבשל?'],tip:'גם אם זה לא מושלם — השבחים חשובים מהתוצאה',dailyQuestion:'אם פתחת מסעדה — מה היה שם המנה המיוחדת שלך?'}
+];
+
+async function generateActivity(){
+  document.getElementById('loadMsg').textContent='מכין פעילות מותאמת אישית...';
+  const p=S.parent, c=S.child;
+  const result = await callServer('/api/activity', {
+    parentName: p.name, interests: p.interests, tradition: p.tradition,
+    childName: c.name, childAge: c.age, relation: c.relation
+  });
+  const act = result?.activity || FALLBACK_ACTS[Math.floor(Math.random()*FALLBACK_ACTS.length)];
+  S.activity=act; save(); go('home');
+}
+
+// ══════════════ QUESTIONS BANK ══════════════
+const QBANK=[
+  {text:'אם יכולת להיות כל בעל חיים — מה היית בוחר/ת ולמה?',cat:'dream'},
+  {text:'מה הדבר הכי מצחיק שקרה לך השבוע?',cat:'fun'},
+  {text:'אם יש לך מעצמה אחת — מה היא תהיה?',cat:'dream'},
+  {text:'מה הדבר הכי חשוב שלמדת מהסבא/סבתא?',cat:'values'},
+  {text:'בעוד 10 שנים — איפה אתה/את רואה את עצמך?',cat:'future'},
+  {text:'מה הזיכרון הכי טוב שלך מגיל 5?',cat:'past'},
+  {text:'אם היית יכול/ה לשנות דבר אחד בעולם — מה?',cat:'values'},
+  {text:'מי האדם שהכי השפיע עליך ולמה?',cat:'values'},
+  {text:'מה הדבר הכי מביך שקרה לך?',cat:'fun'},
+  {text:'אם פתחת עסק — מה הוא היה מוכר?',cat:'future'},
+  {text:'מה היית אומר לעצמך בגיל 5?',cat:'past'},
+  {text:'מה הדבר שהכי גאה בו?',cat:'values'},
+];
+let currentCat='all';
+
+function filterCat(el,cat){
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  currentCat=cat;
+  renderQBank();
+}
+
+function renderQBank(){
+  const filtered=currentCat==='all'?QBANK:QBANK.filter(q=>q.cat===currentCat);
+  document.getElementById('qBankList').innerHTML=filtered.map((q,i)=>
+    `<div class="sq-card"><div class="sq-num">${i+1}</div><div class="sq-text">${q.text}</div></div>`
+  ).join('');
+}
+
+async function genQuestions(){
+  const btn=document.querySelector('.gen-btn');
+  btn.innerHTML='⏳ מייצר שאלות...';
+  btn.disabled=true;
+  const c=S.child;
+  const result = await callServer('/api/questions', { childAge: c.age, childName: c.name });
+  if(result?.questions?.length){
+    const newQs=result.questions.map(q=>({text:q.text||q,cat:q.cat||'dream'}));
+    QBANK.unshift(...newQs);
+    renderQBank();
+    document.getElementById('dinnerQ1').textContent=newQs[0].text;
+  }
+  btn.innerHTML='<span>✨</span> צור שאלות חדשות עם AI';
+  btn.disabled=false;
+}
+
+// ══════════════ UPDATE SCREENS ══════════════
+function updateHome(){
+  const n=S.parent.name||'—';
+  document.getElementById('hpName').textContent=`${n} 👋`;
+  document.getElementById('hAv').textContent=n[0]||'?';
+  document.getElementById('sNum').textContent=S.streak;
+  document.getElementById('sTxt').textContent=`שבוע ${S.streak} ברצף`;
+  const act=S.activity;
+  if(act){
+    document.getElementById('aEm').textContent=act.emoji||'🎯';
+    document.getElementById('aTit').textContent=act.title||'—';
+    document.getElementById('aDesc').textContent=act.description||'';
+    document.getElementById('aDur').textContent=`⏱ ${act.duration||'—'}`;
+    document.getElementById('aAge').textContent=`👧 גיל ${S.child.age}`;
+    document.getElementById('dQ').textContent=act.dailyQuestion||'—';
+    // detail
+    document.getElementById('dEm').textContent=act.emoji||'🎯';
+    document.getElementById('dTit').textContent=act.title||'—';
+    document.getElementById('dWhy').textContent=act.why||'';
+    document.getElementById('memSub').textContent=act.title||'—';
+    document.getElementById('memQLabel').textContent=`מה ${S.child.name||'הילד'} אמר/ה שתזכור?`;
+    document.getElementById('stepsList').innerHTML=(act.steps||[]).map((s,i)=>
+      `<div class="step-row"><div class="step-n">${i+1}</div><div class="step-t">${s}</div></div>`).join('');
+    document.getElementById('qList').innerHTML=(act.questions||[]).map(q=>
+      `<div class="qitem">${q}</div>`).join('');
+    document.getElementById('tipBox').textContent=`💡 ${act.tip||''}`;
+  }
+}
+
+function updateJournal(){
+  const pn=S.parent.name||'', cn=S.child.name||'הילד';
+  document.getElementById('jSub').textContent=`${pn} ו${cn} · ${S.memories.length} פעילויות`;
+  document.getElementById('statN').textContent=S.memories.length;
+  const grid=document.getElementById('memGrid');
+  if(!S.memories.length){
+    grid.innerHTML='<div class="mitem mf"><div class="miem">💚</div><div class="miname">עדיין אין זיכרונות</div><div class="midate">עשו פעילות ראשונה!</div></div>';
+    return;
+  }
+  grid.innerHTML=S.memories.map((m,i)=>
+    `<div class="mitem ${i===0?'mf':'mr'}"><div class="miem">${m.emoji}</div><div class="miname">${m.title}</div><div class="midate">${m.date}</div></div>`
+  ).join('');
+}
+
+function updateProfile(){
+  const p=S.parent, c=S.child;
+  const n=p.name||'—';
+  document.getElementById('pAvatar').textContent=n[0]||'?';
+  document.getElementById('pPname').textContent=n;
+  document.getElementById('pPtag').textContent=`הורה ל${c.name||'—'} · גיל ${c.age}`;
+  document.getElementById('ppName').textContent=n;
+  document.getElementById('ppInterests').textContent=p.interests.join(', ')||'לא נבחר';
+  const tMap={secular:'כיפת השמיים',traditional:'מחובר למסורת',religious:'שורשים',seeking:'בדרך'};
+  document.getElementById('ppTrad').textContent=tMap[p.tradition]||'—';
+  document.getElementById('pcName').textContent=c.name||'—';
+  document.getElementById('pcAge').textContent=c.age;
+  const rMap={great:'מצוין',good:'טוב',distant:'מרוחק'};
+  document.getElementById('pcRel').textContent=rMap[c.relation]||'—';
+  document.getElementById('stMem').textContent=S.memories.length;
+  document.getElementById('stStr').textContent=S.streak;
+  if(document.getElementById('keyStatus')) document.getElementById('keyStatus').textContent='מחובר לשרת ✓';
+  // avatar large
+  document.getElementById('pAvatar').textContent=n[0]||'?';
+}
+
+function updateQuestions(){
+  const act=S.activity;
+  document.getElementById('dinnerQ1').textContent=act?.dailyQuestion||'אם יכולת לגור בכל מקום בעולם — לאן היית הולך/ת?';
+  document.getElementById('dinnerCat1').textContent='שאלת היום 💬';
+  renderQBank();
+}
+
+function saveMemory(){
+  const mem={emoji:S.activity?.emoji||'🎯',title:S.activity?.title||'פעילות',feeling:S.selectedEmoji,quote:document.getElementById('memQuote').value,date:new Date().toLocaleDateString('he-IL',{day:'numeric',month:'short'})};
+  S.memories.unshift(mem);
+  S.streak+=1;
+  save();
+  document.getElementById('savedSub').textContent=`הרגע הזה עם ${S.child.name} שמור לתמיד.`;
+  document.getElementById('savedSN').textContent=S.streak;
+  go('memsaved');
+}
+
+function resetApp(){
+  if(confirm('למחוק את כל הנתונים ולהתחיל מחדש?')){
+    localStorage.removeItem('bondy2');
+    location.reload();
+  }
+}
+
+// ══════════════ INIT ══════════════
+window.addEventListener('load',()=>{
+  if(S.parent.name&&S.child.name){
+    if(S.activity) go('home');
+    else go('loading');
+  }
+});
+</script>
+</body>
+</html>
