@@ -602,8 +602,8 @@ const T = {
   home_dinner: isHE ? 'שאלה לארוחת ערב הערב' : "Tonight's dinner question",
   home_nearby: isHE ? 'קרוב אליך עכשיו 📍' : 'Near you right now 📍',
   home_refresh: isHE ? 'רענן' : 'Refresh',
-  home_find: isHE ? T.home_find : '📍 Find nearby places',
-  home_other: isHE ? T.home_other : '✨ Surprise me with another',
+  home_find: isHE ? '📍 מצא מקומות קרובים' : '📍 Find nearby places',
+  home_other: isHE ? '✨ קסום לי פעילות אחרת' : '✨ Surprise me with another',
   // Nav
   nav_home: isHE ? 'בית' : 'Home',
   nav_memories: isHE ? 'זיכרונות' : 'Memories',
@@ -612,7 +612,7 @@ const T = {
   // Questions
   q_title: isHE ? 'שאלות לשיחה' : 'Conversation Questions',
   q_sub: isHE ? 'לארוחת ערב ולכל רגע' : 'For dinner and every moment',
-  q_dinner: isHE ? T.q_dinner : '🍽️ Dinner Question',
+  q_dinner: isHE ? '🍽️ שאלת ארוחת ערב' : '🍽️ Dinner Question',
   q_swipe: isHE ? 'העבר קלף לשאלה הבאה' : 'Swipe card for next question',
   q_refresh: isHE ? '🔄 רענן' : '🔄 Refresh',
   q_left: isHE ? ' שאלות נותרו' : ' questions left',
@@ -689,7 +689,7 @@ function go(id){
   if(id==='journal') updateJournal();
   if(id==='profile') updateProfile();
   if(id==='questions') updateQuestions();
-  try { applyTranslations(); } catch(e) {}
+  applyTranslations();
 }
 
 // ══════════════ OB HELPERS ══════════════
@@ -704,6 +704,12 @@ function selOpt(el,type,val){
   if(type==='g') gSel=val;
   if(type==='r') rSel=val;
 }
+function selChildGender(el, val){
+  document.querySelectorAll('#childGenderBoy,#childGenderGirl').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  S.child.gender = val;
+}
+
 function tChip(el,val){ el.classList.toggle('sel'); interests.has(val)?interests.delete(val):interests.add(val); }
 function selAge(el,val){ document.querySelectorAll('.age-btn').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); ageSel=val; }
 function selTrad(el,val){ document.querySelectorAll('.trad').forEach(t=>t.classList.remove('sel')); el.classList.add('sel'); tradSel=val; }
@@ -767,7 +773,7 @@ async function generateActivity(){
   const pastTitles = S.memories.map(m=>m.title).concat(S.activity?.title ? [S.activity.title] : []);
   const result = await callServer('/api/activity', {
     parentName: p.name, interests: p.interests, tradition: p.tradition,
-    childName: c.name, childAge: c.age, relation: c.relation, lang: LANG,
+    childName: c.name, childAge: c.age, childGender: c.gender, relation: c.relation, lang: LANG,
     pastActivities: pastTitles
   });
   const act = result?.activity || FALLBACK_ACTS[Math.floor(Math.random()*FALLBACK_ACTS.length)];
@@ -1072,7 +1078,7 @@ function loadNearby(){
 
 // ══════════════ TRANSLATIONS ══════════════
 function applyTranslations(){
-  // Splash
+  try {
   const splashHeadline = document.getElementById('splashHeadline');
   if(splashHeadline) splashHeadline.innerHTML = T.splash_headline1 + '<br>' + (isHE ? 'עוד מסך.' : 'another screen.') + '<br><strong>' + T.splash_headline3 + '</strong>';
   const splashBtn = document.getElementById('splashStart');
@@ -1101,6 +1107,7 @@ function applyTranslations(){
   // Loading
   const loadMsg = document.getElementById('loadMsg');
   if(loadMsg) loadMsg.textContent = T.loading_sub;
+  } catch(e) { console.log('applyTranslations error:', e); }
 }
 
 // ══════════════ INIT ══════════════
