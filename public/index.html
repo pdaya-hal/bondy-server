@@ -235,7 +235,7 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
 <div id="splash" class="screen active">
   <div class="logo a1">bon<span>dy</span></div>
   <div class="logo-tag a1">בניית קשר הורה–ילד</div>
-  <div class="headline a2">' + T.splash_headline1 + '<br>עוד מסך.<br><strong>הוא צריך אותך.</strong></div>
+  <div class="headline a2" id="splashHeadline">הילד שלך לא צריך<br>עוד מסך.<br><strong>הוא צריך אותך.</strong></div>
   <div style="width:100%" class="a3">
     <button class="btn bp" onclick="go('ob1')">בואו נתחיל במסע ←</button>
     <button class="btn bg" onclick="go('ob1')">יש לי כבר חשבון</button>
@@ -549,19 +549,19 @@ const isHE = LANG === 'he';
 const T = {
   // Splash
   splash_start: isHE ? 'בואו נתחיל במסע ←' : 'Start the journey ←',
-  splash_login: isHE ? 'יש לי כבר חשבון' : 'I already have an account',
-  splash_headline1: isHE ? 'הילד שלך לא צריך' : 'Your child doesn't need',
+  splash_login: isHE ? "יש לי כבר חשבון" : "I already have an account",
+  splash_headline1: isHE ? "הילד שלך לא צריך" : "Your child doesn't need",
   splash_headline2: isHE ? 'עוד מסך.' : 'another screen.',
   splash_headline3: isHE ? 'הוא צריך אותך.' : 'They need you.',
   // Onboarding
   ob1_step: isHE ? 'שלב 1 מתוך 4' : 'Step 1 of 4',
-  ob1_q: isHE ? 'היי! איך קוראים לך?' : 'Hi! What's your name?',
+  ob1_q: isHE ? 'היי! איך קוראים לך?' : "Hi! What's your name?",
   ob1_placeholder: isHE ? 'השם שלך...' : 'Your name...',
   ob1_dad: isHE ? '👨 אבא' : '👨 Dad',
   ob1_mom: isHE ? '👩 אמא' : '👩 Mom',
   ob1_next: isHE ? 'המשך ←' : 'Continue ←',
   ob2_step: isHE ? 'שלב 2 מתוך 4' : 'Step 2 of 4',
-  ob2_q: isHE ? 'מה אתה אוהב?' : 'What do you enjoy?',
+  ob2_q: isHE ? "מה אתה אוהב?" : "What do you enjoy?",
   ob2_hint: isHE ? 'בחר כמה שרוצה' : 'Choose as many as you like',
   ob2_hike: isHE ? 'טיולים' : 'Hiking',
   ob2_cook: isHE ? 'בישול' : 'Cooking',
@@ -571,7 +571,7 @@ const T = {
   ob2_music: isHE ? 'מוזיקה' : 'Music',
   ob3_step: isHE ? 'שלב 3 מתוך 4' : 'Step 3 of 4',
   ob3_q: isHE ? 'ספר לי על הילד שלך' : 'Tell me about your child',
-  ob3_child_placeholder: isHE ? 'שם הילד...' : 'Child's name...',
+  ob3_child_placeholder: isHE ? 'שם הילד...' : "Child's name...",
   ob3_age: isHE ? 'גיל' : 'Age',
   ob3_rel_q: isHE ? 'מצב הקשר היום?' : 'How is your connection today?',
   ob3_great: isHE ? '🏔️  מצוין — קרובים מאוד' : '🏔️  Great — very close',
@@ -588,19 +588,17 @@ const T = {
   ob4_rel_sub: isHE ? 'תורה, שבת, מידות — חיים לפי ערכים יהודיים' : 'Torah, Shabbat, values — living by Jewish principles',
   ob4_seek: isHE ? '🔍 בדרך' : '🔍 Exploring',
   ob4_seek_sub: isHE ? 'שואל שאלות, מחפש חיבור' : 'Asking questions, seeking connection',
-  ob4_go: isHE ? 'בואו נתחיל! 🚀' : "Let's go! 🚀",
+  ob4_go: isHE ? "בואו נתחיל! 🚀" : "Let's go! 🚀",
   // Loading
   load_msg: isHE ? 'מכין פעילות מותאמת אישית...' : 'Preparing your personalized activity...',
-  load_title: isHE ? 'Bondy לומד
-על המשפחה שלך' : 'Bondy is learning
-about your family',
+  load_title: isHE ? "Bondy לומד\nעל המשפחה שלך" : "Bondy is learning\nabout your family",
   // Home
   home_greet: isHE ? 'שלום,' : 'Hello,',
   home_streak: isHE ? 'שבוע {n} ברצף' : 'Week {n} streak',
   home_keep: isHE ? 'תמשיך כך!' : 'Keep it up!',
   home_weekly: isHE ? 'הפעילות השבועית שלך' : 'Your weekly activity',
   home_badge: isHE ? '✨ מותאם אישית · AI' : '✨ Personalized · AI',
-  home_do: isHE ? 'בוא נעשה את זה! ←' : "Let's do it! ←",
+  home_do: isHE ? "בוא נעשה את זה! ←" : "Let's do it! ←",
   home_dinner: isHE ? 'שאלה לארוחת ערב הערב' : "Tonight's dinner question",
   home_nearby: isHE ? 'קרוב אליך עכשיו 📍' : 'Near you right now 📍',
   home_refresh: isHE ? 'רענן' : 'Refresh',
@@ -619,13 +617,9 @@ about your family',
   q_refresh: isHE ? '🔄 רענן' : '🔄 Refresh',
   q_left: isHE ? ' שאלות נותרו' : ' questions left',
   q_done_title: isHE ? 'כל הכבוד!' : 'Well done!',
-  q_done_sub: isHE ? 'עברתם על כל השאלות ביחד.
-כל שאלה היא עוד שלב בקשר.' : 'You went through all questions together.
-Each one brings you closer.',
+  q_done_sub: isHE ? "עברתם על כל השאלות ביחד.\nכל שאלה היא עוד שלב בקשר." : "You went through all questions together.\nEach one brings you closer.",
   q_premium: isHE ? '⭐ בונדי פרמיום' : '⭐ Bondy Premium',
-  q_premium_sub: isHE ? 'שאלות ללא הגבלה,
-מותאמות לכל שלב בגיל הילד' : 'Unlimited questions,
-tailored to every stage of childhood',
+  q_premium_sub: isHE ? "שאלות ללא הגבלה, מותאמות לכל שלב בגיל הילד" : "Unlimited questions, tailored to every stage of childhood",
   q_more: isHE ? '✨ קבל עוד שאלות' : '✨ Get more questions',
   q_restart: isHE ? 'חזור להתחלה' : 'Start over',
   // Memory save
@@ -644,7 +638,7 @@ tailored to every stage of childhood',
   j_activities: isHE ? ' פעילויות' : ' activities',
   j_all: isHE ? 'כל הפעילויות' : 'All Activities',
   j_empty: isHE ? 'עדיין אין זיכרונות' : 'No memories yet',
-  j_first: isHE ? 'עשו פעילות ראשונה!' : 'Do your first activity!',
+  j_first: isHE ? "עשו פעילות ראשונה!" : "Do your first activity!",
   // Profile
   p_parent: isHE ? 'הורה ל' : 'Parent of ',
   p_age: isHE ? 'גיל' : 'Age ',
@@ -1077,6 +1071,11 @@ function loadNearby(){
 
 // ══════════════ TRANSLATIONS ══════════════
 function applyTranslations(){
+  // Splash
+  const splashHeadline = document.getElementById('splashHeadline');
+  if(splashHeadline) splashHeadline.innerHTML = T.splash_headline1 + '<br>' + (isHE ? 'עוד מסך.' : 'another screen.') + '<br><strong>' + T.splash_headline3 + '</strong>';
+  const splashBtn = document.getElementById('splashStart');
+  if(splashBtn) splashBtn.textContent = T.splash_start;
   // Nav labels
   document.querySelectorAll('.ni').forEach(el => {
     const ic = el.querySelector('.ni-ic');
@@ -1101,6 +1100,7 @@ function applyTranslations(){
 
 // ══════════════ INIT ══════════════
 window.addEventListener('load',()=>{
+  applyTranslations();
   if(S.parent.name&&S.child.name){
     if(S.activity) go('home');
     else go('loading');
