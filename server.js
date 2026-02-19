@@ -25,7 +25,8 @@ app.post('/api/activity', async (req, res) => {
       'פרופיל הורה: שם ' + parentName + ', תחומי עניין: ' + (interests || []).join(', ') + ', מסורת: ' + (tradMap[tradition] || 'חילוני') + '\n' +
       'פרופיל ילד: שם ' + childName + ', גיל ' + childAge + ', מצב קשר: ' + relation + '\n' +
       pastStr +
-      'חשוב: השתמש בשם הילד (' + childName + ') ובמילה "אבא" או "אמא" — לא בשם ההורה. השתמש רק באמוג\u05d9ים מהטבע, בית, משפחה, אוכל — לא טכנולוגיה.\n' +
+      'חשוב: השתמש בשם הילד (' + childName + ') ובמילה "אבא" או "אמא" — לא בשם ההורה.\n' +
+      'אמוג\u05d9י מותרים בלבד: 🌿 🔥 🌊 🏔️ 🌙 ⭐ 🍃 🌻 🕊️ 🪵 🌾 🍳 🎣 🌲 🧺 🪴 🏕️ 🌅 🍂 🌈 — בחר את המתאים ביותר לפעילות.\n' +
       'צור פעילות שבועית אחת מותאמת אישית. החזר JSON בלבד בעברית, ללא טקסט נוסף:\n' +
       '{"emoji":"","title":"","description":"","why":"","duration":"","steps":["","","",""],"questions":["","",""],"tip":"","dailyQuestion":""}';
 
@@ -150,6 +151,66 @@ app.get('/api/profile/:userId', async (req, res) => {
     if (error && error.code !== 'PGRST116') throw error;
     res.json({ success: true, profile: data || null });
   } catch (error) {
+    res.json({ success: false, error: error.message });
+  }
+});
+
+
+// ════════════════════════════════════════
+// ROUTE: Get Nearby Places
+// POST /api/nearby
+// Body: { lat, lng, childAge }
+// ════════════════════════════════════════
+app.post('/api/nearby', async (req, res) => {
+  try {
+    const { lat, lng, childAge } = req.body;
+    const apiKey = process.env.GOOGLE_PLACES_KEY;
+
+    if (!apiKey) {
+      // Return mock data if no key configured
+      return res.json({ success: true, places: [
+        { name: 'פארק קרוב', type: 'park', distance: '500מ', emoji: '🌿', tip: 'מושלם לטיול קצר' },
+        { name: 'מגרש משחקים', type: 'playground', distance: '800מ', emoji: '🌲', tip: 'אידיאלי לגיל ' + childAge }
+      ]});
+    }
+
+    // Search for family-friendly places
+    const types = ['park', 'museum', 'zoo', 'amusement_park', 'campground'];
+    const results = [];
+
+    for (const type of types.slice(0, 2)) {
+      const url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json' +
+        '?location=' + lat + ',' + lng +
+        '&radius=5000' +
+        '&type=' + type +
+        '&language=he' +
+        '&key=' + apiKey;
+
+      const r = await fetch(url);
+      const data = await r.json();
+
+      if (data.results) {
+        data.results.slice(0, 2).forEach(place => {
+          const dist = Math.round(Math.sqrt(
+            Math.pow((place.geometry.location.lat - lat) * 111000, 2) +
+            Math.pow((place.geometry.location.lng - lng) * 111000, 2)
+          ));
+          const emojiMap = { park: '🌿', museum: '🏛️', zoo: '🦁', amusement_park: '🎡', campground: '🏕️' };
+          results.push({
+            name: place.name,
+            type: type,
+            distance: dist > 1000 ? Math.round(dist/100)/10 + 'ק"מ' : dist + 'מ'',
+            emoji: emojiMap[type] || '📍',
+            rating: place.rating,
+            tip: 'מדורג ' + (place.rating || '?') + '/5 · פתוח עכשיו'
+          });
+        });
+      }
+    }
+
+    res.json({ success: true, places: results.slice(0, 4) });
+  } catch (error) {
+    console.error('Nearby error:', error);
     res.json({ success: false, error: error.message });
   }
 });
