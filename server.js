@@ -14,7 +14,9 @@ app.post('/api/activity', async (req, res) => {
   try {
     const { parentName, interests, tradition, childName, childAge, relation, pastActivities } = req.body;
     const pastStr = (pastActivities && pastActivities.length) ? 'Do not repeat: ' + pastActivities.join(', ') + '. ' : '';
-    const prompt = 'You are Bondy. Design a Hebrew parent-child bonding activity.\n' +
+    const { lang } = req.body;
+    const outputLang = lang === 'en' ? 'English' : 'Hebrew';
+    const prompt = 'You are Bondy. Design a parent-child bonding activity in ' + outputLang + '.\n' +
       'Parent: ' + (parentName||'') + ', interests: ' + (interests||[]).join(',') + ', tradition: ' + (tradition||'') + '\n' +
       'Child: name=' + (childName||'') + ' age=' + (childAge||'') + ' relation=' + (relation||'') + '\n' +
       pastStr + '\n' +
@@ -40,7 +42,9 @@ app.post('/api/activity', async (req, res) => {
 app.post('/api/questions', async (req, res) => {
   try {
     const { childAge } = req.body;
-    const prompt = 'Create 6 Hebrew conversation questions for family dinner, child age ' + (childAge||'8') + '.\n' +
+    const { lang } = req.body;
+    const outputLang = lang === 'en' ? 'English' : 'Hebrew';
+    const prompt = 'Create 6 ' + outputLang + ' conversation questions for family dinner, child age ' + (childAge||'8') + '.\n' +
       'Return ONLY valid JSON:\n' +
       '{"questions":[{"text":"","cat":"dream"},{"text":"","cat":"fun"},{"text":"","cat":"values"},{"text":"","cat":"future"},{"text":"","cat":"past"},{"text":"","cat":"imagine"}]}';
     const r = await fetch('https://api.anthropic.com/v1/messages', {
