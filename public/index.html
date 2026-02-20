@@ -784,7 +784,7 @@ const SERVER = window.location.hostname === ‘localhost’
 
 async function callServer(endpoint, body){
 try{
-const r=await fetch(`${SERVER}${endpoint}`,{
+const r=await fetch(SERVER+endpoint,{
 method:‘POST’,
 headers:{‘Content-Type’:‘application/json’},
 body:JSON.stringify(body)
@@ -902,7 +902,7 @@ if(el) el.textContent = remaining + T.q_left;
 return;
 }
 // Show empty state with upsell
-if(stack) stack.innerHTML = ` <div style="position:absolute;inset:0;background:var(--forest);border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center"> <div style="font-size:42px;margin-bottom:14px">🌿</div> <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:8px">כל הכבוד!</div> <div style="font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:20px">עברתם על כל השאלות ביחד.<br>כל שאלה היא עוד שלב בקשר.</div> <div style="background:rgba(255,255,255,.1);border:1px solid rgba(196,168,130,.4);border-radius:14px;padding:14px 16px;margin-bottom:16px;width:100%"> <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--earth);margin-bottom:6px">⭐ בונדי פרמיום</div> <div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.6">שאלות ללא הגבלה,<br>מותאמות לכל שלב בגיל הילד</div> </div> <button onclick="genQuestions()" style="background:var(--earth);color:var(--dark);border:none;border-radius:12px;padding:13px 24px;font-size:14px;font-weight:800;font-family:'Heebo',sans-serif;cursor:pointer;width:100%;margin-bottom:8px">✨ קבל עוד שאלות</button> <button onclick="cardIndex=0;buildCardStack()" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);border:none;border-radius:12px;padding:10px 24px;font-size:13px;font-weight:600;font-family:'Heebo',sans-serif;cursor:pointer;width:100%">חזור להתחלה</button> </div>`;
+if(stack) stack.innerHTML = ‘\n    <div style="position:absolute;inset:0;background:var(--forest);border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center">\n      <div style="font-size:42px;margin-bottom:14px">🌿</div>\n      <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:8px">כל הכבוד!</div>\n      <div style="font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:20px">עברתם על כל השאלות ביחד.<br>כל שאלה היא עוד שלב בקשר.</div>\n      <div style="background:rgba(255,255,255,.1);border:1px solid rgba(196,168,130,.4);border-radius:14px;padding:14px 16px;margin-bottom:16px;width:100%">\n        <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--earth);margin-bottom:6px">⭐ בונדי פרמיום</div>\n        <div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.6">שאלות ללא הגבלה,<br>מותאמות לכל שלב בגיל הילד</div>\n      </div>\n      <button onclick="genQuestions()" style="background:var(--earth);color:var(--dark);border:none;border-radius:12px;padding:13px 24px;font-size:14px;font-weight:800;font-family:\'Heebo\',sans-serif;cursor:pointer;width:100%;margin-bottom:8px">✨ קבל עוד שאלות</button>\n      <button onclick="cardIndex=0;buildCardStack()" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);border:none;border-radius:12px;padding:10px 24px;font-size:13px;font-weight:600;font-family:\'Heebo\',sans-serif;cursor:pointer;width:100%">חזור להתחלה</button>\n    </div>’;
 if(el) el.textContent = ‘’;
 }
 
@@ -969,10 +969,10 @@ if(btn){ btn.innerHTML=‘🔄 רענן’; btn.disabled=false; }
 // ══════════════ UPDATE SCREENS ══════════════
 function updateHome(){
 const n=S.parent.name||’—’;
-document.getElementById(‘hpName’).textContent=`${n} 👋`;
+document.getElementById(‘hpName’).textContent=n+” 👋”;
 document.getElementById(‘hAv’).textContent=n[0]||’?’;
 document.getElementById(‘sNum’).textContent=S.streak;
-document.getElementById(‘sTxt’).textContent=`שבוע ${S.streak} ברצף`;
+document.getElementById(‘sTxt’).textContent=“שבוע “+S.streak+” ברצף”;
 const act=S.activity;
 if(act){
 document.getElementById(‘aEm’).textContent=act.emoji||‘🎯’;
@@ -981,8 +981,8 @@ const gender = S.parent.gender;
 const parentTitle = gender === ‘mom’ ? ‘אמא’ : ‘אבא’;
 const desc = (act.description||’’).replace(new RegExp(S.parent.name, ‘g’), parentTitle);
 document.getElementById(‘aDesc’).textContent=desc;
-document.getElementById(‘aDur’).textContent=`⏱ ${act.duration||'—'}`;
-document.getElementById(‘aAge’).textContent=`👧 גיל ${S.child.age}`;
+document.getElementById(‘aDur’).textContent=“⏱ “+(act.duration||”—”);
+document.getElementById(‘aAge’).textContent=“👧 גיל “+S.child.age;
 document.getElementById(‘dQ’).textContent=act.dailyQuestion||’—’;
 // detail
 document.getElementById(‘dEm’).textContent=act.emoji||‘🎯’;
@@ -992,18 +992,18 @@ const parentTitle2 = gender2 === ‘mom’ ? ‘אמא’ : ‘אבא’;
 const why = (act.why||’’).replace(new RegExp(S.parent.name, ‘g’), parentTitle2);
 document.getElementById(‘dWhy’).textContent=why;
 document.getElementById(‘memSub’).textContent=act.title||’—’;
-document.getElementById(‘memQLabel’).textContent=`מה ${S.child.name||'הילד'} אמר/ה שתזכור?`;
+document.getElementById(‘memQLabel’).textContent=“מה “+(S.child.name||“הילד”)+” אמר/ה שתזכור?”;
 document.getElementById(‘stepsList’).innerHTML=(act.steps||[]).map((s,i)=>
-`<div class="step-row"><div class="step-n">${i+1}</div><div class="step-t">${s}</div></div>`).join(’’);
+“<div class='step-row'><div class='step-n'>”+(i+1)+”</div><div class='step-t'>”+s+”</div></div>”).join(’’);
 document.getElementById(‘qList’).innerHTML=(act.questions||[]).map(q=>
-`<div class="qitem">${q}</div>`).join(’’);
-document.getElementById(‘tipBox’).textContent=`💡 ${act.tip||''}`;
+“<div class='qitem'>”+q+”</div>”).join(’’);
+document.getElementById(‘tipBox’).textContent=“💡 “+(act.tip||””);
 }
 }
 
 function updateJournal(){
 const pn=S.parent.name||’’, cn=S.child.name||‘הילד’;
-document.getElementById(‘jSub’).textContent=`${pn} ו${cn} · ${S.memories.length} פעילויות`;
+document.getElementById(‘jSub’).textContent=pn+” ו”+cn+” · “+S.memories.length+” פעילויות”;
 document.getElementById(‘statN’).textContent=S.memories.length;
 const grid=document.getElementById(‘memGrid’);
 if(!S.memories.length){
@@ -1011,7 +1011,7 @@ grid.innerHTML=’<div class="mitem mf"><div class="miem">💚</div><div class="
 return;
 }
 grid.innerHTML=S.memories.map((m,i)=>
-`<div class="mitem ${i===0?'mf':'mr'}"><div class="miem">${m.emoji}</div><div class="miname">${m.title}</div><div class="midate">${m.date}</div></div>`
+‘<div class="mitem ${i===0?\'mf\':\'mr\'}"><div class="miem">${m.emoji}</div><div class="miname">${m.title}</div><div class="midate">${m.date}</div></div>’
 ).join(’’);
 }
 
@@ -1020,7 +1020,7 @@ const p=S.parent, c=S.child;
 const n=p.name||’—’;
 document.getElementById(‘pAvatar’).textContent=n[0]||’?’;
 document.getElementById(‘pPname’).textContent=n;
-document.getElementById(‘pPtag’).textContent=`הורה ל${c.name||'—'} · גיל ${c.age}`;
+document.getElementById(‘pPtag’).textContent=“הורה ל”+(c.name||”—”)+” · גיל “+c.age;
 document.getElementById(‘ppName’).textContent=n;
 const intMap = {hike:‘טיולים’,cook:‘בישול’,sport:‘ספורט’,art:‘אמנות’,science:‘מדע’,music:‘מוזיקה’};
 const translatedInterests = (p.interests||[]).map(i=>intMap[i]||i).join(’, ‘);
@@ -1055,7 +1055,7 @@ const mem={emoji:S.activity?.emoji||‘🎯’,title:S.activity?.title||‘פע�
 S.memories.unshift(mem);
 S.streak+=1;
 save();
-document.getElementById(‘savedSub’).textContent=`הרגע הזה עם ${S.child.name} שמור לתמיד.`;
+document.getElementById(‘savedSub’).textContent=“הרגע הזה עם “+S.child.name+” שמור לתמיד.”;
 document.getElementById(‘savedSN’).textContent=S.streak;
 go(‘memsaved’);
 }
