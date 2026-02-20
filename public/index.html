@@ -700,30 +700,18 @@ try{ const s=localStorage.getItem(‘bondy2’);if(s) S=JSON.parse(s); }catch(e)
 const save=()=>{ try{localStorage.setItem(‘bondy2’,JSON.stringify(S));}catch(e){} };
 
 // ══════════════ NAV ══════════════
-function showDebug(msg){
-let d = document.getElementById(‘debugBox’);
-if(!d){ d=document.createElement(‘div’); d.id=‘debugBox’;
-d.style=‘position:fixed;bottom:0;left:0;right:0;background:red;color:#fff;font-size:11px;padding:8px;z-index:9999;max-height:120px;overflow:auto;direction:ltr’;
-document.body.appendChild(d); }
-d.innerHTML += ‘<div>’ + msg + ‘</div>’;
-}
-
 function go(id){
-try{
-showDebug(‘go(’ + id + ‘) called’);
 document.querySelectorAll(’.screen’).forEach(s=>s.classList.remove(‘active’));
-const sc=document.getElementById(id);
-if(!sc){showDebug(’ERROR: screen not found: ’+id);return;}
+var sc=document.getElementById(id);
+if(!sc) return;
 sc.classList.add(‘active’);
-showDebug(‘screen ’ + id + ’ activated’);
 if(sc.scrollTop!==undefined) sc.scrollTop=0;
 if(id===‘loading’) setTimeout(generateActivity,300);
 if(id===‘home’) updateHome();
 if(id===‘journal’) updateJournal();
 if(id===‘profile’) updateProfile();
 if(id===‘questions’) updateQuestions();
-applyTranslations();
-}catch(e){console.error(‘go() error:’,e);}
+try{ applyTranslations(); }catch(e){}
 }
 
 // ══════════════ OB HELPERS ══════════════
@@ -1111,7 +1099,7 @@ else go(‘loading’);
 
 // ══════════════ TRANSLATIONS ══════════════
 function applyTranslations(){
-try {
+try { if(typeof T === ‘undefined’) return;
 const splashHeadline = document.getElementById(‘splashHeadline’);
 if(splashHeadline) splashHeadline.innerHTML = T.splash_headline1 + ‘<br>’ + (isHE ? ‘עוד מסך.’ : ‘another screen.’) + ‘<br><strong>’ + T.splash_headline3 + ‘</strong>’;
 const splashBtn = document.getElementById(‘splashStart’);
@@ -1148,12 +1136,6 @@ if(swipeHint) swipeHint.innerHTML = ’← ’ + (isHE ? ‘העבר לשאלה 
 // ══════════════ INIT ══════════════
 window.addEventListener(‘load’,()=>{
 applyTranslations();
-
-// Splash buttons - using addEventListener for Safari compatibility
-const btnStart = document.getElementById(‘btnStart’);
-const btnLogin = document.getElementById(‘btnLogin’);
-if(btnStart) btnStart.addEventListener(‘click’, function(){ showDebug(‘btnStart clicked’); go(‘ob1’); });
-if(btnLogin) btnLogin.addEventListener(‘click’, function(){ loginFlow(); });
 
 if(S.parent.name&&S.child.name){
 if(S.activity) go(‘home’);
