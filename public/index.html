@@ -5,13 +5,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bondy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=block">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
+/* Heebo must load before render */
+body { font-family: 'Heebo', sans-serif; }
+button, input, select, textarea { font-family: 'Heebo', sans-serif !important; }
 </style>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-button { font-family:'Heebo',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif; }
-body { font-family:'Heebo',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif; background:#2D5016; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+button { font-family:'Heebo',sans-serif; }
+body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; display:flex; align-items:center; justify-content:center; }
 .app { width:100%; max-width:430px; min-height:100vh; background:#FAF7F2; position:relative; overflow:hidden; }
 .screen { display:none; flex-direction:column; min-height:100vh; }
 .screen.active { display:flex; }
@@ -23,21 +28,21 @@ body { font-family:'Heebo',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,san
 .tagline { font-size:11px; letter-spacing:4px; color:rgba(255,255,255,.4); margin-bottom:60px; }
 .headline { font-size:26px; color:#fff; line-height:1.5; margin-bottom:50px; }
 .headline strong { font-weight:900; }
-.btn { width:100%; padding:18px; border:none; border-radius:14px; font-size:17px; font-weight:700; font-family:‘Heebo’,-apple-system,BlinkMacSystemFont,‘Segoe UI’,Arial,sans-serif; cursor:pointer; margin-bottom:12px; display:block; }
-.opt { font-family:‘Heebo’,-apple-system,BlinkMacSystemFont,‘Segoe UI’,Arial,sans-serif; }
+.btn { width:100%; padding:18px; border:none; border-radius:14px; font-size:17px; font-weight:700; font-family:‘Heebo’,sans-serif; cursor:pointer; margin-bottom:12px; display:block; }
+.opt { font-family:‘Heebo’,sans-serif; }
 .btn-primary { background:#C4A882; color:#1A1410; }
 .btn-secondary { background:rgba(255,255,255,.12); color:rgba(255,255,255,.8); }
 
 /* OB */
 .ob { background:#FAF7F2; padding:52px 22px 28px; }
 .ob-title { font-size:22px; font-weight:700; color:#1A1410; margin-bottom:24px; }
-.inp { width:100%; padding:16px; border:2px solid #EDE5D8; border-radius:12px; font-size:16px; font-family:‘Heebo’,-apple-system,BlinkMacSystemFont,‘Segoe UI’,Arial,sans-serif; background:#fff; color:#1A1410; margin-bottom:16px; }
+.inp { width:100%; padding:16px; border:2px solid #EDE5D8; border-radius:12px; font-size:16px; font-family:‘Heebo’,sans-serif; background:#fff; color:#1A1410; margin-bottom:16px; }
 .inp:focus { outline:none; border-color:#2D5016; }
 .opts { display:flex; gap:10px; margin-bottom:20px; }
 .opts.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
 .opts.grid .opt { flex:none; aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; font-size:13px; }
 .opts.grid .opt .opt-emoji { font-size:24px; }
-.opt { flex:1; padding:14px; border:2px solid #EDE5D8; border-radius:12px; text-align:center; font-size:15px; font-family:‘Heebo’,-apple-system,BlinkMacSystemFont,‘Segoe UI’,Arial,sans-serif; cursor:pointer; background:#fff; }
+.opt { flex:1; padding:14px; border:2px solid #EDE5D8; border-radius:12px; text-align:center; font-size:15px; font-family:‘Heebo’,sans-serif; cursor:pointer; background:#fff; }
 .opt.sel { border-color:#2D5016; background:#2D5016; color:#fff; font-weight:700; }
 .btn-green { background:#2D5016; color:#fff; }
 .label { font-size:13px; color:#8B7B6B; margin-bottom:8px; }
@@ -186,7 +191,7 @@ body { font-family:'Heebo',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,san
         <h1>שאלות לשיחה</h1>
         <div style="font-size:13px;color:rgba(255,255,255,.6)">לארוחת ערב ולכל רגע</div>
       </div>
-      <button onclick="loadQuestions()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:20px;font-family:'Heebo',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:13px;cursor:pointer">רענן ↻</button>
+      <button onclick="loadQuestions()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:20px;font-family:'Heebo',sans-serif;font-size:13px;cursor:pointer">רענן ↻</button>
     </div>
   </div>
   <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto" id="qList">
@@ -417,16 +422,18 @@ async function loadQuestions(){
   el.innerHTML = '<div style="text-align:center;color:#8B7B6B;padding:40px">טוען שאלות...</div>';
   var result = await callServer('/api/questions', {
     childName: S.child.name, childAge: S.child.age, childGender: S.child.gender,
-    parentName: S.parent.name
+    childInterests: S.child.interests||[],
+    parentName: S.parent.name, parentGender: S.parent.gender
   });
   if(result && result.questions && result.questions.length){
     el.innerHTML = '';
     result.questions.forEach(function(q, i){
       var d = document.createElement('div');
-      d.style = 'background:#fff;border-radius:20px;padding:28px 24px;margin-bottom:14px;box-shadow:0 4px 16px rgba(0,0,0,.08);position:relative';
-      d.innerHTML = '<div style="font-size:11px;color:#C4A882;font-weight:700;margin-bottom:10px;letter-spacing:1px">שאלה ' + (i+1) + '</div>'
-        + '<div style="font-size:17px;font-weight:700;color:#1A1410;line-height:1.5">' + q + '</div>'
-        + '<div style="margin-top:16px;padding-top:12px;border-top:1px solid #EDE5D8;font-size:12px;color:#8B7B6B">💡 פותח דמיון ומגלה עולמות פנימיים</div>';
+      d.style = 'background:#fff;border-radius:24px;padding:32px 24px;margin-bottom:16px;box-shadow:0 8px 32px rgba(0,0,0,.10);border:1px solid rgba(196,168,130,.2);position:relative;overflow:hidden';
+      d.innerHTML = '<div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#2D5016,#C4A882)"></div>'
+        + '<div style="font-size:11px;color:#C4A882;font-weight:700;margin-bottom:14px;letter-spacing:2px">שאלה ' + (i+1) + ' מתוך ' + result.questions.length + '</div>'
+        + '<div style="font-size:19px;font-weight:700;color:#1A1410;line-height:1.6;margin-bottom:20px">' + q + '</div>'
+        + '<div style="background:#FAF7F2;border-radius:12px;padding:10px 14px;font-size:12px;color:#8B7B6B">💡 פותח דמיון ומגלה עולמות פנימיים</div>';
       el.appendChild(d);
     });
   } else {
@@ -440,10 +447,11 @@ async function loadQuestions(){
     el.innerHTML = '';
     fallbackQ.forEach(function(q, i){
       var d = document.createElement('div');
-      d.style = 'background:#fff;border-radius:20px;padding:28px 24px;margin-bottom:14px;box-shadow:0 4px 16px rgba(0,0,0,.08)';
-      d.innerHTML = '<div style="font-size:11px;color:#C4A882;font-weight:700;margin-bottom:10px;letter-spacing:1px">שאלה ' + (i+1) + '</div>'
-        + '<div style="font-size:17px;font-weight:700;color:#1A1410;line-height:1.5">' + q + '</div>'
-        + '<div style="margin-top:16px;padding-top:12px;border-top:1px solid #EDE5D8;font-size:12px;color:#8B7B6B">💡 פותח דמיון ומגלה עולמות פנימיים</div>';
+      d.style = 'background:#fff;border-radius:24px;padding:32px 24px;margin-bottom:16px;box-shadow:0 8px 32px rgba(0,0,0,.10);border:1px solid rgba(196,168,130,.2);position:relative;overflow:hidden';
+      d.innerHTML = '<div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#2D5016,#C4A882)"></div>'
+        + '<div style="font-size:11px;color:#C4A882;font-weight:700;margin-bottom:14px;letter-spacing:2px">שאלה ' + (i+1) + ' מתוך 5</div>'
+        + '<div style="font-size:19px;font-weight:700;color:#1A1410;line-height:1.6;margin-bottom:20px">' + q + '</div>'
+        + '<div style="background:#FAF7F2;border-radius:12px;padding:10px 14px;font-size:12px;color:#8B7B6B">💡 פותח דמיון ומגלה עולמות פנימיים</div>';
       el.appendChild(d);
     });
   }
