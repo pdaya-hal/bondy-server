@@ -324,7 +324,9 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
 
 <div id="profile" class="screen">
   <div class="home-head" style="position:relative">
-    <div onclick="go('home')" style="position:absolute;top:52px;right:16px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;color:#fff;cursor:pointer">← חזרה</div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+      <div onclick="go('home')" style="background:rgba(255,255,255,.2);border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#fff;cursor:pointer">← חזרה</div>
+    </div>
     <div style="font-size:48px;margin-bottom:8px">👤</div>
     <h1 id="profName">פרופיל</h1>
     <div style="font-size:13px;color:rgba(255,255,255,.6)" id="profSub"></div>
@@ -418,7 +420,9 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
 
 <div id="profile" class="screen">
   <div class="home-head" style="position:relative">
-    <div onclick="go('home')" style="position:absolute;top:52px;right:16px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;color:#fff;cursor:pointer">← חזרה</div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+      <div onclick="go('home')" style="background:rgba(255,255,255,.2);border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#fff;cursor:pointer">← חזרה</div>
+    </div>
     <div style="font-size:48px;margin-bottom:8px">👤</div>
     <h1 id="profName">פרופיל</h1>
     <div style="font-size:13px;color:rgba(255,255,255,.6)" id="profSub"></div>
@@ -515,7 +519,7 @@ function go(id){
   if(sc){ sc.classList.add('active'); sc.scrollTop=0; }
   if(id==='home') updateHome();
   if(id==='loading') setTimeout(generateActivity, 300);
-  if(id==='questions'){ qIndex=0; loadQuestions(); }
+  if(id==='questions' && !qList.length){ qIndex=0; loadQuestions(); } else if(id==='questions'){ /* keep current state */ }
   if(id==='journal') updateJournal();
   if(id==='actdetail') updateDetail();
   if(id==='profile') updateProfile();
