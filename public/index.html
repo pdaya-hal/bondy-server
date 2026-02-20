@@ -222,14 +222,24 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
     <div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:4px" id="homeStreak">שבוע 1 ברצף 🔥</div>
   </div>
   <div class="home-body" style="padding-bottom:80px">
-    <div class="card" id="actCard">
-      <div style="font-size:13px;color:#8B7B6B;margin-bottom:8px">פעילות השבוע</div>
-      <div style="font-size:32px;margin-bottom:8px" id="actEmoji">🌿</div>
-      <div style="font-size:18px;font-weight:700;color:#1A1410;margin-bottom:8px" id="actTitle">טוען...</div>
-      <div style="font-size:14px;color:#8B7B6B;margin-bottom:16px" id="actDesc"></div>
-      <button class="btn btn-green" onclick="go('actdetail')">בוא נעשה את זה! ←</button>
+    <!-- Dinner question -->
+    <div class="card" id="dinnerCard" style="background:linear-gradient(135deg,#2D5016,#3A6B1E);margin-bottom:16px">
+      <div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:8px;letter-spacing:1px">💬 שאלה לארוחת ערב</div>
+      <div style="font-size:16px;font-weight:700;color:#fff;line-height:1.5;margin-bottom:16px" id="dinnerQ">טוען שאלה...</div>
+      <button onclick="go('questions')" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:12px;padding:10px 16px;font-size:13px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer">עוד שאלות ←</button>
     </div>
-    <button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">✨ קסום לי פעילות אחרת</button>
+
+```
+<div class="card" id="actCard">
+  <div style="font-size:13px;color:#8B7B6B;margin-bottom:8px">פעילות השבוע</div>
+  <div style="font-size:32px;margin-bottom:8px" id="actEmoji">🌿</div>
+  <div style="font-size:18px;font-weight:700;color:#1A1410;margin-bottom:8px" id="actTitle">טוען...</div>
+  <div style="font-size:14px;color:#8B7B6B;margin-bottom:16px" id="actDesc"></div>
+  <button class="btn btn-green" onclick="go('actdetail')">בוא נעשה את זה! ←</button>
+</div>
+<button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">✨ קסום לי פעילות אחרת</button>
+```
+
   </div>
   <div class="nav">
     <div class="nav-item active" onclick="go('home')">🏠<span>בית</span></div>
@@ -345,6 +355,19 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
 <!-- Settings -->
 <div class="card" style="margin-bottom:12px">
   <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הגדרות</div>
+  <div onclick="toggleReminder()" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #EDE5D8;cursor:pointer">
+    <div>
+      <div style="color:#1A1410;font-size:15px">🔔 תזכורת לארוחת ערב</div>
+      <div style="color:#8B7B6B;font-size:12px;margin-top:2px" id="reminderStatus">לא מופעל</div>
+    </div>
+    <div id="reminderToggle" style="width:44px;height:26px;border-radius:13px;background:#EDE5D8;position:relative;transition:background .3s">
+      <div id="reminderThumb" style="position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.2);transition:transform .3s"></div>
+    </div>
+  </div>
+  <div id="reminderTimeRow" style="display:none;padding:12px 0;border-bottom:1px solid #EDE5D8">
+    <div style="color:#8B7B6B;font-size:13px;margin-bottom:8px">שעת התזכורת</div>
+    <input type="time" id="reminderTime" value="18:30" onchange="saveReminderTime()" style="border:2px solid #EDE5D8;border-radius:10px;padding:8px 12px;font-size:15px;font-family:Heebo,sans-serif;color:#1A1410;background:#fff">
+  </div>
   <div onclick="confirmReset()" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #EDE5D8;cursor:pointer">
     <span style="color:#1A1410;font-size:15px">🔄 התחל מחדש</span>
     <span style="color:#8B7B6B">›</span>
@@ -426,6 +449,19 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
 <!-- Settings -->
 <div class="card" style="margin-bottom:12px">
   <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הגדרות</div>
+  <div onclick="toggleReminder()" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #EDE5D8;cursor:pointer">
+    <div>
+      <div style="color:#1A1410;font-size:15px">🔔 תזכורת לארוחת ערב</div>
+      <div style="color:#8B7B6B;font-size:12px;margin-top:2px" id="reminderStatus">לא מופעל</div>
+    </div>
+    <div id="reminderToggle" style="width:44px;height:26px;border-radius:13px;background:#EDE5D8;position:relative;transition:background .3s">
+      <div id="reminderThumb" style="position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.2);transition:transform .3s"></div>
+    </div>
+  </div>
+  <div id="reminderTimeRow" style="display:none;padding:12px 0;border-bottom:1px solid #EDE5D8">
+    <div style="color:#8B7B6B;font-size:13px;margin-bottom:8px">שעת התזכורת</div>
+    <input type="time" id="reminderTime" value="18:30" onchange="saveReminderTime()" style="border:2px solid #EDE5D8;border-radius:10px;padding:8px 12px;font-size:15px;font-family:Heebo,sans-serif;color:#1A1410;background:#fff">
+  </div>
   <div onclick="confirmReset()" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #EDE5D8;cursor:pointer">
     <span style="color:#1A1410;font-size:15px">🔄 התחל מחדש</span>
     <span style="color:#8B7B6B">›</span>
@@ -575,6 +611,7 @@ async function generateActivity(){
 }
 
 function updateHome(){
+  loadDinnerQuestion();
   var el = document.getElementById('homeTitle');
   if(el) el.textContent = 'שלום, ' + (S.parent.name||'') + ' 👋';
   var st = document.getElementById('homeStreak');
@@ -681,8 +718,8 @@ function buildQCards(){
     var depth = i; // how deep in stack (0=top)
     card.style.cssText = [
       'position:absolute',
-      'width:100%',
-      'height:100%',
+      'width:calc(100% - 40px)',
+      'height:calc(100% - 20px)',
       'background:#fff',
       'border-radius:28px',
       'box-shadow:0 16px 48px rgba(0,0,0,.14)',
@@ -728,18 +765,22 @@ function getCardTransform(depth){
 }
 
 function dismissTopCard(){
-  if(qIndex >= qList.length - 1) return;
   var topCard = document.getElementById('qcard' + qIndex);
   if(!topCard) return;
 
-  // Fly top card off to the left and behind
   topCard.style.transition = 'transform .4s cubic-bezier(.4,0,.2,1), opacity .35s';
   topCard.style.transform = 'translateX(-110%) rotate(-12deg) scale(0.85)';
   topCard.style.opacity = '0';
 
-  qIndex++;
+  // Last card?
+  if(qIndex >= qList.length - 1){
+    setTimeout(function(){
+      showQFinished();
+    }, 400);
+    return;
+  }
 
-  // Animate remaining cards forward
+  qIndex++;
   for(var i = qIndex; i < qList.length; i++){
     var c = document.getElementById('qcard' + i);
     if(!c) continue;
@@ -747,11 +788,50 @@ function dismissTopCard(){
     c.style.transform = getCardTransform(depth);
     c.style.opacity = depth < 3 ? '1' : '0';
   }
-
-  // Update dots
   updateQDots();
   var ctr = document.getElementById('qCounter');
   if(ctr) ctr.textContent = 'שאלה ' + (qIndex+1) + ' מתוך ' + qList.length;
+}
+
+function scrollToQIndex(idx){}
+
+function showQFinished(){
+  var deck = document.getElementById('qDeck');
+  if(!deck) return;
+  var el = document.createElement('div');
+  el.style.cssText = 'width:calc(100% - 40px);height:calc(100% - 20px);border-radius:28px;background:linear-gradient(160deg,#2D5016,#3A6B1E);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 16px 48px rgba(0,0,0,.2);text-align:center;padding:32px';
+  var logo = document.createElement('div');
+  logo.style.cssText = 'font-size:42px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:4px';
+  logo.innerHTML = 'bon<span style="color:#C4A882">dy</span>';
+  var sub = document.createElement('div');
+  sub.style.cssText = 'font-size:11px;color:rgba(255,255,255,.5);letter-spacing:3px;margin-bottom:32px';
+  sub.textContent = 'שאלות לשיחה';
+  var title = document.createElement('div');
+  title.style.cssText = 'font-size:17px;color:#fff;font-weight:700;margin-bottom:8px';
+  title.textContent = 'סיימתם את השאלות השבועיות! 🎉';
+  var desc = document.createElement('div');
+  desc.style.cssText = 'font-size:13px;color:rgba(255,255,255,.7);margin-bottom:32px;line-height:1.6';
+  desc.innerHTML = 'שאלות חדשות יגיעו בשבוע הבא.<br>רוצים מאגר בלתי נגמר?';
+  var btn1 = document.createElement('button');
+  btn1.style.cssText = 'background:#C4A882;color:#1A1410;border:none;border-radius:16px;padding:14px 28px;font-size:15px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;width:100%';
+  btn1.textContent = '⭐ שדרג לפרמיום';
+  btn1.onclick = showPremium;
+  var btn2 = document.createElement('button');
+  btn2.style.cssText = 'background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:16px;padding:12px 28px;font-size:14px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;width:100%;margin-top:10px';
+  btn2.textContent = '↺ שאלות מחדש';
+  btn2.onclick = loadQuestions;
+  el.appendChild(logo);
+  el.appendChild(sub);
+  el.appendChild(title);
+  el.appendChild(desc);
+  el.appendChild(btn1);
+  el.appendChild(btn2);
+  deck.innerHTML = '';
+  deck.appendChild(el);
+  var ctr = document.getElementById('qCounter');
+  if(ctr) ctr.textContent = 'סיום!';
+  var dots = document.getElementById('qDots');
+  if(dots) dots.innerHTML = '';
 }
 
 function updateQDots(){
@@ -787,7 +867,19 @@ function setupQSwipe(){
     var dx = e.changedTouches[0].clientX - qTouchX;
     var top = document.getElementById('qcard' + qIndex);
     if(Math.abs(dx) > 80){
-      dismissTopCard();
+      if(dx < 0){
+        dismissTopCard();
+      } else {
+        // swipe right = go back (if possible)
+        if(qIndex > 0){
+          qIndex--;
+          // re-show previous card
+          buildQCards();
+          scrollToQIndex(qIndex);
+        } else {
+          if(top){ top.style.transition='transform .3s'; top.style.transform=getCardTransform(0); }
+        }
+      }
     } else {
       if(top){
         top.style.transition = 'transform .3s';
@@ -814,6 +906,7 @@ async function loadQuestions(){
 }
 
 function updateProfile(){
+  updateReminderUI();
   var pn = document.getElementById('profName');
   var ps = document.getElementById('profSub');
   var ppn = document.getElementById('profParentName');
@@ -829,6 +922,73 @@ function updateProfile(){
       + '<div><div style="font-size:15px;font-weight:700;color:#1A1410">' + (S.child.name||'') + '</div>'
       + '<div style="font-size:12px;color:#8B7B6B">גיל ' + (S.child.age||'') + '</div></div></div>';
   }
+}
+
+// Dinner question on home
+var dinnerQuestions = [
+  'מה היה הרגע הכי טוב שלך היום?',
+  'אם היית יכול לשנות משהו מהיום — מה היה?',
+  'מה למדת היום שלא ידעת אתמול?',
+  'מי גרם לך לחייך היום?',
+  'אם היום היה סרט — איזה ז\u0027אנר הוא היה?',
+  'מה הדבר שאתה הכי מצפה לו מחר?',
+  'מה היה הדבר הכי מאתגר שעשית היום?'
+];
+
+function loadDinnerQuestion(){
+  var el = document.getElementById('dinnerQ');
+  if(!el) return;
+  var idx = new Date().getDay();
+  el.textContent = dinnerQuestions[idx % dinnerQuestions.length];
+}
+
+// Reminder toggle
+function toggleReminder(){
+  var on = S.reminder && S.reminder.on;
+  if(!on){
+    if('Notification' in window){
+      Notification.requestPermission().then(function(p){
+        if(p === 'granted'){
+          S.reminder = { on: true, time: '18:30' };
+          save();
+          updateReminderUI();
+          alert('תזכורת הופעלה! 🔔\nנשלח לך כל יום בשעה 18:30');
+        } else {
+          alert('יש לאפשר התראות בהגדרות הדפדפן');
+        }
+      });
+    } else {
+      S.reminder = { on: true, time: '18:30' };
+      save();
+      updateReminderUI();
+    }
+  } else {
+    S.reminder = { on: false, time: S.reminder.time||'18:30' };
+    save();
+    updateReminderUI();
+  }
+}
+
+function saveReminderTime(){
+  var t = document.getElementById('reminderTime');
+  if(!t) return;
+  if(!S.reminder) S.reminder = { on: true };
+  S.reminder.time = t.value;
+  save();
+}
+
+function updateReminderUI(){
+  var on = S.reminder && S.reminder.on;
+  var toggle = document.getElementById('reminderToggle');
+  var thumb = document.getElementById('reminderThumb');
+  var status = document.getElementById('reminderStatus');
+  var timeRow = document.getElementById('reminderTimeRow');
+  var timeInput = document.getElementById('reminderTime');
+  if(toggle) toggle.style.background = on ? '#2D5016' : '#EDE5D8';
+  if(thumb) thumb.style.transform = on ? 'translateX(-18px)' : 'translateX(0)';
+  if(status) status.textContent = on ? ('מופעל · ' + ((S.reminder&&S.reminder.time)||'18:30')) : 'לא מופעל';
+  if(timeRow) timeRow.style.display = on ? 'block' : 'none';
+  if(timeInput && S.reminder && S.reminder.time) timeInput.value = S.reminder.time;
 }
 
 function confirmReset(){
