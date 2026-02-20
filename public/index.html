@@ -240,7 +240,7 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
 
 <!-- QUESTIONS -->
 
-<div id="questions" class="screen" style="background:#F5F0E8">
+<div id="questions" class="screen" style="background:#E8E0D5">
   <div class="home-head">
     <div style="display:flex;justify-content:space-between;align-items:center">
       <div>
@@ -251,12 +251,10 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
     </div>
   </div>
 
-  <!-- Swipeable card strip -->
+  <!-- Stack deck area -->
 
-  <div style="flex:1;display:flex;align-items:center;overflow:hidden;position:relative">
-    <div id="qStrip" style="display:flex;align-items:center;gap:20px;padding:0 40px;height:100%;transition:transform .35s cubic-bezier(.4,0,.2,1);will-change:transform">
-      <!-- cards injected by JS -->
-    </div>
+  <div id="qDeck" style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:20px 32px">
+    <!-- cards injected by JS, stacked absolutely -->
   </div>
 
   <!-- Dots -->
@@ -517,80 +515,147 @@ var qFallback = [
   'מה החלום הכי מוזר שחלמת?',
   'אם היית יכול לשנות משהו אחד בעולם — מה היה?'
 ];
-var qCardW = 0;
 var qTouchX = 0;
+var qTouchY = 0;
+var qDragging = false;
 
 function buildQCards(){
-  var strip = document.getElementById('qStrip');
+  var deck = document.getElementById('qDeck');
   var dots = document.getElementById('qDots');
   var ctr = document.getElementById('qCounter');
-  if(!strip) return;
-
-  // Card width = screen width - 80px padding
-  qCardW = window.innerWidth - 80;
-
-  strip.innerHTML = '';
+  if(!deck) return;
+  deck.innerHTML = '';
   if(dots) dots.innerHTML = '';
 
-  qList.forEach(function(q, i){
+  // Build all cards, stacked on top of each other
+  // Render in reverse so first card is on top
+  for(var i = qList.length-1; i >= 0; i--){
     var card = document.createElement('div');
-    card.style.cssText = 'flex-shrink:0;width:' + qCardW + 'px;background:#fff;border-radius:28px;box-shadow:0 16px 48px rgba(0,0,0,.14);overflow:hidden;display:flex;flex-direction:column;height:calc(100vh - 280px);min-height:360px;';
+    card.id = 'qcard' + i;
+    var isTop = (i === 0);
+    var depth = i; // how deep in stack (0=top)
+    card.style.cssText = [
+      'position:absolute',
+      'width:100%',
+      'height:100%',
+      'background:#fff',
+      'border-radius:28px',
+      'box-shadow:0 16px 48px rgba(0,0,0,.14)',
+      'overflow:hidden',
+      'display:flex',
+      'flex-direction:column',
+      'transform-origin:bottom center',
+      'transition:transform .4s cubic-bezier(.4,0,.2,1), opacity .4s',
+      'transform:' + getCardTransform(depth),
+      'opacity:' + (depth < 3 ? 1 : 0),
+      'z-index:' + (qList.length - depth)
+    ].join(';');
     card.innerHTML = '<div style="height:6px;background:linear-gradient(90deg,#2D5016,#C4A882);flex-shrink:0"></div>'
-      + '<div style="padding:36px 28px;display:flex;flex-direction:column;flex:1;justify-content:space-between">'
+      + '<div style="padding:36px 28px 28px;display:flex;flex-direction:column;flex:1;justify-content:space-between">'
       + '<div>'
       + '<div style="font-size:11px;color:#C4A882;font-weight:700;letter-spacing:2px;margin-bottom:24px">שאלה ' + (i+1) + ' מתוך ' + qList.length + '</div>'
-      + '<div style="font-size:22px;font-weight:700;color:#1A1410;line-height:1.55">' + q + '</div>'
+      + '<div style="font-size:22px;font-weight:700;color:#1A1410;line-height:1.55">' + qList[i] + '</div>'
       + '</div>'
       + '<div style="background:#F5F0E8;border-radius:14px;padding:14px 18px;font-size:13px;color:#8B7B6B">' + qTips[i % qTips.length] + '</div>'
       + '</div>';
-    strip.appendChild(card);
+    deck.appendChild(card);
 
     // Dot
     if(dots){
       var dot = document.createElement('div');
-      dot.style.cssText = 'width:' + (i===0?'20':'8') + 'px;height:8px;border-radius:4px;background:' + (i===0?'#2D5016':'#C4A882') + ';transition:all .3s';
       dot.id = 'qdot' + i;
+      dot.style.cssText = 'width:' + (i===0?'20':'8') + 'px;height:8px;border-radius:4px;background:' + (i===0?'#2D5016':'rgba(196,168,130,.4)') + ';transition:all .3s';
       dots.appendChild(dot);
     }
-  });
-
+  }
   if(ctr) ctr.textContent = 'שאלה 1 מתוך ' + qList.length;
-  scrollToQ(0, false);
   setupQSwipe();
 }
 
-function scrollToQ(idx, animate){
-  var strip = document.getElementById('qStrip');
-  if(!strip) return;
-  qIndex = idx;
-  var offset = idx * (qCardW + 20);
-  strip.style.transition = animate ? 'transform .35s cubic-bezier(.4,0,.2,1)' : 'none';
-  strip.style.transform = 'translateX(' + offset + 'px)';
+function getCardTransform(depth){
+  // depth 0 = top card, full size
+  // depth 1 = slightly scaled down and moved up a bit
+  // depth 2 = more scaled
+  if(depth === 0) return 'translateY(0) scale(1)';
+  if(depth === 1) return 'translateY(-14px) scale(0.94)';
+  if(depth === 2) return 'translateY(-24px) scale(0.88)';
+  return 'translateY(-30px) scale(0.82)';
+}
+
+function dismissTopCard(){
+  if(qIndex >= qList.length - 1) return;
+  var topCard = document.getElementById('qcard' + qIndex);
+  if(!topCard) return;
+
+  // Fly top card off to the left and behind
+  topCard.style.transition = 'transform .4s cubic-bezier(.4,0,.2,1), opacity .35s';
+  topCard.style.transform = 'translateX(-110%) rotate(-12deg) scale(0.85)';
+  topCard.style.opacity = '0';
+
+  qIndex++;
+
+  // Animate remaining cards forward
+  for(var i = qIndex; i < qList.length; i++){
+    var c = document.getElementById('qcard' + i);
+    if(!c) continue;
+    var depth = i - qIndex;
+    c.style.transform = getCardTransform(depth);
+    c.style.opacity = depth < 3 ? '1' : '0';
+  }
+
   // Update dots
-  qList.forEach(function(_, i){
-    var d = document.getElementById('qdot' + i);
-    if(!d) return;
-    d.style.width = i===idx ? '20px' : '8px';
-    d.style.background = i===idx ? '#2D5016' : '#C4A882';
-  });
+  updateQDots();
   var ctr = document.getElementById('qCounter');
-  if(ctr) ctr.textContent = 'שאלה ' + (idx+1) + ' מתוך ' + qList.length;
+  if(ctr) ctr.textContent = 'שאלה ' + (qIndex+1) + ' מתוך ' + qList.length;
+}
+
+function updateQDots(){
+  for(var i = 0; i < qList.length; i++){
+    var d = document.getElementById('qdot' + i);
+    if(!d) continue;
+    d.style.width = i===qIndex ? '20px' : '8px';
+    d.style.background = i===qIndex ? '#2D5016' : 'rgba(196,168,130,.4)';
+  }
 }
 
 function setupQSwipe(){
-  var area = document.getElementById('qStrip');
-  if(!area) return;
-  area.ontouchstart = function(e){ qTouchX = e.touches[0].clientX; };
-  area.ontouchend = function(e){
+  var deck = document.getElementById('qDeck');
+  if(!deck) return;
+  deck.ontouchstart = function(e){
+    qTouchX = e.touches[0].clientX;
+    qTouchY = e.touches[0].clientY;
+    qDragging = true;
+  };
+  deck.ontouchmove = function(e){
+    if(!qDragging) return;
+    var dx = e.touches[0].clientX - qTouchX;
+    var dy = e.touches[0].clientY - qTouchY;
+    // Only handle horizontal swipes
+    if(Math.abs(dx) > Math.abs(dy)){
+      e.preventDefault();
+      var top = document.getElementById('qcard' + qIndex);
+      if(top) top.style.transform = 'translateX(' + dx + 'px) rotate(' + (dx * 0.05) + 'deg)';
+    }
+  };
+  deck.ontouchend = function(e){
+    if(!qDragging) return;
+    qDragging = false;
     var dx = e.changedTouches[0].clientX - qTouchX;
-    if(Math.abs(dx) > 40){
-      if(dx < 0 && qIndex < qList.length-1) scrollToQ(qIndex+1, true);
-      else if(dx > 0 && qIndex > 0) scrollToQ(qIndex-1, true);
+    var top = document.getElementById('qcard' + qIndex);
+    if(Math.abs(dx) > 80){
+      dismissTopCard();
+    } else {
+      // Snap back
+      if(top){
+        top.style.transition = 'transform .3s';
+        top.style.transform = getCardTransform(0);
+      }
     }
   };
 }
 
 async function loadQuestions(){
+  qIndex = 0;
   qList = qFallback;
   buildQCards();
   var result = await callServer('/api/questions', {
@@ -599,6 +664,7 @@ async function loadQuestions(){
     parentName: S.parent.name, parentGender: S.parent.gender
   });
   if(result && result.questions && result.questions.length){
+    qIndex = 0;
     qList = result.questions;
     buildQCards();
   }
