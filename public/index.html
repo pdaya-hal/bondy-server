@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
+button { font-family:'Heebo',sans-serif; }
 body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; display:flex; align-items:center; justify-content:center; }
 .app { width:100%; max-width:430px; min-height:100vh; background:#FAF7F2; position:relative; overflow:hidden; }
 .screen { display:none; flex-direction:column; min-height:100vh; }
@@ -21,6 +22,7 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
 .headline { font-size:26px; color:#fff; line-height:1.5; margin-bottom:50px; }
 .headline strong { font-weight:900; }
 .btn { width:100%; padding:18px; border:none; border-radius:14px; font-size:17px; font-weight:700; font-family:‘Heebo’,sans-serif; cursor:pointer; margin-bottom:12px; display:block; }
+.opt { font-family:‘Heebo’,sans-serif; }
 .btn-primary { background:#C4A882; color:#1A1410; }
 .btn-secondary { background:rgba(255,255,255,.12); color:rgba(255,255,255,.8); }
 
@@ -488,10 +490,9 @@ if(S.parent.name && S.child.name && S.activity){
   <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הילדים שלי</div>
   <div id="profChildren"></div>
   <!-- Add child upsell -->
-  <div style="border:2px dashed #EDE5D8;border-radius:12px;padding:16px;text-align:center;margin-top:8px" onclick="showAddChild()">
-    <div style="font-size:20px;margin-bottom:4px">➕</div>
-    <div style="font-size:14px;font-weight:700;color:#2D5016">הוסף ילד/ה נוסף</div>
-    <div style="font-size:11px;color:#8B7B6B;margin-top:4px">⭐ Bondy פרמיום</div>
+  <div style="border:1px dashed #C4A882;border-radius:10px;padding:10px 14px;margin-top:8px;display:flex;align-items:center;gap:8px;cursor:pointer" onclick="showAddChild()">
+    <div style="font-size:14px;color:#C4A882">➕</div>
+    <div style="font-size:13px;color:#8B7B6B">הוסף ילד/ה נוסף <span style="color:#C4A882;font-size:11px">⭐ פרמיום</span></div>
   </div>
 </div>
 
