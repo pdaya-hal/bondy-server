@@ -310,6 +310,151 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
   </div>
 </div>
 
+<!-- PROFILE -->
+
+<div id="profile" class="screen">
+  <div class="home-head" style="position:relative">
+    <div onclick="go('home')" style="position:absolute;top:52px;right:16px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;color:#fff;cursor:pointer">← חזרה</div>
+    <div style="font-size:48px;margin-bottom:8px">👤</div>
+    <h1 id="profName">פרופיל</h1>
+    <div style="font-size:13px;color:rgba(255,255,255,.6)" id="profSub"></div>
+  </div>
+  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto">
+
+```
+<!-- Parent info -->
+<div class="card" style="margin-bottom:12px">
+  <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">אני</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <span style="color:#1A1410;font-size:15px" id="profParentName"></span>
+    <span style="color:#8B7B6B;font-size:13px" id="profParentGender"></span>
+  </div>
+</div>
+
+<!-- Children -->
+<div class="card" style="margin-bottom:12px">
+  <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הילדים שלי</div>
+  <div id="profChildren"></div>
+  <!-- Add child upsell -->
+  <div style="border:1px dashed #C4A882;border-radius:10px;padding:10px 14px;margin-top:8px;display:flex;align-items:center;gap:8px;cursor:pointer" onclick="showAddChild()">
+    <div style="font-size:14px;color:#C4A882">➕</div>
+    <div style="font-size:13px;color:#8B7B6B">הוסף ילד/ה נוסף <span style="color:#C4A882;font-size:11px">⭐ פרמיום</span></div>
+  </div>
+</div>
+
+<!-- Settings -->
+<div class="card" style="margin-bottom:12px">
+  <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הגדרות</div>
+  <div onclick="confirmReset()" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #EDE5D8;cursor:pointer">
+    <span style="color:#1A1410;font-size:15px">🔄 התחל מחדש</span>
+    <span style="color:#8B7B6B">›</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;cursor:pointer" onclick="showPremium()">
+    <span style="color:#1A1410;font-size:15px">⭐ שדרג לפרמיום</span>
+    <span style="color:#C4A882;font-size:12px;font-weight:700">חינם חודש ראשון</span>
+  </div>
+</div>
+```
+
+  </div>
+  <div class="nav">
+    <div class="nav-item" onclick="go('home')">🏠<span>בית</span></div>
+    <div class="nav-item" onclick="go('journal')">📸<span>זיכרונות</span></div>
+    <div class="nav-item" onclick="go('questions')">💬<span>שאלות</span></div>
+  </div>
+</div>
+
+<!-- PREMIUM UPSELL -->
+
+<div id="premium" class="screen" style="background:#2D5016;align-items:center;justify-content:center;padding:40px;text-align:center">
+  <div style="font-size:48px;margin-bottom:16px">⭐</div>
+  <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:8px">Bondy פרמיום</div>
+  <div style="font-size:15px;color:rgba(255,255,255,.7);margin-bottom:32px;line-height:1.6">ילדים נוספים<br>שאלות ללא הגבלה<br>פעילויות מתקדמות</div>
+  <button class="btn btn-primary" style="margin-bottom:12px" onclick="alert('בקרוב! 🚀')">חינם חודש ראשון ←</button>
+  <button class="btn btn-secondary" onclick="go('profile')">חזרה</button>
+</div>
+
+<!-- SHARE SCREEN -->
+
+<div id="sharescreen" class="screen">
+  <div class="share-card" id="shareCard">
+    <div style="font-size:36px;font-weight:900;color:#2D5016;letter-spacing:-1px;margin-bottom:4px">bon<span style="color:#C4A882">dy</span></div>
+    <div style="font-size:11px;color:#8B7B6B;letter-spacing:3px;margin-bottom:24px">בניית קשר הורה–ילד</div>
+    <div style="font-size:48px;margin-bottom:12px" id="shareEmoji">🌿</div>
+    <div style="font-size:20px;font-weight:900;color:#1A1410;margin-bottom:12px" id="shareTitle"></div>
+    <div style="font-size:14px;color:#8B7B6B;margin-bottom:20px;line-height:1.5" id="shareName"></div>
+    <div style="background:#2D5016;border-radius:16px;padding:16px;color:#fff;font-size:15px;font-weight:700;line-height:1.5" id="shareQuote">
+      עשינו את זה ביחד! 💚
+    </div>
+  </div>
+  <button class="btn btn-primary" style="margin-bottom:12px" onclick="doShare()">📤 שתף את הרגע</button>
+  <button class="btn btn-secondary" onclick="go('home')">חזרה לבית</button>
+</div>
+
+<!-- PROFILE -->
+
+<div id="profile" class="screen">
+  <div class="home-head" style="position:relative">
+    <div onclick="go('home')" style="position:absolute;top:52px;right:16px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;color:#fff;cursor:pointer">← חזרה</div>
+    <div style="font-size:48px;margin-bottom:8px">👤</div>
+    <h1 id="profName">פרופיל</h1>
+    <div style="font-size:13px;color:rgba(255,255,255,.6)" id="profSub"></div>
+  </div>
+  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto">
+
+```
+<!-- Parent info -->
+<div class="card" style="margin-bottom:12px">
+  <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">אני</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <span style="color:#1A1410;font-size:15px" id="profParentName"></span>
+    <span style="color:#8B7B6B;font-size:13px" id="profParentGender"></span>
+  </div>
+</div>
+
+<!-- Children -->
+<div class="card" style="margin-bottom:12px">
+  <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הילדים שלי</div>
+  <div id="profChildren"></div>
+  <!-- Add child upsell -->
+  <div style="border:1px dashed #C4A882;border-radius:10px;padding:10px 14px;margin-top:8px;display:flex;align-items:center;gap:8px;cursor:pointer" onclick="showAddChild()">
+    <div style="font-size:14px;color:#C4A882">➕</div>
+    <div style="font-size:13px;color:#8B7B6B">הוסף ילד/ה נוסף <span style="color:#C4A882;font-size:11px">⭐ פרמיום</span></div>
+  </div>
+</div>
+
+<!-- Settings -->
+<div class="card" style="margin-bottom:12px">
+  <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הגדרות</div>
+  <div onclick="confirmReset()" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #EDE5D8;cursor:pointer">
+    <span style="color:#1A1410;font-size:15px">🔄 התחל מחדש</span>
+    <span style="color:#8B7B6B">›</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;cursor:pointer" onclick="showPremium()">
+    <span style="color:#1A1410;font-size:15px">⭐ שדרג לפרמיום</span>
+    <span style="color:#C4A882;font-size:12px;font-weight:700">חינם חודש ראשון</span>
+  </div>
+</div>
+```
+
+  </div>
+  <div class="nav">
+    <div class="nav-item" onclick="go('home')">🏠<span>בית</span></div>
+    <div class="nav-item" onclick="go('journal')">📸<span>זיכרונות</span></div>
+    <div class="nav-item" onclick="go('questions')">💬<span>שאלות</span></div>
+  </div>
+</div>
+
+<!-- PREMIUM UPSELL -->
+
+<div id="premium" class="screen" style="background:#2D5016;align-items:center;justify-content:center;padding:40px;text-align:center">
+  <div style="font-size:48px;margin-bottom:16px">⭐</div>
+  <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:8px">Bondy פרמיום</div>
+  <div style="font-size:15px;color:rgba(255,255,255,.7);margin-bottom:32px;line-height:1.6">ילדים נוספים<br>שאלות ללא הגבלה<br>פעילויות מתקדמות</div>
+  <button class="btn btn-primary" style="margin-bottom:12px" onclick="alert('בקרוב! 🚀')">חינם חודש ראשון ←</button>
+  <button class="btn btn-secondary" onclick="go('profile')">חזרה</button>
+</div>
+
 <script>
 var SERVER = 'https://bondy-server-production.up.railway.app';
 var gSel = 'dad';
@@ -726,151 +871,6 @@ if(S.parent.name && S.child.name && S.activity){
   go('splash');
 }
 </script>
-
-<!-- PROFILE -->
-
-<div id="profile" class="screen">
-  <div class="home-head" style="position:relative">
-    <div onclick="go('home')" style="position:absolute;top:52px;right:16px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;color:#fff;cursor:pointer">← חזרה</div>
-    <div style="font-size:48px;margin-bottom:8px">👤</div>
-    <h1 id="profName">פרופיל</h1>
-    <div style="font-size:13px;color:rgba(255,255,255,.6)" id="profSub"></div>
-  </div>
-  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto">
-
-```
-<!-- Parent info -->
-<div class="card" style="margin-bottom:12px">
-  <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">אני</div>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-    <span style="color:#1A1410;font-size:15px" id="profParentName"></span>
-    <span style="color:#8B7B6B;font-size:13px" id="profParentGender"></span>
-  </div>
-</div>
-
-<!-- Children -->
-<div class="card" style="margin-bottom:12px">
-  <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הילדים שלי</div>
-  <div id="profChildren"></div>
-  <!-- Add child upsell -->
-  <div style="border:1px dashed #C4A882;border-radius:10px;padding:10px 14px;margin-top:8px;display:flex;align-items:center;gap:8px;cursor:pointer" onclick="showAddChild()">
-    <div style="font-size:14px;color:#C4A882">➕</div>
-    <div style="font-size:13px;color:#8B7B6B">הוסף ילד/ה נוסף <span style="color:#C4A882;font-size:11px">⭐ פרמיום</span></div>
-  </div>
-</div>
-
-<!-- Settings -->
-<div class="card" style="margin-bottom:12px">
-  <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הגדרות</div>
-  <div onclick="confirmReset()" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #EDE5D8;cursor:pointer">
-    <span style="color:#1A1410;font-size:15px">🔄 התחל מחדש</span>
-    <span style="color:#8B7B6B">›</span>
-  </div>
-  <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;cursor:pointer" onclick="showPremium()">
-    <span style="color:#1A1410;font-size:15px">⭐ שדרג לפרמיום</span>
-    <span style="color:#C4A882;font-size:12px;font-weight:700">חינם חודש ראשון</span>
-  </div>
-</div>
-```
-
-  </div>
-  <div class="nav">
-    <div class="nav-item" onclick="go('home')">🏠<span>בית</span></div>
-    <div class="nav-item" onclick="go('journal')">📸<span>זיכרונות</span></div>
-    <div class="nav-item" onclick="go('questions')">💬<span>שאלות</span></div>
-  </div>
-</div>
-
-<!-- PREMIUM UPSELL -->
-
-<div id="premium" class="screen" style="background:#2D5016;align-items:center;justify-content:center;padding:40px;text-align:center">
-  <div style="font-size:48px;margin-bottom:16px">⭐</div>
-  <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:8px">Bondy פרמיום</div>
-  <div style="font-size:15px;color:rgba(255,255,255,.7);margin-bottom:32px;line-height:1.6">ילדים נוספים<br>שאלות ללא הגבלה<br>פעילויות מתקדמות</div>
-  <button class="btn btn-primary" style="margin-bottom:12px" onclick="alert('בקרוב! 🚀')">חינם חודש ראשון ←</button>
-  <button class="btn btn-secondary" onclick="go('profile')">חזרה</button>
-</div>
-
-<!-- SHARE SCREEN -->
-
-<div id="sharescreen" class="screen">
-  <div class="share-card" id="shareCard">
-    <div style="font-size:36px;font-weight:900;color:#2D5016;letter-spacing:-1px;margin-bottom:4px">bon<span style="color:#C4A882">dy</span></div>
-    <div style="font-size:11px;color:#8B7B6B;letter-spacing:3px;margin-bottom:24px">בניית קשר הורה–ילד</div>
-    <div style="font-size:48px;margin-bottom:12px" id="shareEmoji">🌿</div>
-    <div style="font-size:20px;font-weight:900;color:#1A1410;margin-bottom:12px" id="shareTitle"></div>
-    <div style="font-size:14px;color:#8B7B6B;margin-bottom:20px;line-height:1.5" id="shareName"></div>
-    <div style="background:#2D5016;border-radius:16px;padding:16px;color:#fff;font-size:15px;font-weight:700;line-height:1.5" id="shareQuote">
-      עשינו את זה ביחד! 💚
-    </div>
-  </div>
-  <button class="btn btn-primary" style="margin-bottom:12px" onclick="doShare()">📤 שתף את הרגע</button>
-  <button class="btn btn-secondary" onclick="go('home')">חזרה לבית</button>
-</div>
-
-<!-- PROFILE -->
-
-<div id="profile" class="screen">
-  <div class="home-head" style="position:relative">
-    <div onclick="go('home')" style="position:absolute;top:52px;right:16px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;color:#fff;cursor:pointer">← חזרה</div>
-    <div style="font-size:48px;margin-bottom:8px">👤</div>
-    <h1 id="profName">פרופיל</h1>
-    <div style="font-size:13px;color:rgba(255,255,255,.6)" id="profSub"></div>
-  </div>
-  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto">
-
-```
-<!-- Parent info -->
-<div class="card" style="margin-bottom:12px">
-  <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">אני</div>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-    <span style="color:#1A1410;font-size:15px" id="profParentName"></span>
-    <span style="color:#8B7B6B;font-size:13px" id="profParentGender"></span>
-  </div>
-</div>
-
-<!-- Children -->
-<div class="card" style="margin-bottom:12px">
-  <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הילדים שלי</div>
-  <div id="profChildren"></div>
-  <!-- Add child upsell -->
-  <div style="border:1px dashed #C4A882;border-radius:10px;padding:10px 14px;margin-top:8px;display:flex;align-items:center;gap:8px;cursor:pointer" onclick="showAddChild()">
-    <div style="font-size:14px;color:#C4A882">➕</div>
-    <div style="font-size:13px;color:#8B7B6B">הוסף ילד/ה נוסף <span style="color:#C4A882;font-size:11px">⭐ פרמיום</span></div>
-  </div>
-</div>
-
-<!-- Settings -->
-<div class="card" style="margin-bottom:12px">
-  <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הגדרות</div>
-  <div onclick="confirmReset()" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #EDE5D8;cursor:pointer">
-    <span style="color:#1A1410;font-size:15px">🔄 התחל מחדש</span>
-    <span style="color:#8B7B6B">›</span>
-  </div>
-  <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;cursor:pointer" onclick="showPremium()">
-    <span style="color:#1A1410;font-size:15px">⭐ שדרג לפרמיום</span>
-    <span style="color:#C4A882;font-size:12px;font-weight:700">חינם חודש ראשון</span>
-  </div>
-</div>
-```
-
-  </div>
-  <div class="nav">
-    <div class="nav-item" onclick="go('home')">🏠<span>בית</span></div>
-    <div class="nav-item" onclick="go('journal')">📸<span>זיכרונות</span></div>
-    <div class="nav-item" onclick="go('questions')">💬<span>שאלות</span></div>
-  </div>
-</div>
-
-<!-- PREMIUM UPSELL -->
-
-<div id="premium" class="screen" style="background:#2D5016;align-items:center;justify-content:center;padding:40px;text-align:center">
-  <div style="font-size:48px;margin-bottom:16px">⭐</div>
-  <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:8px">Bondy פרמיום</div>
-  <div style="font-size:15px;color:rgba(255,255,255,.7);margin-bottom:32px;line-height:1.6">ילדים נוספים<br>שאלות ללא הגבלה<br>פעילויות מתקדמות</div>
-  <button class="btn btn-primary" style="margin-bottom:12px" onclick="alert('בקרוב! 🚀')">חינם חודש ראשון ←</button>
-  <button class="btn btn-secondary" onclick="go('profile')">חזרה</button>
-</div>
 
 </div>
 </body>
