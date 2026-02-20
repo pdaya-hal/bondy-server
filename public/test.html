@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="background:green;display:flex;align-items:center;justify-content:center;height:100vh">
+<button id="btn" style="padding:20px 40px;font-size:20px;border-radius:12px;border:none;background:#C4A882;color:#000">לחץ כאן</button>
+<div id="msg" style="position:fixed;bottom:20px;left:0;right:0;text-align:center;color:white;font-size:18px"></div>
+<script>
+document.getElementById('btn').addEventListener('click', function(){
+  document.getElementById('msg').textContent = 'עובד! ✅';
+  document.body.style.background = 'blue';
+});
+</script>
+</body>
+</html>
