@@ -169,13 +169,13 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
     <button class="opt" id="cgGirl" onclick="selCG(this,'girl')">👧 בת</button>
   </div>
   <div class="label">גיל</div>
-  <div class="opts" style="flex-wrap:wrap">
-    <button class="opt" onclick="selAge(this,'5-6')">5-6</button>
-    <button class="opt" onclick="selAge(this,'7-8')">7-8</button>
-    <button class="opt sel" onclick="selAge(this,'9-10')">9-10</button>
-    <button class="opt" onclick="selAge(this,'11-12')">11-12</button>
-    <button class="opt" onclick="selAge(this,'13-14')">13-14</button>
-    <button class="opt" onclick="selAge(this,'15-16')">15-16</button>
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px">
+    <button class="opt" style="padding:12px 4px;font-size:13px" onclick="selAge(this,'5-6')">5-6</button>
+    <button class="opt" style="padding:12px 4px;font-size:13px" onclick="selAge(this,'7-8')">7-8</button>
+    <button class="opt sel" style="padding:12px 4px;font-size:13px" onclick="selAge(this,'9-10')">9-10</button>
+    <button class="opt" style="padding:12px 4px;font-size:13px" onclick="selAge(this,'11-12')">11-12</button>
+    <button class="opt" style="padding:12px 4px;font-size:13px" onclick="selAge(this,'13-14')">13-14</button>
+    <button class="opt" style="padding:12px 4px;font-size:13px" onclick="selAge(this,'15-16')">15-16</button>
   </div>
   <div class="label" style="margin-top:8px">מה הילד/ה אוהב/ת? (אופציונלי)</div>
   <div class="opts grid" id="childInts">
@@ -240,19 +240,45 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
 
 <!-- QUESTIONS -->
 
-<div id="questions" class="screen">
+<div id="questions" class="screen" style="background:#FAF7F2">
   <div class="home-head">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div style="display:flex;justify-content:space-between;align-items:center">
       <div>
         <h1>שאלות לשיחה</h1>
-        <div style="font-size:13px;color:rgba(255,255,255,.6)">לארוחת ערב ולכל רגע</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.6)" id="qCounter">טוען...</div>
       </div>
       <button onclick="loadQuestions()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:20px;font-family:'Heebo',sans-serif;font-size:13px;cursor:pointer">רענן ↻</button>
     </div>
   </div>
-  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto" id="qList">
-    <div style="text-align:center;color:#8B7B6B;padding:40px">טוען שאלות...</div>
+
+  <!-- Single card view -->
+
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative" id="qCardArea">
+    <!-- Stack effect - background cards -->
+    <div id="qCardBg2" style="position:absolute;width:calc(100% - 80px);height:200px;background:#E8DDD0;border-radius:24px;transform:translateY(16px) scale(0.92);z-index:1"></div>
+    <div id="qCardBg1" style="position:absolute;width:calc(100% - 56px);height:200px;background:#F0E8DE;border-radius:24px;transform:translateY(8px) scale(0.96);z-index:2"></div>
+
+```
+<!-- Main card -->
+<div id="qMainCard" style="width:100%;background:#fff;border-radius:24px;box-shadow:0 12px 40px rgba(0,0,0,.15);position:relative;z-index:3;overflow:hidden;cursor:grab">
+  <div style="height:6px;background:linear-gradient(90deg,#2D5016,#C4A882)"></div>
+  <div style="padding:32px 28px 28px">
+    <div id="qNum" style="font-size:11px;color:#C4A882;font-weight:700;letter-spacing:2px;margin-bottom:20px">שאלה 1 מתוך 8</div>
+    <div id="qText" style="font-size:21px;font-weight:700;color:#1A1410;line-height:1.55;margin-bottom:24px">טוען שאלות...</div>
+    <div id="qTip" style="background:#FAF7F2;border-radius:12px;padding:12px 16px;font-size:13px;color:#8B7B6B">💡 פותח דמיון ומגלה עולמות פנימיים</div>
   </div>
+</div>
+```
+
+  </div>
+
+  <!-- Nav buttons -->
+
+  <div style="display:flex;gap:12px;padding:0 24px 16px">
+    <button onclick="prevQ()" style="flex:1;padding:14px;border:2px solid #EDE5D8;border-radius:16px;background:#fff;font-size:20px;cursor:pointer">←</button>
+    <button onclick="nextQ()" style="flex:2;padding:14px;border:none;border-radius:16px;background:#2D5016;color:#fff;font-size:16px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer">שאלה הבאה ←</button>
+  </div>
+
   <div class="nav">
     <div class="nav-item" onclick="go('home')">🏠<span>בית</span></div>
     <div class="nav-item" onclick="go('journal')">📸<span>זיכרונות</span></div>
@@ -326,7 +352,7 @@ function go(id){
   if(sc){ sc.classList.add('active'); sc.scrollTop=0; }
   if(id==='home') updateHome();
   if(id==='loading') setTimeout(generateActivity, 300);
-  if(id==='questions') loadQuestions();
+  if(id==='questions'){ qIndex=0; loadQuestions(); }
   if(id==='journal') updateJournal();
   if(id==='actdetail') updateDetail();
   if(id==='profile') updateProfile();
@@ -494,50 +520,85 @@ function getNewActivity(){
   go('loading');
 }
 
-async function loadQuestions(){
-  var el = document.getElementById('qList');
+var qList = [];
+var qIndex = 0;
+var qTips = ['פותח דמיון ומגלה עולמות פנימיים 💡','מחזק קשר ואמון 💚','שאלה שכיף לענות עליה ביחד ✨','יוצר זיכרון משמעותי 🌿','מפתח חשיבה ויצירתיות 🔥','מעמיק הבנה הדדית 🌊','פותח לב ומוזיל מחסומים 🌻','מחזק ביטחון עצמי ⭐'];
+var qFallback = [
+  'אם היית יכול לטייל לכל מקום בעולם — לאן היית הולך?',
+  'מה הדבר הכי מצחיק שקרה לך השבוע?',
+  'אם היית בלתי נראה ליום אחד — מה היית עושה?',
+  'מה הדבר שאתה הכי גאה בו בעצמך?',
+  'אם יכולת להמציא כלל אחד לעולם — מה היה הכלל?',
+  'איזה כוח-על היית הכי רוצה לקבל ולמה?',
+  'מה החלום הכי מוזר שחלמת?',
+  'אם היית יכול לשנות משהו אחד בעולם — מה היה?'
+];
+
+function showQCard(animate){
+  if(!qList.length) return;
+  var q = qList[qIndex];
+  var el = document.getElementById('qText');
+  var num = document.getElementById('qNum');
+  var tip = document.getElementById('qTip');
+  var ctr = document.getElementById('qCounter');
+  var card = document.getElementById('qMainCard');
   if(!el) return;
-  el.innerHTML = '<div style="text-align:center;color:#8B7B6B;padding:40px">טוען שאלות...</div>';
+  if(animate && card){
+    card.style.transition = 'transform .2s,opacity .2s';
+    card.style.transform = 'translateX(-60px)';
+    card.style.opacity = '0';
+    setTimeout(function(){
+      el.textContent = q;
+      if(num) num.textContent = 'שאלה ' + (qIndex+1) + ' מתוך ' + qList.length;
+      if(tip) tip.textContent = qTips[qIndex % qTips.length];
+      if(ctr) ctr.textContent = 'שאלה ' + (qIndex+1) + ' מתוך ' + qList.length;
+      card.style.transition = 'none';
+      card.style.transform = 'translateX(60px)';
+      card.style.opacity = '0';
+      setTimeout(function(){
+        card.style.transition = 'transform .25s,opacity .25s';
+        card.style.transform = 'translateX(0)';
+        card.style.opacity = '1';
+      }, 30);
+    }, 200);
+  } else {
+    el.textContent = q;
+    if(num) num.textContent = 'שאלה ' + (qIndex+1) + ' מתוך ' + qList.length;
+    if(tip) tip.textContent = qTips[qIndex % qTips.length];
+    if(ctr) ctr.textContent = 'שאלה ' + (qIndex+1) + ' מתוך ' + qList.length;
+  }
+}
+
+function nextQ(){
+  if(!qList.length) return;
+  qIndex = (qIndex + 1) % qList.length;
+  showQCard(true);
+}
+function prevQ(){
+  if(!qList.length) return;
+  qIndex = (qIndex - 1 + qList.length) % qList.length;
+  showQCard(true);
+}
+
+async function loadQuestions(){
+  var ctr = document.getElementById('qCounter');
+  var el = document.getElementById('qText');
+  if(ctr) ctr.textContent = 'טוען...';
+  if(el) el.textContent = 'טוען שאלות...';
+  // Show fallback immediately so user isn't waiting
+  qList = qFallback;
+  qIndex = 0;
+  showQCard(false);
+  // Then load real questions in background
   var result = await callServer('/api/questions', {
     childName: S.child.name, childAge: S.child.age, childGender: S.child.gender,
     childInterests: S.child.interests||[],
     parentName: S.parent.name, parentGender: S.parent.gender
   });
   if(result && result.questions && result.questions.length){
-    el.innerHTML = '';
-    result.questions.forEach(function(q, i){
-      var d = document.createElement('div');
-      d.className = 'q-card';
-      var tips = ['פותח דמיון ומגלה עולמות פנימיים 💡','מחזק קשר ואמון 💚','שאלה שכיף לענות עליה ביחד ✨','יוצר זיכרון משמעותי 🌿','מפתח חשיבה ויצירתיות 🔥'];
-      d.innerHTML = '<div class="q-card-top"></div>'
-        + '<div class="q-card-body">'
-        + '<div class="q-card-num">שאלה ' + (i+1) + ' מתוך ' + result.questions.length + '</div>'
-        + '<div class="q-card-text">' + q + '</div>'
-        + '<div class="q-card-tip">' + tips[i % tips.length] + '</div>'
-        + '</div>';
-      el.appendChild(d);
-    });
-  } else {
-    var fallbackQ = [
-      'אם היית יכול/ה לטייל לכל מקום בעולם עכשיו — לאן היית הולך/ת?',
-      'מה הדבר הכי מצחיק שקרה לך השבוע?',
-      'אם היית בלתי נראה/ה ליום אחד — מה היית עושה?',
-      'מה הדבר שאתה הכי גאה בו בעצמך?',
-      'אם יכולת להמציא כלל אחד לעולם — מה היה הכלל?'
-    ];
-    el.innerHTML = '';
-    fallbackQ.forEach(function(q, i){
-      var d = document.createElement('div');
-      d.className = 'q-card';
-      var tips2 = ['פותח דמיון ומגלה עולמות פנימיים 💡','מחזק קשר ואמון 💚','שאלה שכיף לענות עליה ביחד ✨','יוצר זיכרון משמעותי 🌿','מפתח חשיבה ויצירתיות 🔥'];
-      d.innerHTML = '<div class="q-card-top"></div>'
-        + '<div class="q-card-body">'
-        + '<div class="q-card-num">שאלה ' + (i+1) + ' מתוך 5</div>'
-        + '<div class="q-card-text">' + q + '</div>'
-        + '<div class="q-card-tip">' + tips2[i % tips2.length] + '</div>'
-        + '</div>';
-      el.appendChild(d);
-    });
+    qList = result.questions;
+    qIndex = 0;
+    showQCard(false);
   }
 }
 
