@@ -5,16 +5,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bondy</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-@font-face {
-  font-family: 'Heebo';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Heebo'), local('Heebo-Regular');
-}
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
 </style>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -42,6 +34,9 @@ body { font-family:'Heebo',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,san
 .inp { width:100%; padding:16px; border:2px solid #EDE5D8; border-radius:12px; font-size:16px; font-family:‘Heebo’,-apple-system,BlinkMacSystemFont,‘Segoe UI’,Arial,sans-serif; background:#fff; color:#1A1410; margin-bottom:16px; }
 .inp:focus { outline:none; border-color:#2D5016; }
 .opts { display:flex; gap:10px; margin-bottom:20px; }
+.opts.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.opts.grid .opt { flex:none; aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; font-size:13px; }
+.opts.grid .opt .opt-emoji { font-size:24px; }
 .opt { flex:1; padding:14px; border:2px solid #EDE5D8; border-radius:12px; text-align:center; font-size:15px; font-family:‘Heebo’,-apple-system,BlinkMacSystemFont,‘Segoe UI’,Arial,sans-serif; cursor:pointer; background:#fff; }
 .opt.sel { border-color:#2D5016; background:#2D5016; color:#fff; font-weight:700; }
 .btn-green { background:#2D5016; color:#fff; }
@@ -92,13 +87,13 @@ body { font-family:'Heebo',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,san
 <div id="ob2" class="screen ob">
   <div class="ob-title">מה אתה אוהב?</div>
   <div class="label">בחר כמה שרוצה</div>
-  <div class="opts" style="flex-wrap:wrap">
-    <button class="opt" onclick="togInt(this,'hike')">🥾 טיולים</button>
-    <button class="opt" onclick="togInt(this,'cook')">🍳 בישול</button>
-    <button class="opt" onclick="togInt(this,'sport')">⚽ ספורט</button>
-    <button class="opt" onclick="togInt(this,'art')">🎨 אמנות</button>
-    <button class="opt" onclick="togInt(this,'science')">🔬 מדע</button>
-    <button class="opt" onclick="togInt(this,'music')">🎵 מוזיקה</button>
+  <div class="opts grid">
+    <button class="opt" onclick="togInt(this,'hike')"><span class="opt-emoji">🥾</span>טיולים</button>
+    <button class="opt" onclick="togInt(this,'cook')"><span class="opt-emoji">🍳</span>בישול</button>
+    <button class="opt" onclick="togInt(this,'sport')"><span class="opt-emoji">⚽</span>ספורט</button>
+    <button class="opt" onclick="togInt(this,'art')"><span class="opt-emoji">🎨</span>אמנות</button>
+    <button class="opt" onclick="togInt(this,'science')"><span class="opt-emoji">🔬</span>מדע</button>
+    <button class="opt" onclick="togInt(this,'music')"><span class="opt-emoji">🎵</span>מוזיקה</button>
   </div>
   <button class="btn btn-green" onclick="saveOb2()">המשך ←</button>
 </div>
@@ -120,6 +115,18 @@ body { font-family:'Heebo',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,san
     <button class="opt" onclick="selAge(this,'11-12')">11-12</button>
     <button class="opt" onclick="selAge(this,'13-14')">13-14</button>
     <button class="opt" onclick="selAge(this,'15-16')">15-16</button>
+  </div>
+  <div class="label" style="margin-top:8px">מה הילד/ה אוהב/ת? (אופציונלי)</div>
+  <div class="opts grid" id="childInts">
+    <button class="opt" onclick="togChildInt(this,'build')"><span class="opt-emoji">🔨</span>בנייה</button>
+    <button class="opt" onclick="togChildInt(this,'hike')"><span class="opt-emoji">🥾</span>טיולים</button>
+    <button class="opt" onclick="togChildInt(this,'stories')"><span class="opt-emoji">📖</span>סיפורים</button>
+    <button class="opt" onclick="togChildInt(this,'sport')"><span class="opt-emoji">⚽</span>ספורט</button>
+    <button class="opt" onclick="togChildInt(this,'art')"><span class="opt-emoji">🎨</span>אמנות</button>
+    <button class="opt" onclick="togChildInt(this,'cook')"><span class="opt-emoji">🍳</span>בישול</button>
+    <button class="opt" onclick="togChildInt(this,'music')"><span class="opt-emoji">🎵</span>מוזיקה</button>
+    <button class="opt" onclick="togChildInt(this,'animals')"><span class="opt-emoji">🐾</span>חיות</button>
+    <button class="opt" onclick="togChildInt(this,'science')"><span class="opt-emoji">🔬</span>מדע</button>
   </div>
   <button class="btn btn-green" onclick="saveOb3()">המשך ←</button>
 </div>
@@ -199,7 +206,12 @@ body { font-family:'Heebo',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,san
     <h1>זיכרונות</h1>
   </div>
   <div style="padding:20px 22px;padding-bottom:80px" id="jList">
-    <div style="text-align:center;color:#8B7B6B;padding:40px">עוד אין זיכרונות. עשו פעילות ראשונה!</div>
+    <div style="text-align:center;padding:40px">
+      <div style="font-size:48px;margin-bottom:16px">🌱</div>
+      <div style="font-size:17px;font-weight:700;color:#1A1410;margin-bottom:8px">עוד אין זיכרונות</div>
+      <div style="font-size:14px;color:#8B7B6B;margin-bottom:24px">כל פעילות שתעשו ביחד תישמר כאן</div>
+      <button class="btn btn-green" style="max-width:280px;margin:0 auto" onclick="go('actdetail')">✨ צור זיכרון משמעותי</button>
+    </div>
   </div>
   <div class="nav">
     <div class="nav-item" onclick="go('home')">🏠<span>בית</span></div>
@@ -239,7 +251,7 @@ var interests = [];
 
 var DEF = {
   parent:{name:'',gender:'dad',interests:[],tradition:'secular'},
-  child:{name:'',age:'9-10',gender:'boy',relation:'great'},
+  child:{name:'',age:'9-10',gender:'boy',relation:'great',interests:[]},
   streak:1, activity:null, memories:[]
 };
 var S = JSON.parse(JSON.stringify(DEF));
@@ -270,6 +282,12 @@ function selCG(el, val){
   document.getElementById('cgBoy').classList.remove('sel');
   document.getElementById('cgGirl').classList.remove('sel');
   el.classList.add('sel');
+}
+var childInterests = [];
+function togChildInt(el, val){
+  el.classList.toggle('sel');
+  var idx = childInterests.indexOf(val);
+  if(idx===-1) childInterests.push(val); else childInterests.splice(idx,1);
 }
 function togInt(el, val){
   el.classList.toggle('sel');
@@ -309,6 +327,7 @@ function saveOb3(){
   S.child.name = n;
   S.child.age = ageSel;
   S.child.gender = cgSel;
+  S.child.interests = childInterests.slice();
   save();
   go('ob4');
 }
@@ -333,7 +352,7 @@ async function generateActivity(){
   var p = S.parent, c = S.child;
   var result = await callServer('/api/activity', {
     parentName: p.name, interests: p.interests, tradition: p.tradition,
-    childName: c.name, childAge: c.age, childGender: c.gender, relation: c.relation,
+    childName: c.name, childAge: c.age, childGender: c.gender, childInterests: c.interests||[], relation: c.relation,
     pastActivities: S.memories.map(function(m){ return m.title; })
   });
   if(result && result.activity) S.activity = result.activity;
@@ -411,7 +430,22 @@ async function loadQuestions(){
       el.appendChild(d);
     });
   } else {
-    el.innerHTML = '<div style="text-align:center;color:#8B7B6B;padding:40px">לא הצלחנו לטעון שאלות. נסה שוב.</div>';
+    var fallbackQ = [
+      'אם היית יכול/ה לטייל לכל מקום בעולם עכשיו — לאן היית הולך/ת?',
+      'מה הדבר הכי מצחיק שקרה לך השבוע?',
+      'אם היית בלתי נראה/ה ליום אחד — מה היית עושה?',
+      'מה הדבר שאתה הכי גאה בו בעצמך?',
+      'אם יכולת להמציא כלל אחד לעולם — מה היה הכלל?'
+    ];
+    el.innerHTML = '';
+    fallbackQ.forEach(function(q, i){
+      var d = document.createElement('div');
+      d.style = 'background:#fff;border-radius:20px;padding:28px 24px;margin-bottom:14px;box-shadow:0 4px 16px rgba(0,0,0,.08)';
+      d.innerHTML = '<div style="font-size:11px;color:#C4A882;font-weight:700;margin-bottom:10px;letter-spacing:1px">שאלה ' + (i+1) + '</div>'
+        + '<div style="font-size:17px;font-weight:700;color:#1A1410;line-height:1.5">' + q + '</div>'
+        + '<div style="margin-top:16px;padding-top:12px;border-top:1px solid #EDE5D8;font-size:12px;color:#8B7B6B">💡 פותח דמיון ומגלה עולמות פנימיים</div>';
+      el.appendChild(d);
+    });
   }
 }
 
@@ -452,7 +486,7 @@ function updateJournal(){
   var el = document.getElementById('jList');
   if(!el) return;
   if(!S.memories.length){
-    el.innerHTML = '<div style="text-align:center;color:#8B7B6B;padding:40px">עוד אין זיכרונות. עשו פעילות ראשונה!</div>';
+    el.innerHTML = '<div style="text-align:center;padding:40px"><div style="font-size:48px;margin-bottom:16px">🌱</div><div style="font-size:17px;font-weight:700;color:#1A1410;margin-bottom:8px">עוד אין זיכרונות</div><div style="font-size:14px;color:#8B7B6B;margin-bottom:24px">כל פעילות שתעשו ביחד תישמר כאן</div><button onclick="go(\'actdetail\')" style="background:#2D5016;color:#fff;border:none;border-radius:14px;padding:14px 28px;font-size:15px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer">✨ צור זיכרון משמעותי</button></div>';
     return;
   }
   el.innerHTML = '';
