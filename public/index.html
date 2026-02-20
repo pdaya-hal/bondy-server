@@ -19,9 +19,6 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
   body{background:var(--cream);align-items:flex-start}
   .phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}
 }
-html.ltr { direction: ltr; }
-html.ltr .screen { text-align: left; }
-html:not(.ltr) .screen { direction: rtl; }
 .screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
 .screen.active{display:flex}
 
@@ -49,7 +46,7 @@ html:not(.ltr) .screen { direction: rtl; }
 #splash{background:#2D5016 !important;justify-content:center;align-items:center;padding:40px;text-align:center}
 #splash::before{content:’’;position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 25% 75%,rgba(196,168,130,.12),transparent);pointer-events:none}
 .logo{font-size:88px;font-weight:900;color:#fff;line-height:1;margin-bottom:4px;letter-spacing:-3px}
-.logo span{color:var(–earth)}
+.logo span{color:#C4A882 !important}
 .logo-tag{font-size:11px;letter-spacing:4px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:52px}
 .headline{font-size:19px;color:rgba(255,255,255,.85);line-height:1.9;margin-bottom:60px;font-weight:300}
 .headline strong{color:#fff;font-weight:700}
@@ -689,7 +686,8 @@ loading_sub: isHE ? ‘מכין פעילות מותאמת אישית…’ : ‘
 
 // direction - set via CSS class to avoid layout issues
 document.documentElement.lang = isHE ? ‘he’ : ‘en’;
-if(!isHE) document.documentElement.classList.add(‘ltr’);
+document.body.style.direction = isHE ? ‘rtl’ : ‘ltr’;
+document.body.style.textAlign = isHE ? ‘right’ : ‘left’;
 
 // ══════════════ STATE ══════════════
 const DEF = {
