@@ -19,6 +19,9 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
   body{background:var(--cream);align-items:flex-start}
   .phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}
 }
+html.ltr { direction: ltr; }
+html.ltr .screen { text-align: left; }
+html:not(.ltr) .screen { direction: rtl; }
 .screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
 .screen.active{display:flex}
 
@@ -43,7 +46,7 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
 .lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(–soft);margin-bottom:12px}
 
 /* ══ SPLASH ══ */
-#splash{background:var(–forest);justify-content:center;align-items:center;padding:40px;text-align:center}
+#splash{background:#2D5016 !important;justify-content:center;align-items:center;padding:40px;text-align:center}
 #splash::before{content:’’;position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 25% 75%,rgba(196,168,130,.12),transparent);pointer-events:none}
 .logo{font-size:88px;font-weight:900;color:#fff;line-height:1;margin-bottom:4px;letter-spacing:-3px}
 .logo span{color:var(–earth)}
@@ -684,9 +687,9 @@ d_save: isHE ? ‘✓  סיימנו! שמור זיכרון’ : ‘✓  Done! Sa
 loading_sub: isHE ? ‘מכין פעילות מותאמת אישית…’ : ‘Crafting your personalized activity…’,
 };
 
-// direction
-document.documentElement.dir = isHE ? ‘rtl’ : ‘ltr’;
+// direction - set via CSS class to avoid layout issues
 document.documentElement.lang = isHE ? ‘he’ : ‘en’;
+if(!isHE) document.documentElement.classList.add(‘ltr’);
 
 // ══════════════ STATE ══════════════
 const DEF = {
