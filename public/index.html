@@ -122,7 +122,7 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
 
 <div id="splash" class="screen active">
   <div class="logo">bon<span>dy</span></div>
-  <div class="tagline">בניית קשר הורה–ילד</div>
+  <div class="tagline">חיזוק קשר הורה–ילד</div>
   <div class="headline">הילד שלך לא צריך<br>עוד מסך.<br><strong>הוא צריך אותך.</strong></div>
   <div style="width:100%">
     <button class="btn btn-primary" onclick="go('ob1')">בואו נתחיל במסע ←</button>
@@ -209,7 +209,7 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
 <div id="loading" class="screen" style="background:#2D5016;align-items:center;justify-content:center;text-align:center">
   <div style="font-size:48px;margin-bottom:24px">🌿</div>
   <div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:8px">Bondy לומד על המשפחה שלך</div>
-  <div style="font-size:14px;color:rgba(255,255,255,.6)" id="loadMsg">מכין פעילות מותאמת אישית...</div>
+  <div style="font-size:14px;color:rgba(255,255,255,.6)" id="loadMsg">מחזק קשרים...</div>
 </div>
 
 <!-- HOME -->
@@ -237,7 +237,7 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
   <div style="font-size:14px;color:#8B7B6B;margin-bottom:16px" id="actDesc"></div>
   <button class="btn btn-green" onclick="go('actdetail')">בוא נעשה את זה! ←</button>
 </div>
-<button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">✨ קסום לי פעילות אחרת</button>
+<button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">🔄 רוצים פעילות מחזקת אחרת?</button>
 ```
 
   </div>
@@ -402,7 +402,7 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
 <div id="sharescreen" class="screen">
   <div class="share-card" id="shareCard">
     <div style="font-size:36px;font-weight:900;color:#2D5016;letter-spacing:-1px;margin-bottom:4px">bon<span style="color:#C4A882">dy</span></div>
-    <div style="font-size:11px;color:#8B7B6B;letter-spacing:3px;margin-bottom:24px">בניית קשר הורה–ילד</div>
+    <div style="font-size:11px;color:#8B7B6B;letter-spacing:3px;margin-bottom:24px">חיזוק קשר הורה–ילד</div>
     <div style="font-size:48px;margin-bottom:12px" id="shareEmoji">🌿</div>
     <div style="font-size:20px;font-weight:900;color:#1A1410;margin-bottom:12px" id="shareTitle"></div>
     <div style="font-size:14px;color:#8B7B6B;margin-bottom:20px;line-height:1.5" id="shareName"></div>
@@ -666,7 +666,7 @@ function saveMemory(){
 
 function doShare(){
   var act = S.activity||{};
-  var text = 'עשינו ביחד את הפעילות "' + (act.title||'') + '" עם Bondy! \n\nBondy - בניית קשר הורה-ילד 💚\nbondy-server-production.up.railway.app';
+  var text = 'עשינו ביחד את הפעילות "' + (act.title||'') + '" עם Bondy! \n\nBondy - חיזוק קשר הורה-ילד 💚\nbondy-server-production.up.railway.app';
   if(navigator.share){
     navigator.share({ title: 'Bondy - ' + (act.title||''), text: text });
   } else {
@@ -710,6 +710,53 @@ function buildQCards(){
   if(dots) dots.innerHTML = '';
 
   // Build all cards, stacked on top of each other
+  // First add the green "finished" card at the very bottom
+  var finCard = document.createElement('div');
+  finCard.id = 'qcardFin';
+  finCard.style.cssText = [
+    'position:absolute',
+    'width:calc(100% - 64px)',
+    'height:calc(100% - 20px)',
+    'border-radius:28px',
+    'background:linear-gradient(160deg,#2D5016,#3A6B1E)',
+    'box-shadow:0 16px 48px rgba(0,0,0,.2)',
+    'display:flex',
+    'flex-direction:column',
+    'align-items:center',
+    'justify-content:center',
+    'text-align:center',
+    'padding:28px',
+    'z-index:1',
+    'transform:' + getCardTransform(qList.length)
+  ].join(';');
+  var finLogo = document.createElement('div');
+  finLogo.style.cssText = 'font-size:42px;font-weight:900;color:#fff;letter-spacing:-1px';
+  finLogo.innerHTML = 'bon<span style="color:#C4A882">dy</span>';
+  var finSub = document.createElement('div');
+  finSub.style.cssText = 'font-size:11px;color:rgba(255,255,255,.5);letter-spacing:3px;margin-top:4px;margin-bottom:28px';
+  finSub.textContent = 'שאלות לשיחה';
+  var finTitle = document.createElement('div');
+  finTitle.style.cssText = 'font-size:16px;color:#fff;font-weight:700;margin-bottom:8px';
+  finTitle.textContent = 'סיימתם! 🎉';
+  var finDesc = document.createElement('div');
+  finDesc.style.cssText = 'font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:28px';
+  finDesc.innerHTML = 'שאלות חדשות יגיעו בשבוע הבא.<br>רוצים מאגר בלתי נגמר?';
+  var finBtn1 = document.createElement('button');
+  finBtn1.style.cssText = 'background:#C4A882;color:#1A1410;border:none;border-radius:16px;padding:14px;font-size:14px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;width:100%;margin-bottom:10px';
+  finBtn1.textContent = '⭐ שדרג לפרמיום';
+  finBtn1.onclick = showPremium;
+  var finBtn2 = document.createElement('button');
+  finBtn2.style.cssText = 'background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:16px;padding:12px;font-size:13px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;width:100%';
+  finBtn2.textContent = '↺ שאלות מחדש';
+  finBtn2.onclick = loadQuestions;
+  finCard.appendChild(finLogo);
+  finCard.appendChild(finSub);
+  finCard.appendChild(finTitle);
+  finCard.appendChild(finDesc);
+  finCard.appendChild(finBtn1);
+  finCard.appendChild(finBtn2);
+  deck.appendChild(finCard);
+
   // Render in reverse so first card is on top
   for(var i = qList.length-1; i >= 0; i--){
     var card = document.createElement('div');
@@ -773,11 +820,21 @@ function dismissTopCard(){
   topCard.style.transform = 'translateX(110%) rotate(12deg) scale(0.85)';
   topCard.style.opacity = '0';
 
-  // Last card?
-  if(qIndex >= qList.length - 1){
-    setTimeout(function(){
-      showQFinished();
-    }, 400);
+  var isLast = (qIndex >= qList.length - 1);
+
+  if(isLast){
+    // Animate finCard to front
+    var fin = document.getElementById('qcardFin');
+    if(fin){
+      fin.style.transition = 'transform .4s cubic-bezier(.4,0,.2,1)';
+      fin.style.transform = getCardTransform(0);
+    }
+    qIndex++;
+    updateQDots();
+    var ctr = document.getElementById('qCounter');
+    if(ctr) ctr.textContent = 'סיום!';
+    var dots = document.getElementById('qDots');
+    if(dots) dots.innerHTML = '';
     return;
   }
 
@@ -789,6 +846,9 @@ function dismissTopCard(){
     c.style.transform = getCardTransform(depth);
     c.style.opacity = depth < 3 ? '1' : '0';
   }
+  // Keep finCard in background
+  var fin2 = document.getElementById('qcardFin');
+  if(fin2) fin2.style.transform = getCardTransform(qList.length - qIndex + 1);
   updateQDots();
   var ctr = document.getElementById('qCounter');
   if(ctr) ctr.textContent = 'שאלה ' + (qIndex+1) + ' מתוך ' + qList.length;
