@@ -15,9 +15,9 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:'Heebo',Heebo,Arial,sans-serif;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh}
 .phone{width:390px;height:844px;background:var(--cream);border-radius:48px;overflow:hidden;position:relative;box-shadow:0 40px 120px rgba(0,0,0,.7)}
-@media(max-width:430px){
-  body{background:var(--cream);align-items:flex-start;margin:0;padding:0}
-  .phone{width:100vw;width:100%;height:100vh;height:100dvh;border-radius:0;box-shadow:none;max-width:100%}
+@media(max-width:420px){
+  body{background:var(--cream);align-items:flex-start}
+  .phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}
 }
 .screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
 .screen.active{display:flex}
@@ -32,7 +32,7 @@ body{font-family:'Heebo',Heebo,Arial,sans-serif;background:#111;display:flex;jus
 .a5{animation:fadeUp .45s ease .55s both}
 
 /* GLOBAL */
-.btn{width:100%;padding:17px;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:‘Heebo’,Heebo,Arial,sans-serif;cursor:pointer;transition:transform .15s;margin-bottom:10px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
+.btn{width:100%;padding:17px;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:‘Heebo’,Heebo,Arial,sans-serif;cursor:pointer;transition:transform .15s;margin-bottom:10px}
 .btn:active{transform:scale(.97)}
 .bp{background:var(–earth);color:var(–dark)}
 .bf{background:var(–forest);color:#fff}
@@ -240,8 +240,8 @@ will-change:transform;text-align:center;
   <div class="logo-tag a1">בניית קשר הורה–ילד</div>
   <div class="headline a2" id="splashHeadline">הילד שלך לא צריך<br>עוד מסך.<br><strong>הוא צריך אותך.</strong></div>
   <div style="width:100%" class="a3">
-    <button style="width:100%;padding:17px;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;background:#C4A882;color:#1A1410;margin-bottom:10px;display:block" onclick="go('ob1')" ontouchend="go('ob1');return false;">בואו נתחיל במסע ←</button>
-    <button style="width:100%;padding:17px;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);margin-bottom:10px;display:block" onclick="go('ob1')" ontouchend="go('ob1');return false;">יש לי כבר חשבון</button>
+    <button style="width:100%;padding:17px;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;background:#C4A882;color:#1A1410;margin-bottom:10px;display:block" onclick="go('ob1')">בואו נתחיל במסע ←</button>
+    <button style="width:100%;padding:17px;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);margin-bottom:10px;display:block" onclick="go('ob1')">יש לי כבר חשבון</button>
   </div>
 </div>
 
@@ -560,29 +560,40 @@ will-change:transform;text-align:center;
 
 </div><!-- /phone -->
 <script>
-
 // ══════════════ STATE ══════════════
 const DEF = {
-parent:{name:’’,gender:‘dad’,interests:[],tradition:‘secular’},
-child:{name:’’,age:‘9-10’,relation:‘good’,gender:‘boy’},
-streak:1, activity:null, memories:[], apiKey:’’, selectedEmoji:‘❤️’
+  parent:{name:'',gender:'dad',interests:[],tradition:'secular'},
+  child:{name:'',age:'9-10',relation:'good',gender:'boy'},
+  streak:1, activity:null, memories:[], apiKey:'', selectedEmoji:'❤️'
 };
-let S = {…DEF};
-try{ const s=localStorage.getItem(‘bondy2’);if(s) S=JSON.parse(s); }catch(e){}
-const save=()=>{ try{localStorage.setItem(‘bondy2’,JSON.stringify(S));}catch(e){} };
+let S = {...DEF};
+try{ const s=localStorage.getItem('bondy2');if(s) S=JSON.parse(s); }catch(e){}
+const save=()=>{ try{localStorage.setItem('bondy2',JSON.stringify(S));}catch(e){} };
 
 // ══════════════ NAV ══════════════
+function showDebug(msg){
+let d = document.getElementById(‘debugBox’);
+if(!d){ d=document.createElement(‘div’); d.id=‘debugBox’;
+d.style=‘position:fixed;bottom:0;left:0;right:0;background:red;color:#fff;font-size:11px;padding:8px;z-index:9999;max-height:120px;overflow:auto;direction:ltr’;
+document.body.appendChild(d); }
+d.innerHTML += ‘<div>’ + msg + ‘</div>’;
+}
+
 function go(id){
+try{
+showDebug(‘go(’ + id + ‘) called’);
 document.querySelectorAll(’.screen’).forEach(s=>s.classList.remove(‘active’));
-var sc=document.getElementById(id);
-if(!sc) return;
+const sc=document.getElementById(id);
+if(!sc){showDebug(’ERROR: screen not found: ’+id);return;}
 sc.classList.add(‘active’);
+showDebug(‘screen ’ + id + ’ activated’);
 if(sc.scrollTop!==undefined) sc.scrollTop=0;
 if(id===‘loading’) setTimeout(generateActivity,300);
 if(id===‘home’) updateHome();
 if(id===‘journal’) updateJournal();
 if(id===‘profile’) updateProfile();
 if(id===‘questions’) updateQuestions();
+}catch(e){console.error(‘go() error:’,e);}
 }
 
 // ══════════════ OB HELPERS ══════════════
@@ -616,12 +627,6 @@ generateActivity().then(() => {
 btn.textContent = ‘✨ קסום לי פעילות אחרת’;
 btn.disabled = false;
 });
-}
-
-function selCG(el, val){
-document.querySelectorAll(’#cgBoy,#cgGirl’).forEach(function(e){e.classList.remove(‘sel’);});
-el.classList.add(‘sel’);
-S.child.gender = val;
 }
 
 function saveOb1(){
@@ -672,7 +677,7 @@ const p=S.parent, c=S.child;
 const pastTitles = S.memories.map(m=>m.title).concat(S.activity?.title ? [S.activity.title] : []);
 const result = await callServer(’/api/activity’, {
 parentName: p.name, interests: p.interests, tradition: p.tradition,
-childName: c.name, childAge: c.age, childGender: c.gender, relation: c.relation, lang: LANG,
+childName: c.name, childAge: c.age, childGender: c.gender, relation: c.relation,
 pastActivities: pastTitles
 });
 const act = result?.activity || FALLBACK_ACTS[Math.floor(Math.random()*FALLBACK_ACTS.length)];
@@ -820,7 +825,7 @@ async function genQuestions(){
 const btn = document.querySelector(’.gen-btn-small’) || document.querySelector(’.gen-btn’);
 if(btn){ btn.innerHTML=‘⏳…’; btn.disabled=true; }
 const c=S.child;
-const result = await callServer(’/api/questions’, { childAge: c.age, childName: c.name, lang: LANG });
+const result = await callServer(’/api/questions’, { childAge: c.age, childName: c.name });
 if(result?.questions?.length){
 const newQs=result.questions.map(q=>({text:q.text||q,cat:q.cat||‘dream’}));
 QBANK.unshift(…newQs);
@@ -964,6 +969,20 @@ list.innerHTML = ‘<div class="ncard" style="cursor:pointer" onclick="loadNearb
 );
 }
 
+// ══════════════ INIT ══════════════
+window.addEventListener(‘load’,()=>{
+
+// Splash buttons - using addEventListener for Safari compatibility
+const btnStart = document.getElementById(‘btnStart’);
+const btnLogin = document.getElementById(‘btnLogin’);
+if(btnStart) btnStart.addEventListener(‘click’, function(){ showDebug(‘btnStart clicked’); go(‘ob1’); });
+
+if(S.parent.name&&S.child.name){
+if(S.activity) go(‘home’);
+else go(‘loading’);
+}
+});
 </script>
+
 </body>
 </html>
