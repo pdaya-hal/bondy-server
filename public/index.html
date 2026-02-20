@@ -700,12 +700,22 @@ try{ const s=localStorage.getItem(‘bondy2’);if(s) S=JSON.parse(s); }catch(e)
 const save=()=>{ try{localStorage.setItem(‘bondy2’,JSON.stringify(S));}catch(e){} };
 
 // ══════════════ NAV ══════════════
+function showDebug(msg){
+let d = document.getElementById(‘debugBox’);
+if(!d){ d=document.createElement(‘div’); d.id=‘debugBox’;
+d.style=‘position:fixed;bottom:0;left:0;right:0;background:red;color:#fff;font-size:11px;padding:8px;z-index:9999;max-height:120px;overflow:auto;direction:ltr’;
+document.body.appendChild(d); }
+d.innerHTML += ‘<div>’ + msg + ‘</div>’;
+}
+
 function go(id){
 try{
+showDebug(‘go(’ + id + ‘) called’);
 document.querySelectorAll(’.screen’).forEach(s=>s.classList.remove(‘active’));
 const sc=document.getElementById(id);
-if(!sc){console.error(‘Screen not found:’,id);return;}
+if(!sc){showDebug(’ERROR: screen not found: ’+id);return;}
 sc.classList.add(‘active’);
+showDebug(‘screen ’ + id + ’ activated’);
 if(sc.scrollTop!==undefined) sc.scrollTop=0;
 if(id===‘loading’) setTimeout(generateActivity,300);
 if(id===‘home’) updateHome();
@@ -1142,7 +1152,7 @@ applyTranslations();
 // Splash buttons - using addEventListener for Safari compatibility
 const btnStart = document.getElementById(‘btnStart’);
 const btnLogin = document.getElementById(‘btnLogin’);
-if(btnStart) btnStart.addEventListener(‘click’, function(){ go(‘ob1’); });
+if(btnStart) btnStart.addEventListener(‘click’, function(){ showDebug(‘btnStart clicked’); go(‘ob1’); });
 if(btnLogin) btnLogin.addEventListener(‘click’, function(){ loginFlow(); });
 
 if(S.parent.name&&S.child.name){
