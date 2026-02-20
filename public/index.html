@@ -560,134 +560,6 @@ will-change:transform;text-align:center;
 
 </div><!-- /phone -->
 <script>
-// ══════════════ LANGUAGE ══════════════
-const urlLang = new URLSearchParams(window.location.search).get('lang');
-const browserLang = (navigator.language && navigator.language.toLowerCase().startsWith('he')) ? 'he' : 'en';
-const LANG = urlLang || (browserLang === 'he' ? 'he' : 'en');
-const isHE = LANG === 'he';
-
-const T = {
-// Splash
-splash_start: isHE ? ‘בואו נתחיל במסע ←’ : ‘Start the journey ←’,
-splash_login: isHE ? “יש לי כבר חשבון” : “I already have an account”,
-splash_headline1: isHE ? “הילד שלך לא צריך” : “Your child doesn’t need”,
-splash_headline2: isHE ? ‘עוד מסך.’ : ‘another screen.’,
-splash_headline3: isHE ? ‘הוא צריך אותך.’ : ‘They need you.’,
-// Onboarding
-ob1_step: isHE ? ‘שלב 1 מתוך 4’ : ‘Step 1 of 4’,
-ob1_q: isHE ? ‘היי! איך קוראים לך?’ : “Hi! What’s your name?”,
-ob1_placeholder: isHE ? ‘השם שלך…’ : ‘Your name…’,
-ob1_dad: isHE ? ‘👨 אבא’ : ‘👨 Dad’,
-ob1_mom: isHE ? ‘👩 אמא’ : ‘👩 Mom’,
-ob1_next: isHE ? ‘המשך ←’ : ‘Continue ←’,
-ob2_step: isHE ? ‘שלב 2 מתוך 4’ : ‘Step 2 of 4’,
-ob2_q: isHE ? “מה אתה אוהב?” : “What do you enjoy?”,
-ob2_hint: isHE ? ‘בחר כמה שרוצה’ : ‘Choose as many as you like’,
-ob2_hike: isHE ? ‘טיולים’ : ‘Hiking’,
-ob2_cook: isHE ? ‘בישול’ : ‘Cooking’,
-ob2_sport: isHE ? ‘ספורט’ : ‘Sports’,
-ob2_art: isHE ? ‘אמנות’ : ‘Art’,
-ob2_science: isHE ? ‘מדע’ : ‘Science’,
-ob2_music: isHE ? ‘מוזיקה’ : ‘Music’,
-ob3_step: isHE ? ‘שלב 3 מתוך 4’ : ‘Step 3 of 4’,
-ob3_q: isHE ? ‘ספר לי על הילד שלך’ : ‘Tell me about your child’,
-ob3_child_placeholder: isHE ? ‘שם הילד…’ : “Child’s name…”,
-ob3_age: isHE ? ‘גיל’ : ‘Age’,
-ob3_rel_q: isHE ? ‘מצב הקשר היום?’ : ‘How is your connection today?’,
-ob3_great: isHE ? ‘🏔️  מצוין — קרובים מאוד’ : ‘🏔️  Great — very close’,
-ob3_good: isHE ? ‘🛤️  טוב — אבל אפשר יותר’ : ‘🛤️  Good — but could be better’,
-ob3_distant: isHE ? ‘🧭  קצת מרוחק לאחרונה’ : ‘🧭  A bit distant lately’,
-ob4_step: isHE ? ‘שלב 4 מתוך 4’ : ‘Step 4 of 4’,
-ob4_q: isHE ? ‘מה החיבור שלך למסורת?’ : ‘What is your connection to tradition?’,
-ob4_hint: isHE ? ‘זה ישפיע על סוג הפעילויות’ : ‘This will shape your activities’,
-ob4_sec: isHE ? ‘🌿 כיפת השמיים’ : ‘🌿 Nature & Mindfulness’,
-ob4_sec_sub: isHE ? ‘חיבור לטבע, לרגע, לאנשים’ : ‘Connection to nature, moments, people’,
-ob4_trad: isHE ? ‘🕯️ מחובר למסורת’ : ‘🕯️ Traditional’,
-ob4_trad_sub: isHE ? ‘בית מסורתי חם — ארוחות, חגים, סיפורים’ : ‘Warm traditional home — meals, holidays, stories’,
-ob4_rel: isHE ? ‘✡️ שורשים’ : ‘✡️ Religious’,
-ob4_rel_sub: isHE ? ‘תורה, שבת, מידות — חיים לפי ערכים יהודיים’ : ‘Torah, Shabbat, values — living by Jewish principles’,
-ob4_seek: isHE ? ‘🔍 בדרך’ : ‘🔍 Exploring’,
-ob4_seek_sub: isHE ? ‘שואל שאלות, מחפש חיבור’ : ‘Asking questions, seeking connection’,
-ob4_go: isHE ? “בואו נתחיל! 🚀” : “Let’s go! 🚀”,
-// Loading
-load_msg: isHE ? ‘מכין פעילות מותאמת אישית…’ : ‘Preparing your personalized activity…’,
-load_title: isHE ? “Bondy לומד\nעל המשפחה שלך” : “Bondy is learning\nabout your family”,
-// Home
-home_greet: isHE ? ‘שלום,’ : ‘Hello,’,
-home_streak: isHE ? ‘שבוע {n} ברצף’ : ‘Week {n} streak’,
-home_keep: isHE ? ‘תמשיך כך!’ : ‘Keep it up!’,
-home_weekly: isHE ? ‘הפעילות השבועית שלך’ : ‘Your weekly activity’,
-home_badge: isHE ? ‘✨ מותאם אישית · AI’ : ‘✨ Personalized · AI’,
-home_do: isHE ? “בוא נעשה את זה! ←” : “Let’s do it! ←”,
-home_dinner: isHE ? ‘שאלה לארוחת ערב הערב’ : “Tonight’s dinner question”,
-home_nearby: isHE ? ‘קרוב אליך עכשיו 📍’ : ‘Near you right now 📍’,
-home_refresh: isHE ? ‘רענן’ : ‘Refresh’,
-home_find: isHE ? ‘📍 מצא מקומות קרובים’ : ‘📍 Find nearby places’,
-home_other: isHE ? ‘✨ קסום לי פעילות אחרת’ : ‘✨ Surprise me with another’,
-// Nav
-nav_home: isHE ? ‘בית’ : ‘Home’,
-nav_memories: isHE ? ‘זיכרונות’ : ‘Memories’,
-nav_questions: isHE ? ‘שאלות’ : ‘Questions’,
-nav_profile: isHE ? ‘פרופיל’ : ‘Profile’,
-// Questions
-q_title: isHE ? ‘שאלות לשיחה’ : ‘Conversation Questions’,
-q_sub: isHE ? ‘לארוחת ערב ולכל רגע’ : ‘For dinner and every moment’,
-q_dinner: isHE ? ‘🍽️ שאלת ארוחת ערב’ : ‘🍽️ Dinner Question’,
-q_swipe: isHE ? ‘העבר קלף לשאלה הבאה’ : ‘Swipe card for next question’,
-q_refresh: isHE ? ‘🔄 רענן’ : ‘🔄 Refresh’,
-q_left: isHE ? ’ שאלות נותרו’ : ’ questions left’,
-q_done_title: isHE ? ‘כל הכבוד!’ : ‘Well done!’,
-q_done_sub: isHE ? “עברתם על כל השאלות ביחד.\nכל שאלה היא עוד שלב בקשר.” : “You went through all questions together.\nEach one brings you closer.”,
-q_premium: isHE ? ‘⭐ בונדי פרמיום’ : ‘⭐ Bondy Premium’,
-q_premium_sub: isHE ? “שאלות ללא הגבלה, מותאמות לכל שלב בגיל הילד” : “Unlimited questions, tailored to every stage of childhood”,
-q_more: isHE ? ‘✨ קבל עוד שאלות’ : ‘✨ Get more questions’,
-q_restart: isHE ? ‘חזור להתחלה’ : ‘Start over’,
-// Memory save
-mem_title: isHE ? ‘שמור זיכרון 💚’ : ‘Save a Memory 💚’,
-mem_photo: isHE ? ‘לחץ להוספת תמונה’ : ‘Tap to add a photo’,
-mem_optional: isHE ? ‘אופציונלי’ : ‘Optional’,
-mem_feeling: isHE ? ‘איך הרגשת?’ : ‘How did it feel?’,
-mem_save: isHE ? ‘שמור זיכרון ✨’ : ‘Save Memory ✨’,
-// Saved
-saved_title: isHE ? ‘זיכרון נשמר!’ : ‘Memory Saved!’,
-saved_streak: isHE ? ‘רצף שבועי’ : ‘Weekly Streak’,
-saved_share: isHE ? ‘📤 שתף את הזיכרון’ : ‘📤 Share this memory’,
-saved_back: isHE ? ‘חזרה לבית’ : ‘Back home’,
-// Journal
-j_title: isHE ? ‘הזיכרונות שלנו’ : ‘Our Memories’,
-j_activities: isHE ? ’ פעילויות’ : ’ activities’,
-j_all: isHE ? ‘כל הפעילויות’ : ‘All Activities’,
-j_empty: isHE ? ‘עדיין אין זיכרונות’ : ‘No memories yet’,
-j_first: isHE ? “עשו פעילות ראשונה!” : “Do your first activity!”,
-// Profile
-p_parent: isHE ? ‘הורה ל’ : ’Parent of ’,
-p_age: isHE ? ‘גיל’ : ’Age ’,
-p_my: isHE ? ‘פרופיל שלי’ : ‘My Profile’,
-p_name: isHE ? ‘שם’ : ‘Name’,
-p_interests: isHE ? ‘תחומי עניין’ : ‘Interests’,
-p_trad: isHE ? ‘חיבור למסורת’ : ‘Tradition’,
-p_child: isHE ? ‘הילד שלי’ : ‘My Child’,
-p_rel: isHE ? ‘מצב קשר’ : ‘Connection’,
-p_settings: isHE ? ‘הגדרות’ : ‘Settings’,
-p_remind: isHE ? ‘🔔 תזכורות’ : ‘🔔 Reminders’,
-p_reset: isHE ? ‘🔄 התחל מחדש’ : ‘🔄 Reset app’,
-p_upgrade: isHE ? ‘שדרג לפרמיום’ : ‘Upgrade to Premium’,
-p_upgrade_sub: isHE ? ‘פעילויות לפי מיקום, מסלול בר/בת מצווה’ : ‘Location activities, Bar/Bat Mitzvah track’,
-p_memories: isHE ? ‘זיכרונות’ : ‘Memories’,
-p_streak: isHE ? ‘רצף שבועות 🔥’ : ‘Week streak 🔥’,
-p_weeks: isHE ? ‘שבועות בשנה’ : ‘weeks/year’,
-// Activity detail
-d_how: isHE ? ‘איך עושים את זה’ : ‘How to do it’,
-d_questions: isHE ? ‘שאלות לשיחה’ : ‘Conversation starters’,
-d_save: isHE ? ‘✓  סיימנו! שמור זיכרון’ : ‘✓  Done! Save this memory’,
-// Load msg
-loading_sub: isHE ? ‘מכין פעילות מותאמת אישית…’ : ‘Crafting your personalized activity…’,
-};
-
-// direction - set via CSS class to avoid layout issues
-document.documentElement.lang = isHE ? ‘he’ : ‘en’;
-document.body.style.direction = isHE ? ‘rtl’ : ‘ltr’;
-document.body.style.textAlign = isHE ? ‘right’ : ‘left’;
 
 // ══════════════ STATE ══════════════
 const DEF = {
@@ -711,7 +583,6 @@ if(id===‘home’) updateHome();
 if(id===‘journal’) updateJournal();
 if(id===‘profile’) updateProfile();
 if(id===‘questions’) updateQuestions();
-try{ applyTranslations(); }catch(e){}
 }
 
 // ══════════════ OB HELPERS ══════════════
@@ -739,12 +610,18 @@ function selEm(el,em){ document.querySelectorAll(’.embtn’).forEach(b=>b.clas
 
 function getNewActivity(){
 const btn = event.target;
-btn.textContent = isHE ? ‘🔮 מחפש קסם חדש…’ : ‘🔮 Finding something new…’;
+btn.textContent = ‘🔮 מחפש קסם חדש…’;
 btn.disabled = true;
 generateActivity().then(() => {
-btn.textContent = T.home_other;
+btn.textContent = ‘✨ קסום לי פעילות אחרת’;
 btn.disabled = false;
 });
+}
+
+function selCG(el, val){
+document.querySelectorAll(’#cgBoy,#cgGirl’).forEach(function(e){e.classList.remove(‘sel’);});
+el.classList.add(‘sel’);
+S.child.gender = val;
 }
 
 function saveOb1(){
@@ -886,7 +763,7 @@ const remaining = filteredCards.length - cardIndex;
 const el = document.getElementById(‘cardCounter’);
 const stack = document.getElementById(‘cardStack’);
 if(remaining > 0){
-if(el) el.textContent = remaining + T.q_left;
+if(el) el.textContent = remaining + ’ שאלות נותרו’;
 return;
 }
 // Show empty state with upsell
@@ -1087,62 +964,6 @@ list.innerHTML = ‘<div class="ncard" style="cursor:pointer" onclick="loadNearb
 );
 }
 
-// ══════════════ LOGIN FLOW ══════════════
-function loginFlow(){
-const id = prompt(isHE ? ‘הזן את מזהה המשתמש שלך:’ : ‘Enter your user ID:’);
-if(id){
-S.parent.name = id;
-if(S.activity) go(‘home’);
-else go(‘loading’);
-}
-}
-
-// ══════════════ TRANSLATIONS ══════════════
-function applyTranslations(){
-try { if(typeof T === ‘undefined’) return;
-const splashHeadline = document.getElementById(‘splashHeadline’);
-if(splashHeadline) splashHeadline.innerHTML = T.splash_headline1 + ‘<br>’ + (isHE ? ‘עוד מסך.’ : ‘another screen.’) + ‘<br><strong>’ + T.splash_headline3 + ‘</strong>’;
-const splashBtn = document.getElementById(‘splashStart’);
-if(splashBtn) splashBtn.textContent = T.splash_start;
-// Nav labels
-document.querySelectorAll(’.ni’).forEach(el => {
-const ic = el.querySelector(’.ni-ic’);
-if(!ic) return;
-const emoji = ic.textContent;
-// Get text node (last child after icon div)
-const nodes = […el.childNodes].filter(n => n.nodeType === 3);
-if(!nodes.length) return;
-const tn = nodes[nodes.length-1];
-if(emoji.includes(‘🏠’)) tn.textContent = T.nav_home;
-if(emoji.includes(‘📸’)) tn.textContent = T.nav_memories;
-if(emoji.includes(‘💬’)) tn.textContent = T.nav_questions;
-});
-// Home screen
-const greet = document.querySelector(’.hgreeting’);
-if(greet) greet.textContent = T.home_greet;
-// Questions screen
-const qtitle = document.querySelector(’#questions .stitle’);
-if(qtitle) qtitle.textContent = T.q_title;
-const qsub = document.querySelector(’#questions .ssub’);
-if(qsub) qsub.textContent = T.q_sub;
-// Loading
-const loadMsg = document.getElementById(‘loadMsg’);
-if(loadMsg) loadMsg.textContent = T.loading_sub;
-const swipeHint = document.getElementById(‘swipeHint’);
-if(swipeHint) swipeHint.innerHTML = ’← ’ + (isHE ? ‘העבר לשאלה הבאה’ : ‘Swipe for next question’);
-} catch(e) { console.log(‘applyTranslations error:’, e); }
-}
-
-// ══════════════ INIT ══════════════
-window.addEventListener(‘load’,()=>{
-applyTranslations();
-
-if(S.parent.name&&S.child.name){
-if(S.activity) go(‘home’);
-else go(‘loading’);
-}
-});
 </script>
-
 </body>
 </html>
