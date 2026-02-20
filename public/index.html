@@ -124,6 +124,8 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
 }
 </style>
 
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232D5016'/><text y='.9em' font-size='72' font-family='Georgia,serif' font-weight='900' fill='white' x='8'>b</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232D5016'/><text y='.9em' font-size='72' font-family='Georgia,serif' font-weight='900' fill='white' x='8'>b</text></svg>">
 </head>
 <body>
 <div class="app">
@@ -296,9 +298,9 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
   <div style="padding:20px 22px;padding-bottom:80px" id="jList">
     <div style="text-align:center;padding:40px">
       <div style="font-size:48px;margin-bottom:16px">🌱</div>
-      <div style="font-size:17px;font-weight:700;color:#1A1410;margin-bottom:8px">עוד אין זיכרונות</div>
-      <div style="font-size:14px;color:#8B7B6B;margin-bottom:24px">כל פעילות שתעשו ביחד תישמר כאן</div>
-      <button class="btn btn-green" style="max-width:280px;margin:0 auto" onclick="go('actdetail')">✨ צור זיכרון משמעותי</button>
+      <div style="font-size:18px;font-weight:700;color:#1A1410;margin-bottom:8px">הדרך מתחילה כאן</div>
+      <div style="font-size:14px;color:#8B7B6B;line-height:1.7;margin-bottom:24px">כל פעילות שתעשו יחד<br>תישמר כאן לזיכרון</div>
+      <button class="btn btn-green" style="max-width:280px;margin:0 auto" onclick="go('actdetail')">✨ התחילו עם הפעילות הראשונה</button>
     </div>
   </div>
   <div class="nav">
@@ -406,7 +408,8 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
     <div style="font-size:14px;color:rgba(255,255,255,.75);line-height:1.6">חיזוק הקשר עם הילד שלך<br>בלי הגבלות</div>
   </div>
   <div style="background:#C4A882;padding:14px 28px;text-align:center">
-    <div style="font-size:13px;color:#1A1410;font-weight:700">חינם חודש ראשון · אחר כך 29₪/חודש</div>
+    <div style="font-size:13px;color:#1A1410;font-weight:700">חינם חודש ראשון · אחר כך 29₪/חודש</div><div style="font-size:11px;color:rgba(26,20,16,.6);margin-top:3px">ניתן לביטול בכל עת · לא מחייבים אוטומטית</div><div style="font-size:11px;color:rgba(26,20,16,.6);margin-top:3px">ניתן לביטול בכל עת · לא מחויבים אוטומטית</div>
+    <div style="font-size:11px;color:rgba(26,20,16,.6);margin-top:4px">ניתן לביטול בכל עת לפני סיום החודש</div>
   </div>
   <div style="padding:24px 20px 40px">
     <div style="background:#fff;border-radius:20px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)">
@@ -1114,6 +1117,9 @@ function updateJournal(){
     el.appendChild(d);
   });
 }
+
+// Warm up server on load
+fetch(SERVER + '/api/health').catch(function(){});
 
 // Init
 // Show PWA hint if running in browser (not standalone)
