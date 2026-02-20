@@ -5,11 +5,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bondy</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Heebo'), local('Heebo-Regular');
+}
+</style>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-button { font-family:'Heebo',sans-serif; }
-body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+button { font-family:'Heebo',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif; }
+body { font-family:'Heebo',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif; background:#2D5016; min-height:100vh; display:flex; align-items:center; justify-content:center; }
 .app { width:100%; max-width:430px; min-height:100vh; background:#FAF7F2; position:relative; overflow:hidden; }
 .screen { display:none; flex-direction:column; min-height:100vh; }
 .screen.active { display:flex; }
@@ -21,18 +31,18 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
 .tagline { font-size:11px; letter-spacing:4px; color:rgba(255,255,255,.4); margin-bottom:60px; }
 .headline { font-size:26px; color:#fff; line-height:1.5; margin-bottom:50px; }
 .headline strong { font-weight:900; }
-.btn { width:100%; padding:18px; border:none; border-radius:14px; font-size:17px; font-weight:700; font-family:‘Heebo’,sans-serif; cursor:pointer; margin-bottom:12px; display:block; }
-.opt { font-family:‘Heebo’,sans-serif; }
+.btn { width:100%; padding:18px; border:none; border-radius:14px; font-size:17px; font-weight:700; font-family:‘Heebo’,-apple-system,BlinkMacSystemFont,‘Segoe UI’,Arial,sans-serif; cursor:pointer; margin-bottom:12px; display:block; }
+.opt { font-family:‘Heebo’,-apple-system,BlinkMacSystemFont,‘Segoe UI’,Arial,sans-serif; }
 .btn-primary { background:#C4A882; color:#1A1410; }
 .btn-secondary { background:rgba(255,255,255,.12); color:rgba(255,255,255,.8); }
 
 /* OB */
 .ob { background:#FAF7F2; padding:52px 22px 28px; }
 .ob-title { font-size:22px; font-weight:700; color:#1A1410; margin-bottom:24px; }
-.inp { width:100%; padding:16px; border:2px solid #EDE5D8; border-radius:12px; font-size:16px; font-family:‘Heebo’,sans-serif; background:#fff; color:#1A1410; margin-bottom:16px; }
+.inp { width:100%; padding:16px; border:2px solid #EDE5D8; border-radius:12px; font-size:16px; font-family:‘Heebo’,-apple-system,BlinkMacSystemFont,‘Segoe UI’,Arial,sans-serif; background:#fff; color:#1A1410; margin-bottom:16px; }
 .inp:focus { outline:none; border-color:#2D5016; }
 .opts { display:flex; gap:10px; margin-bottom:20px; }
-.opt { flex:1; padding:14px; border:2px solid #EDE5D8; border-radius:12px; text-align:center; font-size:15px; font-family:‘Heebo’,sans-serif; cursor:pointer; background:#fff; }
+.opt { flex:1; padding:14px; border:2px solid #EDE5D8; border-radius:12px; text-align:center; font-size:15px; font-family:‘Heebo’,-apple-system,BlinkMacSystemFont,‘Segoe UI’,Arial,sans-serif; cursor:pointer; background:#fff; }
 .opt.sel { border-color:#2D5016; background:#2D5016; color:#fff; font-weight:700; }
 .btn-green { background:#2D5016; color:#fff; }
 .label { font-size:13px; color:#8B7B6B; margin-bottom:8px; }
@@ -169,7 +179,7 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
         <h1>שאלות לשיחה</h1>
         <div style="font-size:13px;color:rgba(255,255,255,.6)">לארוחת ערב ולכל רגע</div>
       </div>
-      <button onclick="loadQuestions()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:20px;font-family:'Heebo',sans-serif;font-size:13px;cursor:pointer">רענן ↻</button>
+      <button onclick="loadQuestions()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:20px;font-family:'Heebo',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:13px;cursor:pointer">רענן ↻</button>
     </div>
   </div>
   <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto" id="qList">
