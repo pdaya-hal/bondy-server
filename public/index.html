@@ -53,7 +53,7 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
 .home-head h1 { font-size:24px; font-weight:900; }
 .home-body { padding:20px 22px; }
 .card { background:#fff; border-radius:20px; padding:24px; margin-bottom:16px; box-shadow:0 2px 12px rgba(0,0,0,.06); }
-.nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:#fff; border-top:1px solid #EDE5D8; display:flex; padding:8px 0 20px; }
+.nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:#fff; border-top:1px solid #EDE5D8; display:flex; padding:8px 0 20px; z-index:100; }
 .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11px; cursor:pointer; color:#8B7B6B; padding:4px; }
 .nav-item.active { color:#2D5016; font-weight:700; }
 
@@ -216,14 +216,14 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
 
 <div id="home" class="screen">
   <div class="home-head" style="position:relative">
-    <div onclick="go('profile')" style="position:absolute;top:52px;left:16px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer">👤</div>
+    <div onclick="go('profile')" style="position:absolute;top:52px;left:16px;background:rgba(255,255,255,.2);border-radius:20px;padding:6px 12px;font-size:13px;font-weight:700;color:#fff;cursor:pointer">הגדרות</div>
     <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:4px">שלום,</div>
     <h1 id="homeTitle">בונדי</h1>
     <div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:4px" id="homeStreak">שבוע 1 ברצף 🔥</div>
   </div>
   <div class="home-body" style="padding-bottom:80px">
     <!-- Dinner question -->
-    <div class="card" id="dinnerCard" style="background:linear-gradient(135deg,#2D5016,#3A6B1E);margin-bottom:16px">
+    <div class="card" id="dinnerCard" style="background:linear-gradient(135deg,#2D5016,#3A6B1E);margin-bottom:12px">
       <div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:8px;letter-spacing:1px">💬 שאלה לארוחת ערב</div>
       <div style="font-size:16px;font-weight:700;color:#fff;line-height:1.5;margin-bottom:16px" id="dinnerQ">טוען שאלה...</div>
       <button onclick="go('questions')" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:12px;padding:10px 16px;font-size:13px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer">עוד שאלות ←</button>
@@ -718,7 +718,7 @@ function buildQCards(){
     var depth = i; // how deep in stack (0=top)
     card.style.cssText = [
       'position:absolute',
-      'width:calc(100% - 40px)',
+      'width:calc(100% - 64px)',
       'height:calc(100% - 20px)',
       'background:#fff',
       'border-radius:28px',
@@ -732,10 +732,9 @@ function buildQCards(){
       'opacity:' + (depth < 3 ? 1 : 0),
       'z-index:' + (qList.length - depth)
     ].join(';');
-    card.innerHTML = '<div style="height:5px;background:linear-gradient(90deg,#2D5016,#C4A882);flex-shrink:0"></div>'
-      + '<div style="padding:20px 24px 12px;text-align:center;border-bottom:1px solid #F0E8DE;flex-shrink:0">'
-      + '<div style="font-size:22px;font-weight:900;color:#2D5016;letter-spacing:-1px;line-height:1">bon<span style="color:#C4A882">dy</span></div>'
-      + '<div style="font-size:9px;color:#C4A882;letter-spacing:2px;margin-top:1px">שאלות לשיחה</div>'
+    card.innerHTML = '<div style="padding:28px 24px 14px;text-align:center;border-bottom:1px solid #F0E8DE;flex-shrink:0">'
+      + '<div style="font-size:30px;font-weight:900;color:#2D5016;letter-spacing:-1px;line-height:1">bon<span style="color:#C4A882">dy</span></div>'
+      + '<div style="font-size:9px;color:#C4A882;letter-spacing:2px;margin-top:3px">שאלות לשיחה</div>'
       + '</div>'
       + '<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 28px;text-align:center">'
       + '<div style="font-size:11px;color:#C4A882;font-weight:700;letter-spacing:2px;margin-bottom:20px">שאלה ' + (i+1) + ' מתוך ' + qList.length + '</div>'
@@ -801,7 +800,7 @@ function showQFinished(){
   var deck = document.getElementById('qDeck');
   if(!deck) return;
   var el = document.createElement('div');
-  el.style.cssText = 'width:calc(100% - 40px);height:calc(100% - 20px);border-radius:28px;background:linear-gradient(160deg,#2D5016,#3A6B1E);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 16px 48px rgba(0,0,0,.2);text-align:center;padding:28px;position:absolute;overflow:hidden';
+  el.style.cssText = 'width:calc(100% - 64px);height:calc(100% - 20px);border-radius:28px;background:linear-gradient(160deg,#2D5016,#3A6B1E);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 16px 48px rgba(0,0,0,.2);text-align:center;padding:28px;position:absolute;overflow:hidden';
   var logo = document.createElement('div');
   logo.style.cssText = 'font-size:42px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:4px';
   logo.innerHTML = 'bon<span style="color:#C4A882">dy</span>';
@@ -873,7 +872,7 @@ function setupQSwipe(){
         // swipe RIGHT = next card (Hebrew direction)
         dismissTopCard();
       } else {
-        // swipe left = go back
+        // swipe left = go back  
         if(qIndex > 0){
           qIndex--;
           buildQCards();
