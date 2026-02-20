@@ -732,14 +732,16 @@ function buildQCards(){
       'opacity:' + (depth < 3 ? 1 : 0),
       'z-index:' + (qList.length - depth)
     ].join(';');
-    card.innerHTML = '<div style="height:6px;background:linear-gradient(90deg,#2D5016,#C4A882);flex-shrink:0"></div>'
-      + '<div style="padding:36px 28px 28px;display:flex;flex-direction:column;flex:1;justify-content:space-between">'
-      + '<div>'
-      + '<div style="font-size:11px;color:#C4A882;font-weight:700;letter-spacing:2px;margin-bottom:24px">שאלה ' + (i+1) + ' מתוך ' + qList.length + '</div>'
+    card.innerHTML = '<div style="height:5px;background:linear-gradient(90deg,#2D5016,#C4A882);flex-shrink:0"></div>'
+      + '<div style="padding:20px 24px 12px;text-align:center;border-bottom:1px solid #F0E8DE;flex-shrink:0">'
+      + '<div style="font-size:22px;font-weight:900;color:#2D5016;letter-spacing:-1px;line-height:1">bon<span style="color:#C4A882">dy</span></div>'
+      + '<div style="font-size:9px;color:#C4A882;letter-spacing:2px;margin-top:1px">שאלות לשיחה</div>'
+      + '</div>'
+      + '<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 28px;text-align:center">'
+      + '<div style="font-size:11px;color:#C4A882;font-weight:700;letter-spacing:2px;margin-bottom:20px">שאלה ' + (i+1) + ' מתוך ' + qList.length + '</div>'
       + '<div style="font-size:22px;font-weight:700;color:#1A1410;line-height:1.55">' + qList[i] + '</div>'
       + '</div>'
-      + '<div style="background:#F5F0E8;border-radius:14px;padding:14px 18px;font-size:13px;color:#8B7B6B">' + qTips[i % qTips.length] + '</div>'
-      + '</div>';
+      + '<div style="background:#F5F0E8;margin:0 16px 16px;border-radius:14px;padding:12px 16px;font-size:12px;color:#8B7B6B;text-align:center;flex-shrink:0">' + qTips[i % qTips.length] + '</div>';
     deck.appendChild(card);
 
     // Dot
@@ -769,7 +771,7 @@ function dismissTopCard(){
   if(!topCard) return;
 
   topCard.style.transition = 'transform .4s cubic-bezier(.4,0,.2,1), opacity .35s';
-  topCard.style.transform = 'translateX(-110%) rotate(-12deg) scale(0.85)';
+  topCard.style.transform = 'translateX(110%) rotate(12deg) scale(0.85)';
   topCard.style.opacity = '0';
 
   // Last card?
@@ -799,7 +801,7 @@ function showQFinished(){
   var deck = document.getElementById('qDeck');
   if(!deck) return;
   var el = document.createElement('div');
-  el.style.cssText = 'width:calc(100% - 40px);height:calc(100% - 20px);border-radius:28px;background:linear-gradient(160deg,#2D5016,#3A6B1E);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 16px 48px rgba(0,0,0,.2);text-align:center;padding:32px';
+  el.style.cssText = 'width:calc(100% - 40px);height:calc(100% - 20px);border-radius:28px;background:linear-gradient(160deg,#2D5016,#3A6B1E);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 16px 48px rgba(0,0,0,.2);text-align:center;padding:28px;position:absolute;overflow:hidden';
   var logo = document.createElement('div');
   logo.style.cssText = 'font-size:42px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:4px';
   logo.innerHTML = 'bon<span style="color:#C4A882">dy</span>';
@@ -858,7 +860,7 @@ function setupQSwipe(){
     if(Math.abs(dx) > Math.abs(dy)){
       e.preventDefault();
       var top = document.getElementById('qcard' + qIndex);
-      if(top) top.style.transform = 'translateX(' + dx + 'px) rotate(' + (dx * 0.05) + 'deg)';
+      if(top) top.style.transform = 'translateX(' + dx + 'px) rotate(' + (dx * 0.03) + 'deg)';
     }
   }, { passive: false });
   deck.ontouchend = function(e){
@@ -867,15 +869,14 @@ function setupQSwipe(){
     var dx = e.changedTouches[0].clientX - qTouchX;
     var top = document.getElementById('qcard' + qIndex);
     if(Math.abs(dx) > 80){
-      if(dx < 0){
+      if(dx > 0){
+        // swipe RIGHT = next card (Hebrew direction)
         dismissTopCard();
       } else {
-        // swipe right = go back (if possible)
+        // swipe left = go back
         if(qIndex > 0){
           qIndex--;
-          // re-show previous card
           buildQCards();
-          scrollToQIndex(qIndex);
         } else {
           if(top){ top.style.transition='transform .3s'; top.style.transform=getCardTransform(0); }
         }
