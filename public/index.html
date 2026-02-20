@@ -257,7 +257,7 @@ will-change:transform;text-align:center;
     <div class="opt sel" onclick="selOpt(this,'g','dad')">👨 אבא</div>
     <div class="opt" onclick="selOpt(this,'g','mom')">👩 אמא</div>
   </div>
-  <button class="btn bf a4" onclick="saveOb1()">המשך ←</button>
+  <button class="btn bf a4" id="btnOb1Next" onclick="saveOb1()">המשך ←</button>
 </div>
 
 <!-- ══ OB2 ══ -->
@@ -275,7 +275,7 @@ will-change:transform;text-align:center;
     <div class="chip" onclick="tChip(this,'science')"><span class="chip-em">🔬</span>מדע</div>
     <div class="chip" onclick="tChip(this,'music')"><span class="chip-em">🎵</span>מוזיקה</div>
   </div>
-  <button class="btn bf a4" onclick="saveOb2()">המשך ←</button>
+  <button class="btn bf a4" id="btnOb2Next" onclick="saveOb2()">המשך ←</button>
 </div>
 
 <!-- ══ OB3 ══ -->
@@ -303,7 +303,7 @@ will-change:transform;text-align:center;
     <div class="opt sel" style="justify-content:flex-start;margin-bottom:7px" onclick="selOpt(this,'r','good')">🛤️&nbsp; טוב — אבל אפשר יותר</div>
     <div class="opt" style="justify-content:flex-start;margin-bottom:7px" onclick="selOpt(this,'r','distant')">🧭&nbsp; קצת מרוחק לאחרונה</div>
   </div>
-  <button class="btn bf a5" onclick="saveOb3()">המשך ←</button>
+  <button class="btn bf a5" id="btnOb3Next" onclick="saveOb3()">המשך ←</button>
 </div>
 
 <!-- ══ OB4 ══ -->
@@ -319,7 +319,7 @@ will-change:transform;text-align:center;
     <div class="trad" onclick="selTrad(this,'religious')"><div class="trad-radio"></div><div><div class="trad-name">✡️ שורשים</div><div class="trad-sub">תורה, שבת, מידות — חיים לפי ערכים יהודיים</div></div></div>
     <div class="trad" onclick="selTrad(this,'seeking')"><div class="trad-radio"></div><div><div class="trad-name">🔍 בדרך</div><div class="trad-sub">שואל שאלות, מחפש חיבור</div></div></div>
   </div>
-  <button class="btn bf a4" style="margin-top:18px" onclick="saveOb4()">בואו נתחיל! 🚀</button>
+  <button class="btn bf a4" style="margin-top:18px" id="btnOb4Next" onclick="saveOb4()">בואו נתחיל! 🚀</button>
 </div>
 
 <!-- ══ API KEY ══ -->
@@ -1138,6 +1138,13 @@ if(swipeHint) swipeHint.innerHTML = ’← ’ + (isHE ? ‘העבר לשאלה 
 // ══════════════ INIT ══════════════
 window.addEventListener(‘load’,()=>{
 applyTranslations();
+
+// Splash buttons - using addEventListener for Safari compatibility
+const btnStart = document.getElementById(‘btnStart’);
+const btnLogin = document.getElementById(‘btnLogin’);
+if(btnStart) btnStart.addEventListener(‘click’, function(){ go(‘ob1’); });
+if(btnLogin) btnLogin.addEventListener(‘click’, function(){ loginFlow(); });
+
 if(S.parent.name&&S.child.name){
 if(S.activity) go(‘home’);
 else go(‘loading’);
