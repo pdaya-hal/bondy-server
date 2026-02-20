@@ -13,7 +13,7 @@
   --dark:#1A1410; --soft:#8B7B6B; --white:#fff;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh}
+body{font-family:'Heebo',Heebo,Arial,sans-serif;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh}
 .phone{width:390px;height:844px;background:var(--cream);border-radius:48px;overflow:hidden;position:relative;box-shadow:0 40px 120px rgba(0,0,0,.7)}
 @media(max-width:420px){
   body{background:var(--cream);align-items:flex-start}
@@ -32,7 +32,7 @@ body{font-family:'Heebo',sans-serif;background:#111;display:flex;justify-content
 .a5{animation:fadeUp .45s ease .55s both}
 
 /* GLOBAL */
-.btn{width:100%;padding:17px;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:‘Heebo’,sans-serif;cursor:pointer;transition:transform .15s;margin-bottom:10px}
+.btn{width:100%;padding:17px;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:‘Heebo’,Heebo,Arial,sans-serif;cursor:pointer;transition:transform .15s;margin-bottom:10px}
 .btn:active{transform:scale(.97)}
 .bp{background:var(–earth);color:var(–dark)}
 .bf{background:var(–forest);color:#fff}
@@ -240,8 +240,8 @@ will-change:transform;text-align:center;
   <div class="logo-tag a1">בניית קשר הורה–ילד</div>
   <div class="headline a2" id="splashHeadline">הילד שלך לא צריך<br>עוד מסך.<br><strong>הוא צריך אותך.</strong></div>
   <div style="width:100%" class="a3">
-    <button class="btn bp" onclick="go('ob1')">בואו נתחיל במסע ←</button>
-    <button class="btn bg" onclick="go('ob1')">יש לי כבר חשבון</button>
+    <button style="width:100%;padding:17px;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;background:#C4A882;color:#1A1410;margin-bottom:10px;display:block" onclick="go('ob1')">בואו נתחיל במסע ←</button>
+    <button style="width:100%;padding:17px;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);margin-bottom:10px;display:block" onclick="go('ob1')">יש לי כבר חשבון</button>
   </div>
 </div>
 
@@ -701,8 +701,10 @@ const save=()=>{ try{localStorage.setItem(‘bondy2’,JSON.stringify(S));}catch
 
 // ══════════════ NAV ══════════════
 function go(id){
+try{
 document.querySelectorAll(’.screen’).forEach(s=>s.classList.remove(‘active’));
 const sc=document.getElementById(id);
+if(!sc){console.error(‘Screen not found:’,id);return;}
 sc.classList.add(‘active’);
 if(sc.scrollTop!==undefined) sc.scrollTop=0;
 if(id===‘loading’) setTimeout(generateActivity,300);
@@ -711,6 +713,7 @@ if(id===‘journal’) updateJournal();
 if(id===‘profile’) updateProfile();
 if(id===‘questions’) updateQuestions();
 applyTranslations();
+}catch(e){console.error(‘go() error:’,e);}
 }
 
 // ══════════════ OB HELPERS ══════════════
