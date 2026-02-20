@@ -691,7 +691,7 @@ document.documentElement.lang = isHE ? ‘he’ : ‘en’;
 // ══════════════ STATE ══════════════
 const DEF = {
 parent:{name:’’,gender:‘dad’,interests:[],tradition:‘secular’},
-child:{name:’’,age:‘9-10’,relation:‘good’},
+child:{name:’’,age:‘9-10’,relation:‘good’,gender:‘boy’},
 streak:1, activity:null, memories:[], apiKey:’’, selectedEmoji:‘❤️’
 };
 let S = {…DEF};
@@ -1083,6 +1083,16 @@ list.innerHTML = ‘<div class="ncard"><div style="font-size:13px;color:var(--so
 list.innerHTML = ‘<div class="ncard" style="cursor:pointer" onclick="loadNearby()"><div style="font-size:13px;color:var(--soft)">⚠️ אפשר גישה למיקום ולחץ שוב</div></div>’;
 }
 );
+}
+
+// ══════════════ LOGIN FLOW ══════════════
+function loginFlow(){
+const id = prompt(isHE ? ‘הזן את מזהה המשתמש שלך:’ : ‘Enter your user ID:’);
+if(id){
+S.parent.name = id;
+if(S.activity) go(‘home’);
+else go(‘loading’);
+}
 }
 
 // ══════════════ TRANSLATIONS ══════════════
