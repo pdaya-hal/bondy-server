@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bondy</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+.app { width:100%; max-width:430px; min-height:100vh; background:#FAF7F2; position:relative; overflow:hidden; }
+.screen { display:none; flex-direction:column; min-height:100vh; }
+.screen.active { display:flex; }
+
+/* SPLASH */
+#splash { background:#2D5016; align-items:center; justify-content:center; padding:40px; text-align:center; }
+.logo { font-size:64px; font-weight:900; color:#fff; letter-spacing:-2px; }
+.logo span { color:#C4A882; }
+.tagline { font-size:11px; letter-spacing:4px; color:rgba(255,255,255,.4); margin-bottom:60px; }
+.headline { font-size:26px; color:#fff; line-height:1.5; margin-bottom:50px; }
+.headline strong { font-weight:900; }
+.btn { width:100%; padding:18px; border:none; border-radius:14px; font-size:17px; font-weight:700; font-family:‘Heebo’,sans-serif; cursor:pointer; margin-bottom:12px; display:block; }
+.btn-primary { background:#C4A882; color:#1A1410; }
+.btn-secondary { background:rgba(255,255,255,.12); color:rgba(255,255,255,.8); }
+
+/* OB */
+.ob { background:#FAF7F2; padding:52px 22px 28px; }
+.ob-title { font-size:22px; font-weight:700; color:#1A1410; margin-bottom:24px; }
+.inp { width:100%; padding:16px; border:2px solid #EDE5D8; border-radius:12px; font-size:16px; font-family:‘Heebo’,sans-serif; background:#fff; color:#1A1410; margin-bottom:16px; }
+.inp:focus { outline:none; border-color:#2D5016; }
+.opts { display:flex; gap:10px; margin-bottom:20px; }
+.opt { flex:1; padding:14px; border:2px solid #EDE5D8; border-radius:12px; text-align:center; font-size:15px; font-family:‘Heebo’,sans-serif; cursor:pointer; background:#fff; }
+.opt.sel { border-color:#2D5016; background:#2D5016; color:#fff; font-weight:700; }
+.btn-green { background:#2D5016; color:#fff; }
+.label { font-size:13px; color:#8B7B6B; margin-bottom:8px; }
+
+/* HOME */
+#home { background:#FAF7F2; }
+.home-head { background:#2D5016; padding:52px 22px 32px; color:#fff; }
+.home-head h1 { font-size:24px; font-weight:900; }
+.home-body { padding:20px 22px; }
+.card { background:#fff; border-radius:20px; padding:24px; margin-bottom:16px; box-shadow:0 2px 12px rgba(0,0,0,.06); }
+.nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:#fff; border-top:1px solid #EDE5D8; display:flex; padding:8px 0 20px; }
+.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11px; cursor:pointer; color:#8B7B6B; padding:4px; }
+.nav-item.active { color:#2D5016; font-weight:700; }
+</style>
+
+</head>
+<body>
+<div class="app">
+
+<!-- SPLASH -->
+
+<div id="splash" class="screen active">
+  <div class="logo">bon<span>dy</span></div>
+  <div class="tagline">בניית קשר הורה–ילד</div>
+  <div class="headline">הילד שלך לא צריך<br>עוד מסך.<br><strong>הוא צריך אותך.</strong></div>
+  <div style="width:100%">
+    <button class="btn btn-primary" onclick="go('ob1')">בואו נתחיל במסע ←</button>
+    <button class="btn btn-secondary" onclick="go('ob1')">יש לי כבר חשבון</button>
+  </div>
+</div>
+
+<!-- OB1 - שם -->
+
+<div id="ob1" class="screen ob">
+  <div class="ob-title">היי! איך קוראים לך?</div>
+  <input class="inp" id="pName" placeholder="השם שלך...">
+  <div class="label">את/ה...</div>
+  <div class="opts">
+    <button class="opt sel" id="optDad" onclick="selGender(this,'dad')">👨 אבא</button>
+    <button class="opt" id="optMom" onclick="selGender(this,'mom')">👩 אמא</button>
+  </div>
+  <button class="btn btn-green" onclick="saveOb1()">המשך ←</button>
+</div>
+
+<!-- OB2 - תחומי עניין -->
+
+<div id="ob2" class="screen ob">
+  <div class="ob-title">מה אתה אוהב?</div>
+  <div class="label">בחר כמה שרוצה</div>
+  <div class="opts" style="flex-wrap:wrap">
+    <button class="opt" onclick="togInt(this,'hike')">🥾 טיולים</button>
+    <button class="opt" onclick="togInt(this,'cook')">🍳 בישול</button>
+    <button class="opt" onclick="togInt(this,'sport')">⚽ ספורט</button>
+    <button class="opt" onclick="togInt(this,'art')">🎨 אמנות</button>
+    <button class="opt" onclick="togInt(this,'science')">🔬 מדע</button>
+    <button class="opt" onclick="togInt(this,'music')">🎵 מוזיקה</button>
+  </div>
+  <button class="btn btn-green" onclick="saveOb2()">המשך ←</button>
+</div>
+
+<!-- OB3 - ילד -->
+
+<div id="ob3" class="screen ob">
+  <div class="ob-title">ספר לי על הילד שלך</div>
+  <input class="inp" id="cName" placeholder="שם הילד/ה...">
+  <div class="opts">
+    <button class="opt sel" id="cgBoy" onclick="selCG(this,'boy')">👦 בן</button>
+    <button class="opt" id="cgGirl" onclick="selCG(this,'girl')">👧 בת</button>
+  </div>
+  <div class="label">גיל</div>
+  <div class="opts" style="flex-wrap:wrap">
+    <button class="opt" onclick="selAge(this,'5-6')">5-6</button>
+    <button class="opt" onclick="selAge(this,'7-8')">7-8</button>
+    <button class="opt sel" onclick="selAge(this,'9-10')">9-10</button>
+    <button class="opt" onclick="selAge(this,'11-12')">11-12</button>
+    <button class="opt" onclick="selAge(this,'13-14')">13-14</button>
+    <button class="opt" onclick="selAge(this,'15-16')">15-16</button>
+  </div>
+  <button class="btn btn-green" onclick="saveOb3()">המשך ←</button>
+</div>
+
+<!-- OB4 - קשר -->
+
+<div id="ob4" class="screen ob">
+  <div class="ob-title">איך הקשר ביניכם?</div>
+  <div class="opts" style="flex-direction:column">
+    <button class="opt sel" id="r1" onclick="selRel(this,'great')">🏔️ מצוין — קרובים מאוד</button>
+    <button class="opt" id="r2" onclick="selRel(this,'good')">🛤️ טוב — יכול להיות טוב יותר</button>
+    <button class="opt" id="r3" onclick="selRel(this,'hard')">🌱 קשה — רוצה לשפר</button>
+  </div>
+  <button class="btn btn-green" onclick="saveOb4()">בואו נתחיל! 🚀</button>
+</div>
+
+<!-- LOADING -->
+
+<div id="loading" class="screen" style="background:#2D5016;align-items:center;justify-content:center;text-align:center">
+  <div style="font-size:48px;margin-bottom:24px">🌿</div>
+  <div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:8px">Bondy לומד על המשפחה שלך</div>
+  <div style="font-size:14px;color:rgba(255,255,255,.6)" id="loadMsg">מכין פעילות מותאמת אישית...</div>
+</div>
+
+<!-- HOME -->
+
+<div id="home" class="screen">
+  <div class="home-head">
+    <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:4px">שלום,</div>
+    <h1 id="homeTitle">בונדי</h1>
+    <div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:4px" id="homeStreak">שבוע 1 ברצף 🔥</div>
+  </div>
+  <div class="home-body" style="padding-bottom:80px">
+    <div class="card" id="actCard">
+      <div style="font-size:13px;color:#8B7B6B;margin-bottom:8px">פעילות השבוע</div>
+      <div style="font-size:32px;margin-bottom:8px" id="actEmoji">🌿</div>
+      <div style="font-size:18px;font-weight:700;color:#1A1410;margin-bottom:8px" id="actTitle">טוען...</div>
+      <div style="font-size:14px;color:#8B7B6B;margin-bottom:16px" id="actDesc"></div>
+      <button class="btn btn-green" onclick="go('actdetail')">בוא נעשה את זה! ←</button>
+    </div>
+    <button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">✨ קסום לי פעילות אחרת</button>
+  </div>
+  <div class="nav">
+    <div class="nav-item active" onclick="go('home')">🏠<span>בית</span></div>
+    <div class="nav-item" onclick="go('journal')">📸<span>זיכרונות</span></div>
+    <div class="nav-item" onclick="go('questions')">💬<span>שאלות</span></div>
+  </div>
+</div>
+
+<!-- QUESTIONS -->
+
+<div id="questions" class="screen">
+  <div class="home-head">
+    <h1>שאלות לשיחה</h1>
+    <div style="font-size:13px;color:rgba(255,255,255,.6)">לארוחת ערב ולכל רגע</div>
+  </div>
+  <div style="padding:20px 22px;padding-bottom:80px" id="qList">
+    <div style="text-align:center;color:#8B7B6B;padding:40px">טוען שאלות...</div>
+  </div>
+  <div class="nav">
+    <div class="nav-item" onclick="go('home')">🏠<span>בית</span></div>
+    <div class="nav-item" onclick="go('journal')">📸<span>זיכרונות</span></div>
+    <div class="nav-item active" onclick="go('questions')">💬<span>שאלות</span></div>
+  </div>
+</div>
+
+<!-- JOURNAL -->
+
+<div id="journal" class="screen">
+  <div class="home-head">
+    <h1>זיכרונות</h1>
+  </div>
+  <div style="padding:20px 22px;padding-bottom:80px" id="jList">
+    <div style="text-align:center;color:#8B7B6B;padding:40px">עוד אין זיכרונות. עשו פעילות ראשונה!</div>
+  </div>
+  <div class="nav">
+    <div class="nav-item" onclick="go('home')">🏠<span>בית</span></div>
+    <div class="nav-item active" onclick="go('journal')">📸<span>זיכרונות</span></div>
+    <div class="nav-item" onclick="go('questions')">💬<span>שאלות</span></div>
+  </div>
+</div>
+
+<!-- ACT DETAIL -->
+
+<div id="actdetail" class="screen">
+  <div class="home-head" style="position:relative">
+    <div onclick="go('home')" style="position:absolute;top:52px;right:16px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;color:#fff;cursor:pointer">← חזרה</div>
+    <div style="font-size:48px;margin-bottom:8px" id="dEmoji">🌿</div>
+    <h1 id="dTitle">פעילות</h1>
+  </div>
+  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto">
+    <div class="card">
+      <div style="font-size:13px;color:#8B7B6B;margin-bottom:4px">למה זה טוב?</div>
+      <div style="font-size:15px;color:#1A1410" id="dWhy"></div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px">שלבים</div>
+      <div id="dSteps"></div>
+    </div>
+    <button class="btn btn-green" onclick="saveMemory()">✅ עשינו את זה!</button>
+  </div>
+</div>
+
+<script>
+var SERVER = 'https://bondy-server-production.up.railway.app';
+var gSel = 'dad';
+var ageSel = '9-10';
+var rSel = 'great';
+var cgSel = 'boy';
+var interests = [];
+
+var DEF = {
+  parent:{name:'',gender:'dad',interests:[],tradition:'secular'},
+  child:{name:'',age:'9-10',gender:'boy',relation:'great'},
+  streak:1, activity:null, memories:[]
+};
+var S = JSON.parse(JSON.stringify(DEF));
+try { var _s = localStorage.getItem('bondy2'); if(_s) S = JSON.parse(_s); } catch(e){}
+function save(){ try { localStorage.setItem('bondy2', JSON.stringify(S)); } catch(e){} }
+
+function go(id){
+  var screens = document.querySelectorAll('.screen');
+  for(var i=0;i<screens.length;i++) screens[i].classList.remove('active');
+  var sc = document.getElementById(id);
+  if(sc){ sc.classList.add('active'); sc.scrollTop=0; }
+  if(id==='home') updateHome();
+  if(id==='loading') setTimeout(generateActivity, 300);
+  if(id==='questions') loadQuestions();
+  if(id==='journal') updateJournal();
+  if(id==='actdetail') updateDetail();
+}
+
+function selGender(el, val){
+  gSel = val;
+  document.getElementById('optDad').classList.remove('sel');
+  document.getElementById('optMom').classList.remove('sel');
+  el.classList.add('sel');
+}
+function selCG(el, val){
+  cgSel = val;
+  document.getElementById('cgBoy').classList.remove('sel');
+  document.getElementById('cgGirl').classList.remove('sel');
+  el.classList.add('sel');
+}
+function togInt(el, val){
+  el.classList.toggle('sel');
+  var idx = interests.indexOf(val);
+  if(idx===-1) interests.push(val); else interests.splice(idx,1);
+}
+function selAge(el, val){
+  ageSel = val;
+  var btns = el.parentElement.querySelectorAll('.opt');
+  for(var i=0;i<btns.length;i++) btns[i].classList.remove('sel');
+  el.classList.add('sel');
+}
+function selRel(el, val){
+  rSel = val;
+  document.getElementById('r1').classList.remove('sel');
+  document.getElementById('r2').classList.remove('sel');
+  document.getElementById('r3').classList.remove('sel');
+  el.classList.add('sel');
+}
+
+function saveOb1(){
+  var n = document.getElementById('pName').value.trim();
+  if(!n){ alert('נא להזין שם'); return; }
+  S.parent.name = n;
+  S.parent.gender = gSel;
+  save();
+  go('ob2');
+}
+function saveOb2(){
+  S.parent.interests = interests.slice();
+  save();
+  go('ob3');
+}
+function saveOb3(){
+  var n = document.getElementById('cName').value.trim();
+  if(!n){ alert('נא להזין שם'); return; }
+  S.child.name = n;
+  S.child.age = ageSel;
+  S.child.gender = cgSel;
+  save();
+  go('ob4');
+}
+function saveOb4(){
+  S.child.relation = rSel;
+  save();
+  go('loading');
+}
+
+async function callServer(endpoint, data){
+  try {
+    var r = await fetch(SERVER + endpoint, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+    return await r.json();
+  } catch(e){ return null; }
+}
+
+async function generateActivity(){
+  var p = S.parent, c = S.child;
+  var result = await callServer('/api/activity', {
+    parentName: p.name, interests: p.interests, tradition: p.tradition,
+    childName: c.name, childAge: c.age, childGender: c.gender, relation: c.relation,
+    pastActivities: S.memories.map(function(m){ return m.title; })
+  });
+  if(result && result.activity) S.activity = result.activity;
+  save();
+  go('home');
+}
+
+function updateHome(){
+  var el = document.getElementById('homeTitle');
+  if(el) el.textContent = 'שלום, ' + (S.parent.name||'') + ' 👋';
+  var st = document.getElementById('homeStreak');
+  if(st) st.textContent = 'שבוע ' + S.streak + ' ברצף 🔥';
+  var act = S.activity;
+  if(act){
+    var em = document.getElementById('actEmoji');
+    var ti = document.getElementById('actTitle');
+    var de = document.getElementById('actDesc');
+    if(em) em.textContent = act.emoji||'🌿';
+    if(ti) ti.textContent = act.title||'';
+    if(de) de.textContent = act.description||'';
+  }
+}
+
+function updateDetail(){
+  var act = S.activity;
+  if(!act) return;
+  var em = document.getElementById('dEmoji');
+  var ti = document.getElementById('dTitle');
+  var wy = document.getElementById('dWhy');
+  var st = document.getElementById('dSteps');
+  if(em) em.textContent = act.emoji||'🌿';
+  if(ti) ti.textContent = act.title||'';
+  if(wy) wy.textContent = act.why||'';
+  if(st){
+    st.innerHTML = '';
+    var steps = act.steps||[];
+    for(var i=0;i<steps.length;i++){
+      var d = document.createElement('div');
+      d.style = 'display:flex;gap:10px;margin-bottom:10px';
+      d.innerHTML = '<div style="width:24px;height:24px;border-radius:50%;background:#2D5016;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">'+(i+1)+'</div><div style="font-size:14px;color:#1A1410;padding-top:3px">'+steps[i]+'</div>';
+      st.appendChild(d);
+    }
+  }
+}
+
+function saveMemory(){
+  var act = S.activity;
+  if(!act) return;
+  S.memories.unshift({emoji: act.emoji||'🎯', title: act.title||'פעילות', date: new Date().toLocaleDateString('he-IL')});
+  save();
+  alert('הרגע הזה עם ' + S.child.name + ' שמור לתמיד! 💚');
+  go('home');
+}
+
+function getNewActivity(){
+  go('loading');
+}
+
+async function loadQuestions(){
+  var el = document.getElementById('qList');
+  if(!el) return;
+  el.innerHTML = '<div style="text-align:center;color:#8B7B6B;padding:40px">טוען שאלות...</div>';
+  var result = await callServer('/api/questions', {
+    childName: S.child.name, childAge: S.child.age, childGender: S.child.gender,
+    parentName: S.parent.name
+  });
+  if(result && result.questions && result.questions.length){
+    el.innerHTML = '';
+    result.questions.forEach(function(q){
+      var d = document.createElement('div');
+      d.style = 'background:#fff;border-radius:16px;padding:20px;margin-bottom:12px;font-size:16px;font-weight:600;color:#1A1410;box-shadow:0 2px 8px rgba(0,0,0,.06)';
+      d.textContent = q;
+      el.appendChild(d);
+    });
+  }
+}
+
+function updateJournal(){
+  var el = document.getElementById('jList');
+  if(!el) return;
+  if(!S.memories.length){
+    el.innerHTML = '<div style="text-align:center;color:#8B7B6B;padding:40px">עוד אין זיכרונות. עשו פעילות ראשונה!</div>';
+    return;
+  }
+  el.innerHTML = '';
+  S.memories.forEach(function(m){
+    var d = document.createElement('div');
+    d.style = 'background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)';
+    d.innerHTML = '<div style="font-size:32px">'+m.emoji+'</div><div><div style="font-size:15px;font-weight:700;color:#1A1410">'+m.title+'</div><div style="font-size:12px;color:#8B7B6B">'+m.date+'</div></div>';
+    el.appendChild(d);
+  });
+}
+
+// Init
+if(S.parent.name && S.child.name && S.activity){
+  go('home');
+} else if(S.parent.name && S.child.name){
+  go('loading');
+} else {
+  go('splash');
+}
+</script>
+
+</div>
+</body>
+</html>
