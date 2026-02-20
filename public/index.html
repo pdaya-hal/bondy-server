@@ -1106,6 +1106,11 @@ function updateJournal(){
 }
 
 // Init
+// Show PWA hint if running in browser (not standalone)
+if(window.navigator.standalone === false || (window.matchMedia && !window.matchMedia('(display-mode: standalone)').matches)){
+  var hint = document.getElementById('pwaHint');
+  if(hint) hint.style.display = 'block';
+}
 if(S.parent.name && S.child.name && S.activity){
   go('home');
 } else if(S.parent.name && S.child.name){
