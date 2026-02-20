@@ -43,11 +43,16 @@ res.json({ success: true, activity: { emoji: ‘🌿’, title: ‘nature walk�
 
 app.post(’/api/questions’, async (req, res) => {
 try {
-const { childAge } = req.body;
+const { childAge, childName, childGender, childInterests, parentName, parentGender, lang } = req.body;
 const outputLang = lang === ‘en’ ? ‘English’ : ‘Hebrew’;
-const prompt = ’Create 6 ’ + outputLang + ’ conversation questions for family dinner, child age ’ + (childAge||‘8’) + ‘.\n’ +
+const childLabel = childGender === ‘girl’ ? ‘בת’ : ‘בן’;
+const parentLabel = parentGender === ‘mom’ ? ‘אמא’ : ‘אבא’;
+const prompt = ‘Create 8 Hebrew conversation questions for a parent and child.\n’ +
+‘Parent: ’ + parentLabel + ‘. Child: ’ + (childName||’’) + ’ (’ + childLabel + ‘, age ’ + (childAge||‘8’) + ‘).\n’ +
+‘Child interests: ’ + (childInterests||[]).join(’,’) + ‘.\n’ +
+‘Questions should be fun, deep, imaginative. Mix easy and thought-provoking.\n’ +
 ‘Return ONLY valid JSON:\n’ +
-‘{“questions”:[{“text”:””,“cat”:“dream”},{“text”:””,“cat”:“fun”},{“text”:””,“cat”:“values”},{“text”:””,“cat”:“future”},{“text”:””,“cat”:“past”},{“text”:””,“cat”:“imagine”}]}’;
+‘Return ONLY a JSON array of 8 question strings in Hebrew, no extra text:\n[“שאלה1”,“שאלה2”,…]’;
 const r = await fetch(‘https://api.anthropic.com/v1/messages’, {
 method: ‘POST’,
 headers: { ‘Content-Type’: ‘application/json’, ‘x-api-key’: process.env.ANTHROPIC_API_KEY, ‘anthropic-version’: ‘2023-06-01’ },
@@ -56,7 +61,8 @@ body: JSON.stringify({ model: ‘claude-sonnet-4-20250514’, max_tokens: 800, m
 const d = await r.json();
 const text = (d.content && d.content[0]) ? d.content[0].text : ‘’;
 const result = JSON.parse(text.replace(/`json|`/g, ‘’).trim());
-res.json({ success: true, questions: result.questions });
+const qs = Array.isArray(result) ? result : (result.questions || []);
+res.json({ success: true, questions: qs });
 } catch (e) {
 res.json({ success: false, error: e.message });
 }
