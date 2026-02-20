@@ -562,7 +562,7 @@ will-change:transform;text-align:center;
 <script>
 // ══════════════ LANGUAGE ══════════════
 const urlLang = new URLSearchParams(window.location.search).get('lang');
-const browserLang = navigator.language?.toLowerCase().startsWith('he') ? 'he' : 'en';
+const browserLang = (navigator.language && navigator.language.toLowerCase().startsWith('he')) ? 'he' : 'en';
 const LANG = urlLang || (browserLang === 'he' ? 'he' : 'en');
 const isHE = LANG === 'he';
 
