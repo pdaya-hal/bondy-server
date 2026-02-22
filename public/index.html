@@ -389,7 +389,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
       </div>
       <div style="display:flex;align-items:flex-start;gap:12px;margin-top:14px">
         <div style="font-size:22px;flex-shrink:0">&#128218;</div>
-        <div><div style="font-weight:700;color:#1A1410;font-size:15px">לימוד יומי מהמקורות</div><div style="font-size:13px;color:#8B7B6B">פרקי אבות, תנכ״ך ועוד — מותאם לגיל ולזהות היהודית שלכם</div></div>
+        <div><div style="font-weight:700;color:#1A1410;font-size:15px">לימוד יומי מותאם עבורכם</div><div style="font-size:13px;color:#8B7B6B">קטע לימוד שיחזק את הסקרנות ויבנה קשר על בסיס לימוד משותף</div></div>
       </div>
     </div>
     <button onclick="alert('בקרוב! &#128640;')" style="width:100%;padding:18px;background:#2D5016;color:#fff;border:none;border-radius:18px;font-size:17px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;margin-bottom:10px">בואו נשקיע בקשר &larr;</button>
@@ -472,6 +472,10 @@ async function generateActivity(){
   save(); go('home');
 }
 
+function sanitize(str) {
+  return (str || '').replace(/`/g, '').replace(/\*\*/g, '').replace(/\*/g, '').trim();
+}
+
 function updateHome(){
   loadDinnerQuestion();
   loadDailyLearning();
@@ -481,8 +485,8 @@ function updateHome(){
   if(act){
     var em=document.getElementById('actEmoji'); var ti=document.getElementById('actTitle'); var de=document.getElementById('actDesc');
     if(em) em.textContent=act.emoji||'\uD83C\uDF3F';
-    if(ti) ti.textContent=(act.title||'').replace(/`/g,'');
-    if(de) de.textContent=(act.description||'').replace(/`/g,'');
+    if(ti) ti.textContent=sanitize(act.title);
+    if(de) de.textContent=sanitize(act.description);
   }
 }
 
@@ -490,13 +494,13 @@ function updateDetail(){
   var act=S.activity; if(!act) return;
   var em=document.getElementById('dEmoji'); var ti=document.getElementById('dTitle'); var wy=document.getElementById('dWhy'); var st=document.getElementById('dSteps');
   if(em) em.textContent=act.emoji||'\uD83C\uDF3F';
-  if(ti) ti.textContent=act.title||'';
-  if(wy) wy.textContent=act.why||'';
+  if(ti) ti.textContent=sanitize(act.title);
+  if(wy) wy.textContent=sanitize(act.why);
   if(st){
     st.innerHTML='';
     (act.steps||[]).forEach(function(step,i){
       var d=document.createElement('div'); d.style='display:flex;gap:10px;margin-bottom:10px';
-      d.innerHTML='<div style="width:24px;height:24px;border-radius:50%;background:#2D5016;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">'+(i+1)+'</div><div style="font-size:14px;color:#1A1410;padding-top:3px">'+step+'</div>';
+      d.innerHTML='<div style="width:24px;height:24px;border-radius:50%;background:#2D5016;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">'+(i+1)+'</div><div style="font-size:14px;color:#1A1410;padding-top:3px">'+sanitize(step)+'</div>';
       st.appendChild(d);
     });
   }
