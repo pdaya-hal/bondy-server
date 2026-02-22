@@ -12,49 +12,69 @@ const supabase = createClient(process.env.SUPABASE_URL || "", process.env.SUPABA
 
 app.post("/api/activity", async (req, res) => {
   try {
-    const { parentName, parentGender, interests, tradition, timeAvail, childName, childAge, childGender, childInterests, relation, pastActivities } = req.body;
+    const { parentName, parentGender, interests, tradition, timeAvail, lang, childName, childAge, childGender, childInterests, relation, pastActivities } = req.body;
+    const isEn = lang === "en";
     const pastCount = (pastActivities && pastActivities.length) ? pastActivities.length : 0;
     const pastStr = pastCount > 0 ? "פעילויות שכבר עשו - אל תחזור עליהן: " + pastActivities.join(", ") + ". " : "";
 
-    const parentLabel = parentGender === "mom" ? "אמא" : "אבא";
-    const childLabel = childGender === "girl" ? "בת" : "בן";
+    const parentLabel = isEn ? (parentGender === "mom" ? "Mom" : "Dad") : (parentGender === "mom" ? "אמא" : "אבא");
+    const childLabel = isEn ? (childGender === "girl" ? "girl" : "boy") : (childGender === "girl" ? "בת" : "בן");
 
     let difficultyInstruction;
-    if (pastCount === 0) {
-      difficultyInstruction = "רמת קושי: קלה מאוד - ניצחון ראשון.\nחובה: פעילות בבית בלבד, 10-15 דקות, ללא ציוד מיוחד, ללא יציאה.\nדוגמאות: שיחה עם שאלה מיוחדת, משחק מהיר בסלון, סיפור שממציאים ביחד, ציור ביחד.\nמטרה: ניצחון קטן שגורם לרצות עוד.";
-    } else if (pastCount <= 3) {
-      difficultyInstruction = "רמת קושי: קלה - מתחילים.\nפעילות פשוטה בבית או ליד הבית, 20-30 דקות, ציוד בסיסי.\nדוגמאות: בישול פשוט ביחד, יצירה מחומרים בבית, חצר הבניין, משחק קופסה.";
-    } else if (pastCount <= 8) {
-      difficultyInstruction = "רמת קושי: בינונית - מתחזקים.\nפעילות עם קצת הכנה, אפשר גם קרוב לבית, 30-45 דקות.\nדוגמאות: פרויקט קטן, בישול מתכון חדש, טיול שכונתי עם משימה, מתנה בעבודת יד.";
+    if (isEn) {
+      if (pastCount === 0) {
+        difficultyInstruction = "Difficulty: Very easy — first win.\nMust be: at home, 10-15 min, no special equipment, no going out.\nExamples: a special conversation question, quick living room game, making up a story together, drawing together.\nGoal: a small win that makes them want more.";
+      } else if (pastCount <= 3) {
+        difficultyInstruction = "Difficulty: Easy — getting started.\nSimple activity at home or nearby, 20-30 min, basic supplies.\nExamples: simple cooking together, crafts from household items, building hallway game.";
+      } else if (pastCount <= 8) {
+        difficultyInstruction = "Difficulty: Medium — building momentum.\nActivity with a bit of preparation, can be nearby, 30-45 min.\nExamples: small project, new recipe, neighborhood walk with a mission, handmade gift.";
+      } else {
+        difficultyInstruction = "Difficulty: Challenging — deep connection.\nActivity requiring planning or going out, a meaningful shared experience.\nExamples: trip to a park, multi-day project, a new experience together.";
+      }
     } else {
-      difficultyInstruction = "רמת קושי: מאתגרת - קשר עמוק.\nפעילות שדורשת תכנון או יציאה, חוויה משותפת עמוקה.\nדוגמאות: יציאה לפארק, בניית פרויקט לאורך ימים, חוויה חדשה ביחד.";
+      if (pastCount === 0) {
+        difficultyInstruction = "רמת קושי: קלה מאוד - ניצחון ראשון.\nחובה: פעילות בבית בלבד, 10-15 דקות, ללא ציוד מיוחד, ללא יציאה.\nדוגמאות: שיחה עם שאלה מיוחדת, משחק מהיר בסלון, סיפור שממציאים ביחד, ציור ביחד.\nמטרה: ניצחון קטן שגורם לרצות עוד.";
+      } else if (pastCount <= 3) {
+        difficultyInstruction = "רמת קושי: קלה - מתחילים.\nפעילות פשוטה בבית או ליד הבית, 20-30 דקות, ציוד בסיסי.\nדוגמאות: בישול פשוט ביחד, יצירה מחומרים בבית, חצר הבניין, משחק קופסה.";
+      } else if (pastCount <= 8) {
+        difficultyInstruction = "רמת קושי: בינונית - מתחזקים.\nפעילות עם קצת הכנה, אפשר גם קרוב לבית, 30-45 דקות.\nדוגמאות: פרויקט קטן, בישול מתכון חדש, טיול שכונתי עם משימה, מתנה בעבודת יד.";
+      } else {
+        difficultyInstruction = "רמת קושי: מאתגרת - קשר עמוק.\nפעילות שדורשת תכנון או יציאה, חוויה משותפת עמוקה.\nדוגמאות: יציאה לפארק, בניית פרויקט לאורך ימים, חוויה חדשה ביחד.";
+      }
     }
 
-    const timeMap = {
+    const timeMapHe = {
       short: "זמן פנוי: 10-15 דקות בלבד. הפעילות חייבת להיות קצרה מאוד וישירה.",
       medium: "זמן פנוי: כחצי שעה. פעילות עם קצת עומק.",
       long: "זמן פנוי: שעה ויותר. אפשר להשקיע בחוויה עמוקה."
     };
+    const timeMapEn = {
+      short: "Available time: 10-15 minutes only. Activity must be very short and direct.",
+      medium: "Available time: about 30 minutes. Activity with some depth.",
+      long: "Available time: an hour or more. Can invest in a deep experience."
+    };
+    const timeMap = isEn ? timeMapEn : timeMapHe;
     const timeInstruction = timeMap[timeAvail] || timeMap.short;
 
-    const genderNote = parentGender === "mom"
-      ? "חשוב מאוד: כתוב בלשון נקבה לגבי ההורה בכל המשפטים. לדוגמה: 'האמא יוצאת', 'היא בונה', 'כשהיא', 'רחל ו" + (childName||"הילד") + " יוצאות'."
-      : "כתוב בלשון זכר לגבי ההורה. לדוגמה: 'האבא יוצא', 'הוא בונה'.";
+    const genderNote = isEn
+      ? (parentGender === "mom" ? "Use she/her for the parent in all sentences." : "Use he/him for the parent in all sentences.")
+      : (parentGender === "mom"
+        ? "חשוב מאוד: כתוב בלשון נקבה לגבי ההורה בכל המשפטים. לדוגמה: 'האמא יוצאת', 'היא בונה', 'כשהיא', 'רחל ו" + (childName||"הילד") + " יוצאות'."
+        : "כתוב בלשון זכר לגבי ההורה. לדוגמה: 'האבא יוצא', 'הוא בונה'.");
 
-    const childGenderNote = childGender === "girl"
-      ? "כתוב בלשון נקבה לגבי הילדה."
-      : "כתוב בלשון זכר לגבי הילד.";
+    const childGenderNote = isEn
+      ? (childGender === "girl" ? "Use she/her for the child." : "Use he/him for the child.")
+      : (childGender === "girl" ? "כתוב בלשון נקבה לגבי הילדה." : "כתוב בלשון זכר לגבי הילד.");
 
     const lines = [
-      "אתה Bondy, אפליקציה לחיזוק קשר הורה-ילד.",
-      "תכנן פעילות קצרה, ישימה ומחברת בעברית.",
+      isEn ? "You are Bondy, an app for strengthening the parent-child bond. Design a short, practical, connecting activity in English." : "אתה Bondy, אפליקציה לחיזוק קשר הורה-ילד. תכנן פעילות קצרה, ישימה ומחברת בעברית.",
       "",
-      "פרטי המשפחה:",
-      "הורה: " + parentLabel + " " + (parentName||"") + " | מגדר: " + (parentGender === "mom" ? "נקבה" : "זכר"),
-      "תחומי עניין של ההורה: " + (interests||[]).join(", "),
-      "ילד/ה: " + (childName||"") + " | " + childLabel + " | גיל " + (childAge||"8"),
-      "תחומי עניין של הילד/ה: " + (childInterests||[]).join(", "),
-      "מצב הקשר: " + (relation||"good"),
+      isEn ? "Family details:" : "פרטי המשפחה:",
+      "Parent: " + parentLabel + " " + (parentName||"") + " | gender: " + (parentGender === "mom" ? "female" : "male"),
+      "Parent interests: " + (interests||[]).join(", "),
+      "Child: " + (childName||"") + " | " + childLabel + " | age " + (childAge||"8"),
+      "Child interests: " + (childInterests||[]).join(", "),
+      "Relationship: " + (relation||"good"),
       pastStr,
       "",
       difficultyInstruction,
@@ -66,11 +86,16 @@ app.post("/api/activity", async (req, res) => {
       "- שיחה בתוך הפעילות, לא רק עשייה — שאלות שיוצרות קשר",
       "- רגע שבו הילד/ה מרגיש/ה נשמע/ת ורצוי/ה",
       "- סיום עם תחושת הצלחה משותפת",
-      "- " + parentLabel + " " + (parentName||"") + " (לא רק שם פרטי) — לדוגמה: '" + parentLabel + " ו" + (childName||"הילד") + "'",
+      "- " + parentLabel + " " + (parentName||"") + " — " + (isEn ? "use full title+name, e.g. '" + parentLabel + " and " + (childName||"child") + "'" : "לא רק שם פרטי, לדוגמה: '" + parentLabel + " ו" + (childName||"הילד") + "'"),
       timeInstruction,
       "",
-      "עברית בלבד. אמוג'י טבע בלבד. החזר JSON תקני בלבד:",
-      '{"emoji":"","title":"","description":"","why":"","duration":"","steps":["","","",""],"questions":["","",""],"tip":"","dailyQuestion":""}'
+      isEn ? "Allowed materials ONLY (things found in every home):" : "חומרים מותרים בלבד (מה שיש בכל בית):",
+      "✅ " + (isEn ? "Allowed: paper, pencils/crayons, cardboard boxes, basic kitchen items, books, pillows, blankets, string/rubber bands, tape, scissors, basic pantry food." : "מותר: נייר, עפרונות/צבעים, קרטון מקופסאות, כלי מטבח בסיסיים, ספרים, כריות, שמיכות, חוטים/גומיות, קלטת, מספריים, אוכל בסיסי שיש בבית."),
+      "❌ " + (isEn ? "Not allowed: seeds, plants, special tools, craft supplies that need to be purchased, anything requiring a store trip." : "אסור: זרעים, עציצים, חומרים מיוחדים, כלי עבודה, ציוד שקונים בחנות, כל דבר שדורש קנייה מראש."),
+      isEn ? "If the activity requires unavailable materials — choose a different activity." : "אם הפעילות דורשת חומרים — בחר פעילות אחרת שלא דורשת.",
+      "",
+      isEn ? "English only. Nature emojis only. Return ONLY valid JSON:" : "עברית בלבד. אמוג'י טבע בלבד. החזר JSON תקני בלבד:",
+      '{"emoji":"","title":"","description":"","why":"","duration":"","materials":["",""],"steps":["","","",""],"questions":["","",""],"tip":"","dailyQuestion":""}'
     ];
 
     const prompt = lines.join("\n");
@@ -92,16 +117,17 @@ app.post("/api/activity", async (req, res) => {
 
 app.post("/api/questions", async (req, res) => {
   try {
-    const { childAge, childName, childGender, childInterests, parentGender } = req.body;
-    const parentLabel = parentGender === "mom" ? "אמא" : "אבא";
-    const childLabel = childGender === "girl" ? "בת" : "בן";
+    const { childAge, childName, childGender, childInterests, parentGender, lang: qLang } = req.body;
+    const isEnQ = qLang === "en";
+    const parentLabel = isEnQ ? (parentGender === "mom" ? "Mom" : "Dad") : (parentGender === "mom" ? "אמא" : "אבא");
+    const childLabel = isEnQ ? (childGender === "girl" ? "girl" : "boy") : (childGender === "girl" ? "בת" : "בן");
     const lines = [
-      "צור 8 שאלות שיחה כיפיות בעברית להורה וילד/ה.",
-      "הורה: " + parentLabel + ". ילד/ה: " + (childName||"") + " (" + childLabel + ", גיל " + (childAge||"8") + ").",
-      "תחומי עניין: " + (childInterests||[]).join(", ") + ".",
-      "שלב: חלומות, דמיון, ערכים, תרחישים מצחיקים, זיכרונות.",
-      "עברית בלבד ללא יוצא מן הכלל.",
-      'החזר JSON array של 8 מחרוזות בלבד: ["q1","q2",...]'
+      isEnQ ? "Create 8 fun conversation questions in English for a parent and child." : "צור 8 שאלות שיחה כיפיות בעברית להורה וילד/ה.",
+      "Parent: " + parentLabel + ". Child: " + (childName||"") + " (" + childLabel + ", age " + (childAge||"8") + ").",
+      "Child interests: " + (childInterests||[]).join(", ") + ".",
+      isEnQ ? "Mix: dreams, imagination, values, funny scenarios, memories." : "שלב: חלומות, דמיון, ערכים, תרחישים מצחיקים, זיכרונות.",
+      isEnQ ? "English only. No other languages." : "עברית בלבד ללא יוצא מן הכלל.",
+      'Return ONLY a JSON array of 8 strings: ["q1","q2",...]'
     ];
     const r = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
