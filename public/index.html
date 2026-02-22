@@ -48,6 +48,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 .opts.grid .opt .opt-emoji { font-size:24px; }
 .opt { flex:1; padding:14px; border:2px solid #EDE5D8; border-radius:12px; text-align:center; font-size:15px; font-family:'Heebo',sans-serif; cursor:pointer; background:#fff; }
 .opt.sel { border-color:#2D5016; background:#2D5016; color:#fff; font-weight:700; }
+.opt.sel div { color:#fff !important; }
 .btn-green { background:#2D5016; color:#fff; }
 .label { font-size:13px; color:#8B7B6B; margin-bottom:8px; }
 #home { background:#FAF7F2; }
@@ -95,22 +96,22 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 <!-- OB5 - מסורת -->
 
 <div id="ob5" class="screen ob">
-  <div class="ob-title">איך הבית שלכם?</div>
+  <div class="ob-title">ספרו לנו על האווירה בבית</div>
   <div class="opts" style="flex-direction:column;gap:12px">
-    <button class="opt" id="tr1" onclick="selTrad(this,&#39;secular&#39;)" style="text-align:right;padding:16px 18px">
-      <div style="font-size:16px;font-weight:700">&#9728;&#65039; כיפת השמיים</div>
+    <button class="opt" id="tr1" onclick="selTrad(this,&#39;secular&#39;)" style="text-align:right;padding:16px 18px;color:#1A1410">
+      <div style="font-size:16px;font-weight:700;color:#2D5016">&#9728;&#65039; כיפת השמיים</div>
       <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">יהדות כתרבות וזהות, בלי חובות</div>
     </button>
-    <button class="opt" id="tr2" onclick="selTrad(this,&#39;traditional&#39;)" style="text-align:right;padding:16px 18px">
-      <div style="font-size:16px;font-weight:700">&#128367;&#65039; מסורתי חם</div>
+    <button class="opt" id="tr2" onclick="selTrad(this,&#39;traditional&#39;)" style="text-align:right;padding:16px 18px;color:#1A1410">
+      <div style="font-size:16px;font-weight:700;color:#2D5016">&#128367;&#65039; מסורתי חם</div>
       <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">שומרים מה שמרגיש נכון, מחברים בין עולמות</div>
     </button>
-    <button class="opt" id="tr3" onclick="selTrad(this,&#39;religious&#39;)" style="text-align:right;padding:16px 18px">
-      <div style="font-size:16px;font-weight:700">&#128214; שורשים</div>
+    <button class="opt" id="tr3" onclick="selTrad(this,&#39;religious&#39;)" style="text-align:right;padding:16px 18px;color:#1A1410">
+      <div style="font-size:16px;font-weight:700;color:#2D5016">&#128214; שורשים</div>
       <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">תורה ומצוות כדרך חיים</div>
     </button>
-    <button class="opt" id="tr4" onclick="selTrad(this,&#39;haredi&#39;)" style="text-align:right;padding:16px 18px">
-      <div style="font-size:16px;font-weight:700">&#127807; פתוח ללמוד</div>
+    <button class="opt" id="tr4" onclick="selTrad(this,&#39;haredi&#39;)" style="text-align:right;padding:16px 18px;color:#1A1410">
+      <div style="font-size:16px;font-weight:700;color:#2D5016">&#127807; פתוח ללמוד</div>
       <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">לימוד לשמו, עיון ועומק</div>
     </button>
   </div>
@@ -123,7 +124,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
   <div class="ob-title">מה אתה אוהב?</div>
   <div class="label">בחר כמה שרוצה</div>
   <div class="opts grid">
-    <button class="opt" onclick="togInt(this,'hike')"><span class="opt-emoji">&#129694;</span>טיולים</button>
+    <button class="opt" onclick="togInt(this,'hike')"><span class="opt-emoji">&#9968;&#65039;</span>טיולים</button>
     <button class="opt" onclick="togInt(this,'cook')"><span class="opt-emoji">&#127859;</span>בישול</button>
     <button class="opt" onclick="togInt(this,'sport')"><span class="opt-emoji">&#9917;</span>ספורט</button>
     <button class="opt" onclick="togInt(this,'art')"><span class="opt-emoji">&#127912;</span>אמנות</button>
@@ -154,7 +155,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
   <div class="label" style="margin-top:8px">מה הילד/ה אוהב/ת? (אופציונלי)</div>
   <div class="opts grid" id="childInts">
     <button class="opt" onclick="togChildInt(this,'build')"><span class="opt-emoji">&#128296;</span>בנייה</button>
-    <button class="opt" onclick="togChildInt(this,'hike')"><span class="opt-emoji">&#129694;</span>טיולים</button>
+    <button class="opt" onclick="togChildInt(this,'hike')"><span class="opt-emoji">&#9968;&#65039;</span>טיולים</button>
     <button class="opt" onclick="togChildInt(this,'stories')"><span class="opt-emoji">&#128214;</span>סיפורים</button>
     <button class="opt" onclick="togChildInt(this,'sport')"><span class="opt-emoji">&#9917;</span>ספורט</button>
     <button class="opt" onclick="togChildInt(this,'art')"><span class="opt-emoji">&#127912;</span>אמנות</button>
@@ -706,7 +707,7 @@ if(S.parent.name&&S.child.name&&S.activity){ go('home'); } else if(S.parent.name
 
 <!-- GLOBAL NAV -->
 
-<div id="globalNav" class="nav">
+<div id="globalNav" class="nav" style="display:none">
   <div class="nav-item" id="navHome" onclick="go('home')">&#127968;<span>בית</span></div>
   <div class="nav-item" id="navJournal" onclick="go('journal')">&#128247;<span>זיכרונות</span></div>
   <div class="nav-item" id="navQuestions" onclick="go('questions')">&#128172;<span>שאלות</span></div>
