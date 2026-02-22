@@ -150,7 +150,33 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
     <button class="opt" id="r2" onclick="selRel(this,'good')">&#128340; טוב - יכול להיות טוב יותר</button>
     <button class="opt" id="r3" onclick="selRel(this,'hard')">&#127807; קשה - רוצה לשפר</button>
   </div>
-  <button class="btn btn-green" onclick="saveOb4()">בואו נתחיל! &#128640;</button>
+  <button class="btn btn-green" onclick="saveOb4()">המשך &larr;</button>
+</div>
+
+<!-- OB5 - מסורת -->
+
+<div id="ob5" class="screen ob">
+  <div class="ob-title">מה הרוח שלנו בבית?</div>
+  <div class="label" style="margin-bottom:16px">זה עוזר לנו להתאים את הלימוד היומי</div>
+  <div class="opts" style="flex-direction:column;gap:12px">
+    <button class="opt" id="tr1" onclick="selTrad(this,&#39;secular&#39;)" style="text-align:right;padding:16px 18px">
+      <div style="font-size:16px;font-weight:700">&#9728;&#65039; כיפת השמיים</div>
+      <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">יהדות כתרבות וזהות, בלי חובות</div>
+    </button>
+    <button class="opt" id="tr2" onclick="selTrad(this,&#39;traditional&#39;)" style="text-align:right;padding:16px 18px">
+      <div style="font-size:16px;font-weight:700">&#128367;&#65039; מסורתי חם</div>
+      <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">שומרים מה שמרגיש נכון, מחברים בין עולמות</div>
+    </button>
+    <button class="opt" id="tr3" onclick="selTrad(this,&#39;religious&#39;)" style="text-align:right;padding:16px 18px">
+      <div style="font-size:16px;font-weight:700">&#128214; שורשים</div>
+      <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">תורה ומצוות כדרך חיים</div>
+    </button>
+    <button class="opt" id="tr4" onclick="selTrad(this,&#39;haredi&#39;)" style="text-align:right;padding:16px 18px">
+      <div style="font-size:16px;font-weight:700">&#127807; פתוח ללמוד</div>
+      <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">לימוד לשמו, עיון ועומק</div>
+    </button>
+  </div>
+  <button class="btn btn-green" style="margin-top:8px" onclick="saveOb5()">בואו נתחיל! &#128640;</button>
 </div>
 
 <!-- LOADING -->
@@ -352,7 +378,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 
 <script>
 var SERVER = 'https://bondy-server-production.up.railway.app';
-var gSel = 'dad', ageSel = '9-10', rSel = 'great', cgSel = 'boy', interests = [];
+var gSel = 'dad', ageSel = '9-10', rSel = 'great', cgSel = 'boy', tradSel = 'secular', interests = [];
 var DEF = {
   parent:{name:'',gender:'dad',interests:[],tradition:'secular'},
   child:{name:'',age:'9-10',gender:'boy',relation:'great',interests:[]},
@@ -390,7 +416,13 @@ function selRel(el,val){ rSel=val; ['r1','r2','r3'].forEach(function(id){ docume
 function saveOb1(){ var n=document.getElementById('pName').value.trim(); if(!n){ alert('נא להזין שם'); return; } S.parent.name=n; S.parent.gender=gSel; save(); go('ob2'); }
 function saveOb2(){ S.parent.interests=interests.slice(); save(); go('ob3'); }
 function saveOb3(){ var n=document.getElementById('cName').value.trim(); if(!n){ alert('נא להזין שם'); return; } S.child.name=n; S.child.age=ageSel; S.child.gender=cgSel; S.child.interests=childInterests.slice(); save(); go('ob4'); }
-function saveOb4(){ S.child.relation=rSel; save(); go('loading'); }
+function saveOb4(){ S.child.relation=rSel; save(); go('ob5'); }
+function selTrad(el,val){
+  tradSel=val;
+  ['tr1','tr2','tr3','tr4'].forEach(function(id){ var e=document.getElementById(id); if(e) e.classList.remove('sel'); });
+  el.classList.add('sel');
+}
+function saveOb5(){ S.parent.tradition=tradSel; save(); go('loading'); }
 
 async function callServer(endpoint,data){
   try { var r=await fetch(SERVER+endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); return await r.json(); } catch(e){ return null; }
