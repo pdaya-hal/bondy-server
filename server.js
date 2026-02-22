@@ -10,29 +10,50 @@ app.use(express.static(‘public’));
 
 const supabase = createClient(process.env.SUPABASE_URL || ‘’, process.env.SUPABASE_ANON_KEY || ‘’);
 
-app.post(’/api/activity’, async (req, res) => {
-try {
-const { parentName, parentGender, interests, tradition, childName, childAge, childGender, childInterests, relation, pastActivities } = req.body;
-const pastStr = (pastActivities && pastActivities.length) ? ‘Do not repeat these activities: ’ + pastActivities.join(’, ‘) + ‘. ’ : ‘’;
-const parentLabel = parentGender === ‘mom’ ? ‘\u05d0\u05de\u05d0’ : ‘\u05d0\u05d1\u05d0’;
-const childLabel = childGender === ‘girl’ ? ‘\u05d1\u05ea’ : ‘\u05d1\u05df’;
-const prompt = ‘You are Bondy. Design a meaningful parent-child bonding activity in Hebrew.\n’ +
-‘Parent: ’ + parentLabel + ‘, interests: ’ + (interests||[]).join(’,’) + ‘, tradition: ’ + (tradition||‘secular’) + ‘\n’ +
-‘Child: name=’ + (childName||’’) + ’ age=’ + (childAge||’’) + ’ gender=’ + childLabel + ’ interests: ’ + (childInterests||[]).join(’,’) + ’ relation=’ + (relation||’’) + ‘\n’ +
-pastStr +
-‘Rules: Use ’ + parentLabel + ’ for parent. Use child name ’ + (childName||’’) + ‘. Nature emojis only. Hebrew text ONLY.\n’ +
-‘Return ONLY valid JSON in Hebrew:\n’ +
-‘{“emoji”:””,“title”:””,“description”:””,“why”:””,“duration”:””,“steps”:[””,””,””,””],“questions”:[””,””,””],“tip”:””,“dailyQuestion”:””}’;
+const ANTHROPIC_URL = ‘https://api.anthropic.com/v1/messages’;
+const MODEL = ‘claude-sonnet-4-20250514’;
 
-```
-const r = await fetch('https://api.anthropic.com/v1/messages', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
-  body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1200, messages: [{ role: 'user', content: prompt }] })
+async function callClaude(prompt, maxTokens) {
+const r = await fetch(ANTHROPIC_URL, {
+method: ‘POST’,
+headers: {
+‘Content-Type’: ‘application/json’,
+‘x-api-key’: process.env.ANTHROPIC_API_KEY,
+‘anthropic-version’: ‘2023-06-01’
+},
+body: JSON.stringify({
+model: MODEL,
+max_tokens: maxTokens || 1000,
+messages: [{ role: ‘user’, content: prompt }]
+})
 });
 const d = await r.json();
-const text = (d.content && d.content[0]) ? d.content[0].text : '';
-const activity = JSON.parse(text.replace(/```json|```/g, '').trim());
+const text = (d.content && d.content[0]) ? d.content[0].text : ‘’;
+return JSON.parse(text.replace(/`json|`/g, ‘’).trim());
+}
+
+function parentLabel(g) { return g === ‘mom’ ? ‘\u05d0\u05de\u05d0’ : ‘\u05d0\u05d1\u05d0’; }
+function childLabel(g)  { return g === ‘girl’ ? ‘\u05d1\u05ea’ : ‘\u05d1\u05df’; }
+
+app.post(’/api/activity’, async (req, res) => {
+try {
+const { parentGender, interests, tradition, childName, childAge, childGender, childInterests, relation, pastActivities } = req.body;
+const past = (pastActivities && pastActivities.length) ? ‘Do not repeat: ’ + pastActivities.join(’, ’) + ’. ’ : ‘’;
+const pLabel = parentLabel(parentGender);
+const cLabel = childLabel(childGender);
+
+```
+const lines = [
+  'You are Bondy. Design a meaningful parent-child bonding activity in Hebrew.',
+  'Parent: ' + pLabel + ', interests: ' + (interests||[]).join(',') + ', tradition: ' + (tradition||'secular'),
+  'Child: name=' + (childName||'') + ' age=' + (childAge||'') + ' gender=' + cLabel + ' interests: ' + (childInterests||[]).join(',') + ' relation=' + (relation||''),
+  past,
+  'Rules: Use ' + pLabel + ' for parent. Use child name ' + (childName||'') + '. Nature emojis only. Hebrew text ONLY.',
+  'Return ONLY valid JSON:',
+  '{"emoji":"","title":"","description":"","why":"","duration":"","steps":["","","",""],"questions":["","",""],"tip":"","dailyQuestion":""}'
+];
+
+const activity = await callClaude(lines.join('\n'), 1200);
 res.json({ success: true, activity });
 ```
 
@@ -45,24 +66,20 @@ res.json({ success: false, error: e.message });
 app.post(’/api/questions’, async (req, res) => {
 try {
 const { childAge, childName, childGender, childInterests, parentGender } = req.body;
-const parentLabel = parentGender === ‘mom’ ? ‘\u05d0\u05de\u05d0’ : ‘\u05d0\u05d1\u05d0’;
-const childLabel = childGender === ‘girl’ ? ‘\u05d1\u05ea’ : ‘\u05d1\u05df’;
-const prompt = ‘Create 8 fun Hebrew conversation questions for a parent and child.\n’ +
-‘Parent: ’ + parentLabel + ‘. Child: ’ + (childName||’’) + ’ (’ + childLabel + ‘, age ’ + (childAge||‘8’) + ‘).\n’ +
-‘Child interests: ’ + (childInterests||[]).join(’,’) + ‘.\n’ +
-‘Mix: dreams, imagination, values, funny scenarios, memories.\n’ +
-‘CRITICAL: Hebrew characters ONLY. No Arabic, no English.\n’ +
-‘Return ONLY a JSON array of 8 strings: [“q1”,“q2”,…]’;
+const pLabel = parentLabel(parentGender);
+const cLabel = childLabel(childGender);
 
 ```
-const r = await fetch('https://api.anthropic.com/v1/messages', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
-  body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 800, messages: [{ role: 'user', content: prompt }] })
-});
-const d = await r.json();
-const text = (d.content && d.content[0]) ? d.content[0].text : '';
-const result = JSON.parse(text.replace(/```json|```/g, '').trim());
+const lines = [
+  'Create 8 fun Hebrew conversation questions for a parent and child.',
+  'Parent: ' + pLabel + '. Child: ' + (childName||'') + ' (' + cLabel + ', age ' + (childAge||'8') + ').',
+  'Child interests: ' + (childInterests||[]).join(',') + '.',
+  'Mix: dreams, imagination, values, funny scenarios, memories.',
+  'CRITICAL: Hebrew characters ONLY. No Arabic, no English.',
+  'Return ONLY a JSON array of 8 strings: ["q1","q2",...]'
+];
+
+const result = await callClaude(lines.join('\n'), 800);
 const qs = Array.isArray(result) ? result : (result.questions || []);
 res.json({ success: true, questions: qs });
 ```
@@ -76,52 +93,35 @@ res.json({ success: false, error: e.message });
 app.post(’/api/daily-learning’, async (req, res) => {
 try {
 const { tradition, childAge, childName, childGender, parentGender } = req.body;
-const parentLabel = parentGender === ‘mom’ ? ‘\u05d0\u05de\u05d0’ : ‘\u05d0\u05d1\u05d0’;
-const childLabel = childGender === ‘girl’ ? ‘\u05d1\u05ea’ : ‘\u05d1\u05df’;
+const pLabel = parentLabel(parentGender);
+const cLabel = childLabel(childGender);
 
 ```
-// Map tradition to appropriate source texts
 const sourceMap = {
-  secular:     'פרקי אבות — בחר משנה עם מסר אנושי אוניברסלי. פירוש: פשוט, מודרני, ללא שפה דתית.',
-  traditional: 'פרקי אבות או תהילים — בחר פסוק חם ומחבר. פירוש: קרוב ללב, מחבר מסורת לחיים.',
-  religious:   'משנה, פרקי אבות או הלכה יומית קצרה. פירוש: בשפה דתית נגישה, עם עומק.',
-  haredi:      'גמרא, הלכה יומית או מוסר. פירוש: לעומק, בשפת בית מדרש נגישה.'
+  secular:     'Pirkei Avot - choose a mishna with a universal human message. Explanation: simple, modern, no religious jargon.',
+  traditional: 'Pirkei Avot or Psalms - choose a warm connecting verse. Explanation: close to the heart, connecting tradition to life.',
+  religious:   'Mishna, Pirkei Avot or a short daily halacha. Explanation: accessible religious language with depth.',
+  haredi:      'Gemara, daily halacha or mussar. Explanation: deep, accessible yeshiva-style language.'
 };
 const sourceInstruction = sourceMap[tradition] || sourceMap.secular;
-
-// Use day-of-year as seed so all users get same learning that day, but it changes daily
 const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
 
-const prompt = 'You are a Jewish educator creating a daily learning unit for a parent and child.\n' +
-  'Tradition level: ' + (tradition||'secular') + '\n' +
-  'Source to use: ' + sourceInstruction + '\n' +
-  'Parent: ' + parentLabel + '. Child: ' + (childName||'') + ' (' + childLabel + ', age ' + (childAge||'8') + ').\n' +
-  'Day seed (use to pick a specific text, not too common): ' + dayOfYear + '\n' +
-  'Rules:\n' +
-  '- The quote must be a REAL, ACCURATE Jewish text — exact wording, correct attribution.\n' +
-  '- Hebrew text ONLY in all fields.\n' +
-  '- The discussion question must be age-appropriate for a ' + (childAge||'8') + ' year old.\n' +
-  '- sefaria_url: link to the exact source on sefaria.org (e.g. https://www.sefaria.org/Pirkei_Avot.1.1)\n' +
-  'Return ONLY valid JSON:\n' +
-  '{\n' +
-  '  "source": "",\n' +
-  '  "source_he": "",\n' +
-  '  "quote": "",\n' +
-  '  "quote_translation": "",\n' +
-  '  "explanation": "",\n' +
-  '  "discussion_question": "",\n' +
-  '  "emoji": "",\n' +
-  '  "sefaria_url": ""\n' +
-  '}';
+const lines = [
+  'You are a Jewish educator creating a daily learning unit for a parent and child.',
+  'Tradition level: ' + (tradition||'secular'),
+  'Source to use: ' + sourceInstruction,
+  'Parent: ' + pLabel + '. Child: ' + (childName||'') + ' (' + cLabel + ', age ' + (childAge||'8') + ').',
+  'Day seed (use to pick a specific text, rotate through the year): ' + dayOfYear,
+  'Rules:',
+  '- The quote must be a REAL, ACCURATE Jewish text with correct source attribution.',
+  '- ALL text fields must be in Hebrew only.',
+  '- The discussion_question must be age-appropriate for a ' + (childAge||'8') + ' year old.',
+  '- sefaria_url: direct link to the exact passage on sefaria.org',
+  'Return ONLY valid JSON:',
+  '{"source":"","source_he":"","quote":"","quote_translation":"","explanation":"","discussion_question":"","emoji":"","sefaria_url":""}'
+];
 
-const r = await fetch('https://api.anthropic.com/v1/messages', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
-  body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
-});
-const d = await r.json();
-const text = (d.content && d.content[0]) ? d.content[0].text : '';
-const learning = JSON.parse(text.replace(/```json|```/g, '').trim());
+const learning = await callClaude(lines.join('\n'), 1000);
 res.json({ success: true, learning });
 ```
 
