@@ -699,13 +699,16 @@ function setLang(lang) {
   var prevLang = LANG;
   LANG = lang;
   S.lang = lang;
-  // Clear cached activity so it regenerates in new language
   if (prevLang !== lang) {
     S.activity = null;
     S.dailyLearning = null;
+    save();
+    applyLang();
+    if(S.parent.name && S.child.name) { go('loading'); }
+  } else {
+    save();
+    applyLang();
   }
-  save();
-  applyLang();
 }
 
 function applyLang() {
@@ -986,7 +989,9 @@ function getNewActivity(){
 }
 
 var qList=[], qIndex=0;
-var qTips=['פותח דמיון ומגלה עולמות פנימיים \uD83D\uDCA1','מחזק קשר ואמון \uD83D\uDC9A','שאלה שכיף לענות עליה ביחד \u2728','יוצר זיכרון משמעותי \uD83C\uDF3F','מפתח חשיבה ויצירתיות \uD83D\uDD25','מעמיק הבנה הדדית \uD83C\uDF0A','פותח לב ומחבר לבבות \uD83C\uDF3B','מחזק ביטחון עצמי \u2B50'];
+var qTipsHe=['פותח דמיון ומגלה עולמות פנימיים \uD83D\uDCA1','מחזק קשר ואמון \uD83D\uDC9A','שאלה שכיף לענות עליה ביחד \u2728','יוצר זיכרון משמעותי \uD83C\uDF3F','מפתח חשיבה ויצירתיות \uD83D\uDD25','מעמיק הבנה הדדית \uD83C\uDF0A','פותח לב ומחבר לבבות \uD83C\uDF3B','מחזק ביטחון עצמי \u2B50'];
+var qTipsEn=['Sparks imagination and reveals inner worlds \uD83D\uDCA1','Builds trust and connection \uD83D\uDC9A','A fun question to answer together \u2728','Creates a meaningful memory \uD83C\uDF3F','Develops creative thinking \uD83D\uDD25','Deepens mutual understanding \uD83C\uDF0A','Opens hearts and brings you closer \uD83C\uDF3B','Strengthens confidence \u2B50'];
+function getQTips(){ return LANG==='en' ? qTipsEn : qTipsHe; }
 var qFallbackHe = ['אם היית יכול לטייל לכל מקום בעולם — לאן היית הולך?','מה הדבר הכי מצחיק שקרה לך השבוע?','אם היית בלתי נראה ליום אחד — מה היית עושה?','מה הדבר שאתה הכי גאה בו בעצמך?','אם יכולת להמציא כלל אחד לעולם — מה היה הכלל?','איזה כוח-על היית הכי רוצה לקבל ולמה?','מה החלום הכי מוזר שחלמת?','אם היית יכול לשנות משהו אחד בעולם — מה היה?'];
 var qFallbackEn = ['If you could travel anywhere in the world, where would you go?','What was the funniest thing that happened to you this week?','If you were invisible for one day, what would you do?','What is something you are really proud of about yourself?','If you could invent one rule for the whole world, what would it be?','What superpower would you most want and why?','What is the strangest dream you have ever had?','If you could change one thing about the world, what would it be?'];
 function getQFallback(){ return LANG==='en' ? qFallbackEn : qFallbackHe; }
@@ -1007,7 +1012,7 @@ function buildQCards(){
   finCard.id='qcardFin';
   finCard.style.cssText='position:absolute;width:240px;height:calc(100% - 60px);border-radius:28px;background:linear-gradient(160deg,#2D5016,#3A6B1E);box-shadow:0 16px 48px rgba(0,0,0,.2);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;z-index:1;transform:'+getCardTransform(qList.length);
   finCard.innerHTML='<div style="font-size:42px;font-weight:900;color:#fff;letter-spacing:-1px">bon<span style="color:#C4A882">dy</span></div>'
-    +'<div style="font-size:11px;color:rgba(255,255,255,.5);letter-spacing:3px;margin-top:4px;margin-bottom:28px">שאלות לפתוח את הלב</div>'
+    +'<div style="font-size:11px;color:rgba(255,255,255,.5);letter-spacing:3px;margin-top:4px;margin-bottom:28px">'+(LANG==="en"?"OPEN THE HEART":"שאלות לפתוח את הלב")+'</div>'
     +'<div style="font-size:16px;color:#fff;font-weight:700;margin-bottom:8px">'+(LANG==="en"?"All done! \uD83C\uDF89":"סיימתם! \uD83C\uDF89")+"</div>"
     +'<div style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:28px">'+(LANG==="en"?"New questions next week.<br>Want unlimited questions?":"שאלות חדשות יגיעו בשבוע הבא.<br>רוצים מאגר בלתי נגמר?")+"</div>"
     +'<button onclick="showPremium()" style="background:#C4A882;color:#1A1410;border:none;border-radius:16px;padding:14px;font-size:14px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;width:100%;margin-bottom:10px">\u2B50 שדרג לפרמיום</button>'
@@ -1018,7 +1023,7 @@ function buildQCards(){
     var card=document.createElement('div');
     card.id='qcard'+i;
     card.style.cssText='position:absolute;width:240px;height:calc(100% - 60px);background:#fff;border-radius:28px;box-shadow:0 16px 48px rgba(0,0,0,.14);overflow:hidden;display:flex;flex-direction:column;transform-origin:bottom center;transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .4s;transform:'+getCardTransform(i)+';opacity:'+(i<3?1:0)+';z-index:'+(qList.length-i);
-    card.innerHTML='<div style="padding:28px 24px 14px;text-align:center;border-bottom:1px solid #F0E8DE;flex-shrink:0"><div style="font-size:30px;font-weight:900;color:#2D5016;letter-spacing:-1px;line-height:1">bon<span style="color:#C4A882">dy</span></div><div style="font-size:9px;color:#C4A882;letter-spacing:2px;margin-top:3px">שאלות לפתוח את הלב</div></div>'
+    card.innerHTML='<div style="padding:28px 24px 14px;text-align:center;border-bottom:1px solid #F0E8DE;flex-shrink:0"><div style="font-size:30px;font-weight:900;color:#2D5016;letter-spacing:-1px;line-height:1">bon<span style="color:#C4A882">dy</span></div><div style="font-size:9px;color:#C4A882;letter-spacing:2px;margin-top:3px">'+(LANG==="en"?"OPEN THE HEART":"שאלות לפתוח את הלב")+'</div></div>'
       +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 28px;text-align:center"><div style="font-size:'+(qList[i].length > 80 ? '16' : qList[i].length > 50 ? '19' : '22')+'px;font-weight:700;color:#1A1410;line-height:1.55">'+qList[i]+'</div></div>'
       +'<div style="background:#F5F0E8;margin:0 16px 16px;border-radius:14px;padding:12px 16px;font-size:12px;color:#8B7B6B;text-align:center;flex-shrink:0">'+qTips[i%qTips.length]+'</div>';
     deck.appendChild(card);
