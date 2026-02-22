@@ -31,9 +31,9 @@ button, input, select, textarea { font-family: 'Heebo', sans-serif !important; }
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 button { font-family:'Heebo',sans-serif; }
-body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; display:flex; align-items:center; justify-content:center; }
-.app { width:100%; max-width:430px; min-height:100vh; background:#FAF7F2; position:relative; overflow:hidden; }
-.screen { display:none; flex-direction:column; height:100vh; overflow:hidden; }
+body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; overflow:hidden; height:100vh; }
+.app { width:100%; height:100vh; background:#FAF7F2; position:relative; overflow:hidden; }
+.screen { display:none; flex-direction:column; height:100%; min-height:100vh; overflow:hidden; }
 .screen.active { display:flex; }
 
 /* SPLASH */
@@ -64,7 +64,7 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
 
 /* HOME */
 #home { background:#FAF7F2; }
-.home-head { background:#2D5016; padding:52px 22px 32px; color:#fff; }
+.home-head { background:#2D5016; padding:44px 22px 24px; color:#fff; }
 .home-head h1 { font-size:24px; font-weight:900; }
 .home-body { padding:20px 22px; overflow-y:auto; flex:1; overscroll-behavior:contain; }
 .card { background:#fff; border-radius:20px; padding:24px; margin-bottom:16px; box-shadow:0 1px 4px rgba(0,0,0,.04); }
@@ -232,10 +232,14 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
 <!-- HOME -->
 
 <div id="home" class="screen">
-  <div class="home-head" style="position:relative">
-    <div onclick="go('profile')" style="position:absolute;top:52px;left:16px;width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer">⚙️</div>
-    <h1 id="homeTitle" style="margin:0" class="a1">בונדי</h1>
-    <div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:4px" id="homeStreak" class="a2">שבוע 1 ברצף 🔥</div>
+  <div class="home-head">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="text-align:right">
+        <h1 id="homeTitle" style="margin:0" class="a1">בונדי</h1>
+        <div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:2px" id="homeStreak" class="a2">שבוע 1 ברצף 🔥</div>
+      </div>
+      <div onclick="go('profile')" style="width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer">⚙️</div>
+    </div>
   </div>
   <div class="home-body" style="padding-bottom:80px">
     <!-- Dinner question -->
@@ -282,12 +286,6 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
   <!-- Dots -->
 
   <div id="qDots" style="display:flex;justify-content:center;gap:6px;padding:12px 0 8px"></div>
-</div>
-
-  <!-- Dots -->
-
-  <div id="qDots" style="display:flex;justify-content:center;gap:6px;padding:12px 0 8px"></div>
-
 </div>
 
 <!-- JOURNAL -->
