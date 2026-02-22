@@ -205,14 +205,47 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
       <div style="font-size:16px;font-weight:700;color:#fff;line-height:1.5;margin-bottom:16px" id="dinnerQ"></div>
       <button onclick="go('questions')" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:12px;padding:10px 16px;font-size:13px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer">עוד שאלות &larr;</button>
     </div>
-    <div class="card" id="actCard">
-      <div style="font-size:13px;color:#8B7B6B;margin-bottom:8px">פעילות השבוע</div>
-      <div style="font-size:32px;margin-bottom:8px" id="actEmoji">&#127807;</div>
-      <div style="font-size:18px;font-weight:700;color:#1A1410;margin-bottom:8px" id="actTitle"></div>
-      <div style="font-size:14px;color:#8B7B6B;margin-bottom:16px" id="actDesc"></div>
-      <button class="btn btn-green" onclick="go('actdetail')">בוא נעשה את זה! &larr;</button>
+    <!-- Daily Learning Card - Premium -->
+    <div class="card" id="learningCard" style="display:none;border:1.5px solid #C4A882;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#C4A882,#2D5016)"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:11px;color:#C4A882;font-weight:700;letter-spacing:1px">&#128218; לימוד יומי</div>
+        <div style="font-size:10px;color:#8B7B6B;background:#FAF7F2;padding:3px 8px;border-radius:10px" id="learnSource"></div>
+      </div>
+      <div style="font-size:20px;margin-bottom:8px" id="learnEmoji">&#128218;</div>
+      <div style="font-size:15px;font-weight:700;color:#2D5016;line-height:1.6;margin-bottom:8px;font-style:italic" id="learnQuote"></div>
+      <div style="font-size:13px;color:#8B7B6B;line-height:1.6;margin-bottom:12px" id="learnTranslation"></div>
+
+```
+  <!-- Expandable section -->
+  <div id="learnExpanded" style="display:none;border-top:1px solid #EDE5D8;padding-top:12px;margin-bottom:12px">
+    <div style="font-size:13px;color:#1A1410;line-height:1.7;margin-bottom:12px" id="learnExplanation"></div>
+    <div style="background:#FAF7F2;border-radius:12px;padding:12px 14px;margin-bottom:12px">
+      <div style="font-size:11px;color:#C4A882;font-weight:700;margin-bottom:6px">&#128172; שאלה לשיחה</div>
+      <div style="font-size:13px;color:#1A1410;line-height:1.6" id="learnQuestion"></div>
     </div>
-    <button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">&#128260; רוצים פעילות מחזקת אחרת?</button>
+    <a id="learnSefaria" href="#" target="_blank" style="display:flex;align-items:center;gap:8px;text-decoration:none;background:#2D5016;border-radius:12px;padding:10px 14px">
+      <span style="font-size:14px">&#128279;</span>
+      <span style="font-size:13px;font-weight:700;color:#fff">המשך ללמוד בספריא</span>
+      <span style="font-size:11px;color:rgba(255,255,255,.6);margin-right:auto">&#8592;</span>
+    </a>
+  </div>
+
+  <button onclick="toggleLearnExpand()" id="learnToggleBtn" style="width:100%;background:rgba(196,168,130,.12);color:#2D5016;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer">
+    העמק &#9660;
+  </button>
+</div>
+
+<div class="card" id="actCard">
+  <div style="font-size:13px;color:#8B7B6B;margin-bottom:8px">פעילות השבוע</div>
+  <div style="font-size:32px;margin-bottom:8px" id="actEmoji">&#127807;</div>
+  <div style="font-size:18px;font-weight:700;color:#1A1410;margin-bottom:8px" id="actTitle"></div>
+  <div style="font-size:14px;color:#8B7B6B;margin-bottom:16px" id="actDesc"></div>
+  <button class="btn btn-green" onclick="go('actdetail')">בוא נעשה את זה! &larr;</button>
+</div>
+<button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">&#128260; רוצים פעילות מחזקת אחרת?</button>
+```
+
   </div>
 </div>
 
@@ -437,6 +470,7 @@ async function generateActivity(){
 
 function updateHome(){
   loadDinnerQuestion();
+  loadDailyLearning();
   var el=document.getElementById('homeTitle'); if(el) el.textContent='שלום, '+(S.parent.name||'')+' \uD83D\uDC4B';
   var st=document.getElementById('homeStreak'); if(st) st.textContent='שבוע '+S.streak+' ברצף \uD83D\uDD25';
   var act=S.activity;
@@ -603,6 +637,48 @@ function updateJournal(){
   if(!S.memories.length){ el.innerHTML='<div style="text-align:center;padding:40px"><div style="font-size:48px;margin-bottom:16px">\uD83C\uDF31</div><div style="font-size:17px;font-weight:700;color:#1A1410;margin-bottom:8px">עוד אין זיכרונות</div><div style="font-size:14px;color:#8B7B6B;margin-bottom:24px">כל פעילות שתעשו ביחד תישמר כאן</div><button onclick="go(\'actdetail\')" style="background:#2D5016;color:#fff;border:none;border-radius:14px;padding:14px 28px;font-size:15px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer">\u2728 צור זיכרון משמעותי</button></div>'; return; }
   el.innerHTML='';
   S.memories.forEach(function(m){ var d=document.createElement('div'); d.style='background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)'; d.innerHTML='<div style="font-size:32px">'+m.emoji+'</div><div><div style="font-size:15px;font-weight:700;color:#1A1410">'+m.title+'</div><div style="font-size:12px;color:#8B7B6B">'+m.date+'</div></div>'; el.appendChild(d); });
+}
+
+var learnExpanded = false;
+var dailyLearning = null;
+
+async function loadDailyLearning() {
+  var isPremium = S.premium && S.premium.active;
+  var card = document.getElementById('learningCard');
+  if (!card) return;
+  if (!isPremium) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  var today = new Date().toDateString();
+  if (S.dailyLearning && S.dailyLearning.date === today) { renderLearning(S.dailyLearning.data); return; }
+  var result = await callServer('/api/daily-learning', {
+    tradition: S.parent.tradition || 'secular',
+    childAge: S.child.age, childName: S.child.name,
+    childGender: S.child.gender, parentGender: S.parent.gender
+  });
+  if (result && result.learning) {
+    S.dailyLearning = { date: today, data: result.learning };
+    save(); renderLearning(result.learning);
+  }
+}
+
+function renderLearning(l) {
+  dailyLearning = l;
+  var el;
+  el = document.getElementById('learnEmoji'); if(el) el.textContent = l.emoji || '&#128218;';
+  el = document.getElementById('learnSource'); if(el) el.textContent = l.source_he || l.source || '';
+  el = document.getElementById('learnQuote'); if(el) el.textContent = l.quote || '';
+  el = document.getElementById('learnTranslation'); if(el) el.textContent = l.quote_translation || '';
+  el = document.getElementById('learnExplanation'); if(el) el.textContent = l.explanation || '';
+  el = document.getElementById('learnQuestion'); if(el) el.textContent = l.discussion_question || '';
+  el = document.getElementById('learnSefaria'); if(el) el.href = l.sefaria_url || 'https://www.sefaria.org';
+}
+
+function toggleLearnExpand() {
+  learnExpanded = !learnExpanded;
+  var expanded = document.getElementById('learnExpanded');
+  var btn = document.getElementById('learnToggleBtn');
+  if (expanded) expanded.style.display = learnExpanded ? 'block' : 'none';
+  if (btn) btn.textContent = learnExpanded ? 'צמצם ▲' : 'העמק ▼';
 }
 
 fetch(SERVER+'/api/health').catch(function(){});
