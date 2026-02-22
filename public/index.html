@@ -21,8 +21,13 @@ button, input, select, textarea { font-family: 'Heebo', sans-serif !important; }
 .a3{animation:fadeUp .45s ease .3s both}
 .a4{animation:fadeUp .45s ease .42s both}
 .spin{width:64px;height:64px;border:3px solid rgba(255,255,255,.15);border-top-color:#C4A882;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 28px}
-</style>
 
+/* Hide scrollbars but keep scroll functionality */
+::-webkit-scrollbar { display: none; }
+
+- { -ms-overflow-style: none; scrollbar-width: none; }
+
+</style>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 button { font-family:'Heebo',sans-serif; }
@@ -38,21 +43,21 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
 .tagline { font-size:11px; letter-spacing:4px; color:rgba(255,255,255,.4); margin-bottom:60px; }
 .headline { font-size:26px; color:#fff; line-height:1.5; margin-bottom:50px; }
 .headline strong { font-weight:900; }
-.btn { width:100%; padding:18px; border:none; border-radius:14px; font-size:17px; font-weight:700; font-family:'Heebo',sans-serif; cursor:pointer; margin-bottom:12px; display:block; }
-.opt { font-family:'Heebo',sans-serif; }
+.btn { width:100%; padding:18px; border:none; border-radius:14px; font-size:17px; font-weight:700; font-family:‘Heebo’,sans-serif; cursor:pointer; margin-bottom:12px; display:block; }
+.opt { font-family:‘Heebo’,sans-serif; }
 .btn-primary { background:#C4A882; color:#1A1410; }
 .btn-secondary { background:rgba(255,255,255,.12); color:rgba(255,255,255,.8); }
 
 /* OB */
 .ob { background:#FAF7F2; padding:52px 22px 28px; }
 .ob-title { font-size:22px; font-weight:700; color:#1A1410; margin-bottom:24px; }
-.inp { width:100%; padding:16px; border:2px solid #EDE5D8; border-radius:12px; font-size:16px; font-family:'Heebo',sans-serif; background:#fff; color:#1A1410; margin-bottom:16px; }
+.inp { width:100%; padding:16px; border:2px solid #EDE5D8; border-radius:12px; font-size:16px; font-family:‘Heebo’,sans-serif; background:#fff; color:#1A1410; margin-bottom:16px; }
 .inp:focus { outline:none; border-color:#2D5016; }
 .opts { display:flex; gap:10px; margin-bottom:20px; }
 .opts.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
 .opts.grid .opt { flex:none; aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; font-size:13px; }
 .opts.grid .opt .opt-emoji { font-size:24px; }
-.opt { flex:1; padding:14px; border:2px solid #EDE5D8; border-radius:12px; text-align:center; font-size:15px; font-family:'Heebo',sans-serif; cursor:pointer; background:#fff; }
+.opt { flex:1; padding:14px; border:2px solid #EDE5D8; border-radius:12px; text-align:center; font-size:15px; font-family:‘Heebo’,sans-serif; cursor:pointer; background:#fff; }
 .opt.sel { border-color:#2D5016; background:#2D5016; color:#fff; font-weight:700; }
 .btn-green { background:#2D5016; color:#fff; }
 .label { font-size:13px; color:#8B7B6B; margin-bottom:8px; }
@@ -69,58 +74,58 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
 
 /* QUESTION CARDS */
 .q-card {
-  background:#fff;
-  border-radius:24px;
-  padding:0;
-  margin-bottom:20px;
-  box-shadow:0 8px 40px rgba(0,0,0,.12);
-  overflow:hidden;
-  position:relative;
+background:#fff;
+border-radius:24px;
+padding:0;
+margin-bottom:20px;
+box-shadow:0 8px 40px rgba(0,0,0,.12);
+overflow:hidden;
+position:relative;
 }
 .q-card-top {
-  height:6px;
-  background:linear-gradient(90deg,#2D5016,#C4A882);
+height:6px;
+background:linear-gradient(90deg,#2D5016,#C4A882);
 }
 .q-card-body {
-  padding:28px 24px 24px;
+padding:28px 24px 24px;
 }
 .q-card-num {
-  font-size:11px;
-  color:#C4A882;
-  font-weight:700;
-  letter-spacing:2px;
-  margin-bottom:16px;
+font-size:11px;
+color:#C4A882;
+font-weight:700;
+letter-spacing:2px;
+margin-bottom:16px;
 }
 .q-card-text {
-  font-size:20px;
-  font-weight:700;
-  color:#1A1410;
-  line-height:1.55;
-  margin-bottom:20px;
+font-size:20px;
+font-weight:700;
+color:#1A1410;
+line-height:1.55;
+margin-bottom:20px;
 }
 .q-card-tip {
-  background:#FAF7F2;
-  border-radius:12px;
-  padding:10px 14px;
-  font-size:12px;
-  color:#8B7B6B;
+background:#FAF7F2;
+border-radius:12px;
+padding:10px 14px;
+font-size:12px;
+color:#8B7B6B;
 }
 
 /* SHARE SCREEN */
 #sharescreen {
-  background:#2D5016;
-  align-items:center;
-  justify-content:center;
-  padding:32px 24px;
-  text-align:center;
+background:#2D5016;
+align-items:center;
+justify-content:center;
+padding:32px 24px;
+text-align:center;
 }
 .share-card {
-  background:#FAF7F2;
-  border-radius:28px;
-  padding:36px 28px;
-  width:100%;
-  margin-bottom:24px;
-  box-shadow:0 16px 48px rgba(0,0,0,.3);
+background:#FAF7F2;
+border-radius:28px;
+padding:36px 28px;
+width:100%;
+margin-bottom:24px;
+box-shadow:0 16px 48px rgba(0,0,0,.3);
 }
 </style>
 
@@ -318,7 +323,7 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
     <div style="font-size:48px;margin-bottom:8px" id="dEmoji">🌿</div>
     <h1 id="dTitle">פעילות</h1>
   </div>
-  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto">
+  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:scroll;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1">
     <div class="card">
       <div style="font-size:13px;color:#8B7B6B;margin-bottom:4px">למה זה טוב?</div>
       <div style="font-size:15px;color:#1A1410" id="dWhy"></div>
@@ -341,7 +346,7 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
     <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:4px" id="profName">פרופיל</div>
     <div style="font-size:14px;color:rgba(255,255,255,.65)" id="profSub"></div>
   </div>
-  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto">
+  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:scroll;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1">
 
 ```
 <!-- Parent info -->
@@ -401,7 +406,7 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
 
 <!-- PREMIUM -->
 
-<div id="premium" class="screen" style="background:#FAF7F2;overflow-y:auto">
+<div id="premium" class="screen" style="background:#FAF7F2;overflow-y:scroll;-webkit-overflow-scrolling:touch;scrollbar-width:none">
   <div style="background:linear-gradient(160deg,#2D5016,#4A8028);padding:52px 28px 36px;text-align:center">
     <div style="font-size:52px;margin-bottom:14px">⭐</div>
     <div style="font-size:26px;font-weight:900;color:#fff;margin-bottom:8px">Bondy פרמיום</div>
@@ -467,7 +472,7 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
     <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:4px" id="profName">פרופיל</div>
     <div style="font-size:14px;color:rgba(255,255,255,.65)" id="profSub"></div>
   </div>
-  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto">
+  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:scroll;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1">
 
 ```
 <!-- Parent info -->
