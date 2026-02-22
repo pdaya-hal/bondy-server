@@ -1,3 +1,5 @@
+הנה:
+
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -12,7 +14,7 @@ const supabase = createClient(process.env.SUPABASE_URL || "", process.env.SUPABA
 
 app.post("/api/activity", async (req, res) => {
   try {
-    const { parentName, parentGender, interests, tradition, childName, childAge, childGender, childInterests, relation, pastActivities } = req.body;
+    const { parentName, parentGender, interests, tradition, timeAvail, childName, childAge, childGender, childInterests, relation, pastActivities } = req.body;
     const pastCount = (pastActivities && pastActivities.length) ? pastActivities.length : 0;
     const pastStr = pastCount > 0 ? "פעילויות שכבר עשו - אל תחזור עליהן: " + pastActivities.join(", ") + ". " : "";
 
@@ -29,6 +31,13 @@ app.post("/api/activity", async (req, res) => {
     } else {
       difficultyInstruction = "רמת קושי: מאתגרת - קשר עמוק.\nפעילות שדורשת תכנון או יציאה, חוויה משותפת עמוקה.\nדוגמאות: יציאה לפארק, בניית פרויקט לאורך ימים, חוויה חדשה ביחד.";
     }
+
+    const timeMap = {
+      short: "זמן פנוי: 10-15 דקות בלבד. הפעילות חייבת להיות קצרה מאוד וישירה.",
+      medium: "זמן פנוי: כחצי שעה. פעילות עם קצת עומק.",
+      long: "זמן פנוי: שעה ויותר. אפשר להשקיע בחוויה עמוקה."
+    };
+    const timeInstruction = timeMap[timeAvail] || timeMap.short;
 
     const genderNote = parentGender === "mom"
       ? "חשוב מאוד: כתוב בלשון נקבה לגבי ההורה בכל המשפטים. לדוגמה: 'האמא יוצאת', 'היא בונה', 'כשהיא', 'רחל ו" + (childName||"הילד") + " יוצאות'."
@@ -54,6 +63,13 @@ app.post("/api/activity", async (req, res) => {
       "",
       genderNote,
       childGenderNote,
+      "",
+      "עקרונות פעילות מחברת:",
+      "- שיחה בתוך הפעילות, לא רק עשייה — שאלות שיוצרות קשר",
+      "- רגע שבו הילד/ה מרגיש/ה נשמע/ת ורצוי/ה",
+      "- סיום עם תחושת הצלחה משותפת",
+      "- " + parentLabel + " " + (parentName||"") + " (לא רק שם פרטי) — לדוגמה: '" + parentLabel + " ו" + (childName||"הילד") + "'",
+      timeInstruction,
       "",
       "עברית בלבד. אמוג'י טבע בלבד. החזר JSON תקני בלבד:",
       '{"emoji":"","title":"","description":"","why":"","duration":"","steps":["","","",""],"questions":["","",""],"tip":"","dailyQuestion":""}'
