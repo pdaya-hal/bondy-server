@@ -422,7 +422,19 @@ var DEF = {
   streak:1, activity:null, memories:[]
 };
 var S = JSON.parse(JSON.stringify(DEF));
-try { var _s = localStorage.getItem('bondy2'); if(_s) S = JSON.parse(_s); } catch(e){}
+try {
+  var _s = localStorage.getItem('bondy2');
+  if(_s) {
+    S = JSON.parse(_s);
+    // Sanitize any backticks that crept in from old API responses
+    if(S.activity) {
+      S.activity.title = (S.activity.title||'').replace(/`/g,'').trim();
+      S.activity.description = (S.activity.description||'').replace(/`/g,'').trim();
+      S.activity.why = (S.activity.why||'').replace(/`/g,'').trim();
+      if(S.activity.steps) S.activity.steps = S.activity.steps.map(function(s){ return s.replace(/`/g,'').trim(); });
+    }
+  }
+} catch(e){}
 function save(){ try { localStorage.setItem('bondy2', JSON.stringify(S)); } catch(e){} }
 
 function go(id){
