@@ -1069,7 +1069,7 @@ function setupQSwipe(){
   };
 }
 
-async async function loadQuestions(){
+async function loadQuestions(){
   qIndex=0; qList=getQFallback(); buildQCards();
   var result=await callServer('/api/questions',{childName:S.child.name,childAge:S.child.age,childGender:S.child.gender,childInterests:S.child.interests||[],parentName:S.parent.name,parentGender:S.parent.gender,lang:S.lang||'he'});
   if(result&&result.questions&&result.questions.length){ if(qIndex===0){ qList=result.questions; buildQCards(); } }
