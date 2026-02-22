@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -68,6 +69,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 <div class="app">
 
 <!-- SPLASH -->
+
 <div id="splash" class="screen active">
   <div class="logo a1">bon<span>dy</span></div>
   <div class="tagline a2">חיזוק קשר הורה-ילד</div>
@@ -79,6 +81,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 </div>
 
 <!-- OB1 -->
+
 <div id="ob1" class="screen ob">
   <div class="ob-title">היי! איך קוראים לך?</div>
   <input class="inp" id="pName" placeholder="השם שלך...">
@@ -90,23 +93,24 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
   <button class="btn btn-green" onclick="saveOb1()">המשך &larr;</button>
 </div>
 
-<!-- OB5 - אווירה בבית -->
+<!-- OB5 - מסורת -->
+
 <div id="ob5" class="screen ob">
   <div class="ob-title">ספרו לנו על האווירה בבית</div>
   <div class="opts" style="flex-direction:column;gap:12px">
-    <button class="opt" id="tr1" onclick="selTrad(this,'secular')" style="text-align:right;padding:16px 18px;color:#1A1410">
+    <button class="opt" id="tr1" onclick="selTrad(this,&#39;secular&#39;)" style="text-align:right;padding:16px 18px;color:#1A1410">
       <div style="font-size:16px;font-weight:700;color:#2D5016">&#9728;&#65039; כיפת השמיים</div>
       <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">יהדות כתרבות וזהות, בלי חובות</div>
     </button>
-    <button class="opt" id="tr2" onclick="selTrad(this,'traditional')" style="text-align:right;padding:16px 18px;color:#1A1410">
+    <button class="opt" id="tr2" onclick="selTrad(this,&#39;traditional&#39;)" style="text-align:right;padding:16px 18px;color:#1A1410">
       <div style="font-size:16px;font-weight:700;color:#2D5016">&#128367;&#65039; מסורתי חם</div>
       <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">שומרים מה שמרגיש נכון, מחברים בין עולמות</div>
     </button>
-    <button class="opt" id="tr3" onclick="selTrad(this,'religious')" style="text-align:right;padding:16px 18px;color:#1A1410">
+    <button class="opt" id="tr3" onclick="selTrad(this,&#39;religious&#39;)" style="text-align:right;padding:16px 18px;color:#1A1410">
       <div style="font-size:16px;font-weight:700;color:#2D5016">&#128214; שורשים</div>
       <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">תורה ומצוות כדרך חיים</div>
     </button>
-    <button class="opt" id="tr4" onclick="selTrad(this,'haredi')" style="text-align:right;padding:16px 18px;color:#1A1410">
+    <button class="opt" id="tr4" onclick="selTrad(this,&#39;haredi&#39;)" style="text-align:right;padding:16px 18px;color:#1A1410">
       <div style="font-size:16px;font-weight:700;color:#2D5016">&#10024; סקרן לגלות</div>
       <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">לא מוגדר, פתוח, רוצה להתחבר למשהו עמוק</div>
     </button>
@@ -115,6 +119,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 </div>
 
 <!-- OB2 -->
+
 <div id="ob2" class="screen ob">
   <div class="ob-title">מה אתה אוהב?</div>
   <div class="label">בחר כמה שרוצה</div>
@@ -130,6 +135,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 </div>
 
 <!-- OB3 -->
+
 <div id="ob3" class="screen ob">
   <div class="ob-title">ספר לי על הילד שלך</div>
   <input class="inp" id="cName" placeholder="שם הילד/ה...">
@@ -162,6 +168,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 </div>
 
 <!-- OB4 -->
+
 <div id="ob4" class="screen ob">
   <div class="ob-title">איך הקשר ביניכם?</div>
   <div class="opts" style="flex-direction:column">
@@ -173,6 +180,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 </div>
 
 <!-- LOADING -->
+
 <div id="loading" class="screen" style="background:#2D5016;align-items:center;justify-content:center;text-align:center;padding:40px">
   <div class="spin a1"></div>
   <div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:10px;line-height:1.4" class="a2">Bondy מחזק<br>את הקשר שלכם</div>
@@ -180,6 +188,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 </div>
 
 <!-- HOME -->
+
 <div id="home" class="screen">
   <div class="home-head">
     <div style="display:flex;justify-content:space-between;align-items:center">
@@ -206,32 +215,42 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
       <div style="font-size:20px;margin-bottom:8px" id="learnEmoji">&#128218;</div>
       <div style="font-size:15px;font-weight:700;color:#2D5016;line-height:1.6;margin-bottom:8px;font-style:italic" id="learnQuote"></div>
       <div style="font-size:13px;color:#8B7B6B;line-height:1.6;margin-bottom:12px" id="learnTranslation"></div>
-      <div id="learnExpanded" style="display:none;border-top:1px solid #EDE5D8;padding-top:12px;margin-bottom:12px">
-        <div style="font-size:13px;color:#1A1410;line-height:1.7;margin-bottom:12px" id="learnExplanation"></div>
-        <div style="background:#FAF7F2;border-radius:12px;padding:12px 14px;margin-bottom:12px">
-          <div style="font-size:11px;color:#C4A882;font-weight:700;margin-bottom:6px">&#128172; שאלה לשיחה</div>
-          <div style="font-size:13px;color:#1A1410;line-height:1.6" id="learnQuestion"></div>
-        </div>
-        <a id="learnSefaria" href="#" target="_blank" style="display:flex;align-items:center;gap:8px;text-decoration:none;background:#2D5016;border-radius:12px;padding:10px 14px">
-          <span style="font-size:14px">&#128279;</span>
-          <span style="font-size:13px;font-weight:700;color:#fff">המשך ללמוד בספריא</span>
-          <span style="font-size:11px;color:rgba(255,255,255,.6);margin-right:auto">&#8592;</span>
-        </a>
-      </div>
-      <button onclick="toggleLearnExpand()" id="learnToggleBtn" style="width:100%;background:rgba(196,168,130,.12);color:#2D5016;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer">העמק &#9660;</button>
+
+```
+  <!-- Expandable section -->
+  <div id="learnExpanded" style="display:none;border-top:1px solid #EDE5D8;padding-top:12px;margin-bottom:12px">
+    <div style="font-size:13px;color:#1A1410;line-height:1.7;margin-bottom:12px" id="learnExplanation"></div>
+    <div style="background:#FAF7F2;border-radius:12px;padding:12px 14px;margin-bottom:12px">
+      <div style="font-size:11px;color:#C4A882;font-weight:700;margin-bottom:6px">&#128172; שאלה לשיחה</div>
+      <div style="font-size:13px;color:#1A1410;line-height:1.6" id="learnQuestion"></div>
     </div>
-    <div class="card" id="actCard">
-      <div style="font-size:13px;color:#8B7B6B;margin-bottom:8px">פעילות השבוע</div>
-      <div style="font-size:32px;margin-bottom:8px" id="actEmoji">&#127807;</div>
-      <div style="font-size:18px;font-weight:700;color:#1A1410;margin-bottom:8px" id="actTitle"></div>
-      <div style="font-size:14px;color:#8B7B6B;margin-bottom:16px" id="actDesc"></div>
-      <button class="btn btn-green" onclick="go('actdetail')">בוא נעשה את זה! &larr;</button>
-    </div>
-    <button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">&#128260; רוצים פעילות מחזקת אחרת?</button>
+    <a id="learnSefaria" href="#" target="_blank" style="display:flex;align-items:center;gap:8px;text-decoration:none;background:#2D5016;border-radius:12px;padding:10px 14px">
+      <span style="font-size:14px">&#128279;</span>
+      <span style="font-size:13px;font-weight:700;color:#fff">המשך ללמוד בספריא</span>
+      <span style="font-size:11px;color:rgba(255,255,255,.6);margin-right:auto">&#8592;</span>
+    </a>
+  </div>
+
+  <button onclick="toggleLearnExpand()" id="learnToggleBtn" style="width:100%;background:rgba(196,168,130,.12);color:#2D5016;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer">
+    העמק &#9660;
+  </button>
+</div>
+
+<div class="card" id="actCard">
+  <div style="font-size:13px;color:#8B7B6B;margin-bottom:8px">פעילות השבוע</div>
+  <div style="font-size:32px;margin-bottom:8px" id="actEmoji">&#127807;</div>
+  <div style="font-size:18px;font-weight:700;color:#1A1410;margin-bottom:8px" id="actTitle"></div>
+  <div style="font-size:14px;color:#8B7B6B;margin-bottom:16px" id="actDesc"></div>
+  <button class="btn btn-green" onclick="go('actdetail')">בוא נעשה את זה! &larr;</button>
+</div>
+<button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">&#128260; רוצים פעילות מחזקת אחרת?</button>
+```
+
   </div>
 </div>
 
 <!-- QUESTIONS -->
+
 <div id="questions" class="screen" style="background:#FAF7F2;padding-bottom:72px">
   <div class="home-head">
     <div style="display:flex;justify-content:space-between;align-items:center">
@@ -247,6 +266,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 </div>
 
 <!-- JOURNAL -->
+
 <div id="journal" class="screen">
   <div class="home-head"><h1>זיכרונות</h1></div>
   <div style="padding:20px 22px 88px;overflow-y:auto;flex:1" id="jList">
@@ -260,6 +280,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 </div>
 
 <!-- ACT DETAIL -->
+
 <div id="actdetail" class="screen">
   <div class="home-head" style="position:relative">
     <div onclick="go('home')" style="position:absolute;top:52px;right:16px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;color:#fff;cursor:pointer">&larr; חזרה</div>
@@ -280,6 +301,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 </div>
 
 <!-- PROFILE -->
+
 <div id="profile" class="screen">
   <div style="background:#2D5016;padding:48px 22px 20px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -325,13 +347,14 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;cursor:pointer" onclick="showPremium()">
         <span style="color:#1A1410;font-size:15px">&#11088; שדרג לפרמיום</span>
-        <span style="color:#C4A882;font-size:12px;font-weight:700">בואו נשקיע בקשר</span>
+        <span style="color:#C4A882;font-size:12px;font-weight:700">חינם חודש ראשון</span>
       </div>
     </div>
   </div>
 </div>
 
 <!-- PREMIUM -->
+
 <div id="premium" class="screen" style="background:#FAF7F2;overflow-y:auto;padding-bottom:88px">
   <div style="background:linear-gradient(160deg,#2D5016,#4A8028);padding:52px 28px 36px;text-align:center">
     <div style="font-size:52px;margin-bottom:14px">&#11088;</div>
@@ -360,7 +383,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
         <div style="font-size:22px;flex-shrink:0">&#128205;</div>
         <div><div style="font-weight:700;color:#1A1410;font-size:15px">פעילויות מבוססות מיקום</div><div style="font-size:13px;color:#8B7B6B">פארקים, מוזיאונים ומקומות קרובים</div></div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px">
+      <div style="display:flex;align-items:flex-start;gap:12px">
         <div style="font-size:22px;flex-shrink:0">&#128276;</div>
         <div><div style="font-weight:700;color:#1A1410;font-size:15px">תזכורות חכמות</div><div style="font-size:13px;color:#8B7B6B">התראות על פעילויות, שאלות ורגעים מיוחדים</div></div>
       </div>
@@ -376,6 +399,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 </div>
 
 <!-- SHARE SCREEN -->
+
 <div id="sharescreen" class="screen">
   <div class="share-card" id="shareCard">
     <div style="font-size:36px;font-weight:900;color:#2D5016;letter-spacing:-1px;margin-bottom:4px">bon<span style="color:#C4A882">dy</span></div>
@@ -402,6 +426,7 @@ try {
   var _s = localStorage.getItem('bondy2');
   if(_s) {
     S = JSON.parse(_s);
+    // Sanitize any backticks that crept in from old API responses
     if(S.activity) {
       S.activity.title = (S.activity.title||'').replace(/`/g,'').trim();
       S.activity.description = (S.activity.description||'').replace(/`/g,'').trim();
@@ -454,7 +479,7 @@ async function callServer(endpoint,data){
 
 async function generateActivity(){
   var p=S.parent, c=S.child;
-  var result=await callServer('/api/activity',{parentName:p.name,interests:p.interests,tradition:p.tradition,childName:c.name,childAge:c.age,childGender:c.gender,childInterests:c.interests||[],relation:c.relation,pastActivities:S.memories.map(function(m){ return m.title; })});
+  var result=await callServer('/api/activity',{parentName:p.name,parentGender:p.gender,interests:p.interests,tradition:p.tradition,childName:c.name,childAge:c.age,childGender:c.gender,childInterests:c.interests||[],relation:c.relation,pastActivities:S.memories.map(function(m){ return m.title; })});
   if(result&&result.activity) S.activity=result.activity;
   save(); go('home');
 }
@@ -514,7 +539,7 @@ function doShare(){
 function getNewActivity(){ go('loading'); }
 
 var qList=[], qIndex=0;
-var qTips=['\uD83D\uDCA1 פותח דמיון ומגלה עולמות פנימיים','\uD83D\uDC9A מחזק קשר ואמון','\u2728 שאלה שכיף לענות עליה ביחד','\uD83C\uDF3F יוצר זיכרון משמעותי','\uD83D\uDD25 מפתח חשיבה ויצירתיות','\uD83C\uDF0A מעמיק הבנה הדדית','\uD83C\uDF3B פותח לב ומחבר לבבות','\u2B50 מחזק ביטחון עצמי'];
+var qTips=['פותח דמיון ומגלה עולמות פנימיים \uD83D\uDCA1','מחזק קשר ואמון \uD83D\uDC9A','שאלה שכיף לענות עליה ביחד \u2728','יוצר זיכרון משמעותי \uD83C\uDF3F','מפתח חשיבה ויצירתיות \uD83D\uDD25','מעמיק הבנה הדדית \uD83C\uDF0A','פותח לב ומחבר לבבות \uD83C\uDF3B','מחזק ביטחון עצמי \u2B50'];
 var qFallback=['אם היית יכול לטייל לכל מקום בעולם — לאן היית הולך?','מה הדבר הכי מצחיק שקרה לך השבוע?','אם היית בלתי נראה ליום אחד — מה היית עושה?','מה הדבר שאתה הכי גאה בו בעצמך?','אם יכולת להמציא כלל אחד לעולם — מה היה הכלל?','איזה כוח-על היית הכי רוצה לקבל ולמה?','מה החלום הכי מוזר שחלמת?','אם היית יכול לשנות משהו אחד בעולם — מה היה?'];
 var qTouchX=0, qTouchY=0, qDragging=false;
 
@@ -659,7 +684,7 @@ async function loadDailyLearning() {
 function renderLearning(l) {
   dailyLearning = l;
   var el;
-  el = document.getElementById('learnEmoji'); if(el) el.textContent = l.emoji || '\uD83D\uDCDA';
+  el = document.getElementById('learnEmoji'); if(el) el.textContent = l.emoji || '&#128218;';
   el = document.getElementById('learnSource'); if(el) el.textContent = l.source_he || l.source || '';
   el = document.getElementById('learnQuote'); if(el) el.textContent = l.quote || '';
   el = document.getElementById('learnTranslation'); if(el) el.textContent = l.quote_translation || '';
@@ -673,7 +698,7 @@ function toggleLearnExpand() {
   var expanded = document.getElementById('learnExpanded');
   var btn = document.getElementById('learnToggleBtn');
   if (expanded) expanded.style.display = learnExpanded ? 'block' : 'none';
-  if (btn) btn.textContent = learnExpanded ? '\u05E6\u05DE\u05E6\u05DD \u25B2' : '\u05D4\u05E2\u05DE\u05E7 \u25BC';
+  if (btn) btn.textContent = learnExpanded ? 'צמצם ▲' : 'העמק ▼';
 }
 
 fetch(SERVER+'/api/health').catch(function(){});
@@ -684,6 +709,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- GLOBAL NAV -->
+
 <div id="globalNav" class="nav" style="display:none">
   <div class="nav-item" id="navHome" onclick="go('home')">&#127968;<span>בית</span></div>
   <div class="nav-item" id="navJournal" onclick="go('journal')">&#128247;<span>זיכרונות</span></div>
