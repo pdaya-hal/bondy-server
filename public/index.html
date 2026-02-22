@@ -49,7 +49,7 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
 .btn-secondary { background:rgba(255,255,255,.12); color:rgba(255,255,255,.8); }
 
 /* OB */
-.ob { background:#FAF7F2; padding:52px 22px 80px; overflow-y:auto; }
+.ob { background:#FAF7F2; padding:52px 22px 80px; overflow-y:auto; overscroll-behavior:contain; }
 .ob-title { font-size:22px; font-weight:700; color:#1A1410; margin-bottom:24px; }
 .inp { width:100%; padding:16px; border:2px solid #EDE5D8; border-radius:12px; font-size:16px; font-family:‘Heebo’,sans-serif; background:#fff; color:#1A1410; margin-bottom:16px; }
 .inp:focus { outline:none; border-color:#2D5016; }
@@ -66,7 +66,7 @@ body { font-family:'Heebo',sans-serif; background:#2D5016; min-height:100vh; dis
 #home { background:#FAF7F2; }
 .home-head { background:#2D5016; padding:52px 22px 32px; color:#fff; }
 .home-head h1 { font-size:24px; font-weight:900; }
-.home-body { padding:20px 22px; overflow-y:auto; flex:1; }
+.home-body { padding:20px 22px; overflow-y:auto; flex:1; overscroll-behavior:contain; }
 .card { background:#fff; border-radius:20px; padding:24px; margin-bottom:16px; box-shadow:0 1px 4px rgba(0,0,0,.04); }
 .nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:#fff; border-top:1px solid #EDE5D8; display:flex; padding:8px 0 20px; z-index:100; }
 .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11px; cursor:pointer; color:#8B7B6B; padding:4px; }
@@ -310,7 +310,7 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
     <div style="font-size:48px;margin-bottom:8px" id="dEmoji">🌿</div>
     <h1 id="dTitle">פעילות</h1>
   </div>
-  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:scroll;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1">
+  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto;overscroll-behavior:contain;flex:1">
     <div class="card">
       <div style="font-size:13px;color:#8B7B6B;margin-bottom:4px">למה זה טוב?</div>
       <div style="font-size:15px;color:#1A1410" id="dWhy"></div>
@@ -333,7 +333,7 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
     <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:4px" id="profName">פרופיל</div>
     <div style="font-size:14px;color:rgba(255,255,255,.65)" id="profSub"></div>
   </div>
-  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:scroll;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1">
+  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto;overscroll-behavior:contain;flex:1">
 
 ```
 <!-- Parent info -->
@@ -396,7 +396,7 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
     <div style="font-size:14px;color:rgba(255,255,255,.75);line-height:1.6">חיזוק הקשר עם הילד שלך<br>בלי הגבלות</div>
   </div>
   <div style="background:#C4A882;padding:14px 28px;text-align:center">
-    <div style="font-size:13px;color:#1A1410;font-weight:700">חינם חודש ראשון · אחר כך 29₪/חודש</div><div style="font-size:11px;color:rgba(26,20,16,.6);margin-top:3px">ניתן לביטול בכל עת · לא מחייבים אוטומטית</div><div style="font-size:11px;color:rgba(26,20,16,.6);margin-top:3px">ניתן לביטול בכל עת · לא מחויבים אוטומטית</div>
+    <div style="font-size:13px;color:#1A1410;font-weight:700">חינם חודש ראשון · 29₪/חודש לאחר מכן · ביטול בכל עת</div><div style="font-size:11px;color:rgba(26,20,16,.6);margin-top:3px">ניתן לביטול בכל עת · לא מחויבים אוטומטית</div>
     <div style="font-size:11px;color:rgba(26,20,16,.6);margin-top:4px">ניתן לביטול בכל עת לפני סיום החודש</div>
   </div>
   <div style="padding:24px 20px 40px">
@@ -445,17 +445,7 @@ box-shadow:0 16px 48px rgba(0,0,0,.3);
   <button class="btn btn-secondary" onclick="go('home')">חזרה לבית</button>
 </div>
 
-<!-- PROFILE -->
-
-<div id="profile" class="screen">
-  <div style="background:#2D5016;padding:48px 22px 20px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <div onclick="go('home')" style="background:rgba(255,255,255,.2);border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#fff;cursor:pointer">← חזרה</div>
-    </div>
-    <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:4px" id="profName">פרופיל</div>
-    <div style="font-size:14px;color:rgba(255,255,255,.65)" id="profSub"></div>
-  </div>
-  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:scroll;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1">
+  <div style="padding:20px 22px;padding-bottom:80px;overflow-y:auto;overscroll-behavior:contain;flex:1">
 
 ```
 <!-- Parent info -->
