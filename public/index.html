@@ -238,7 +238,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
   </div>
   <div class="home-body">
     <div class="card" id="dinnerCard" style="background:linear-gradient(135deg,#2D5016,#3A6B1E);margin-bottom:12px">
-      <div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:8px;letter-spacing:1px">&#128172; שאלה לארוחת ערב</div>
+      <div id="dinnerLabel" style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:8px;letter-spacing:1px">&#128172; שאלה לארוחת ערב</div>
       <div style="font-size:16px;font-weight:700;color:#fff;line-height:1.5;margin-bottom:16px" id="dinnerQ"></div>
       <button onclick="go('questions')" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:12px;padding:10px 16px;font-size:13px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer">עוד שאלות &larr;</button>
     </div>
@@ -253,6 +253,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
       <div style="font-size:15px;font-weight:700;color:#2D5016;line-height:1.6;margin-bottom:8px;font-style:italic" id="learnQuote"></div>
       <div style="font-size:13px;color:#8B7B6B;line-height:1.6;margin-bottom:12px" id="learnTranslation"></div>
 
+```
   <!-- Expandable section -->
   <div id="learnExpanded" style="display:none;border-top:1px solid #EDE5D8;padding-top:12px;margin-bottom:12px">
     <div style="font-size:13px;color:#1A1410;line-height:1.7;margin-bottom:12px" id="learnExplanation"></div>
@@ -273,13 +274,14 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 </div>
 
 <div class="card" id="actCard">
-  <div style="font-size:13px;color:#8B7B6B;margin-bottom:8px">פעילות השבוע</div>
+  <div id="actLabel" style="font-size:13px;color:#8B7B6B;margin-bottom:8px">פעילות השבוע</div>
   <div style="font-size:32px;margin-bottom:8px" id="actEmoji">&#127807;</div>
   <div style="font-size:18px;font-weight:700;color:#1A1410;margin-bottom:8px" id="actTitle"></div>
   <div style="font-size:14px;color:#8B7B6B;margin-bottom:16px" id="actDesc"></div>
-  <button class="btn btn-green" onclick="go('actdetail')">בוא נעשה את זה! &larr;</button>
+  <button id="actBtn" class="btn btn-green" onclick="go('actdetail')">בוא נעשה את זה! &larr;</button>
 </div>
 <button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">&#128260; רוצים פעילות מחזקת אחרת?</button>
+```
 
   </div>
 </div>
@@ -293,7 +295,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
         <h1>שאלות לפתוח את הלב</h1>
         <div style="font-size:13px;color:rgba(255,255,255,.6)" id="qCounter"></div>
       </div>
-      <button onclick="loadQuestions()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:20px;font-family:'Heebo',sans-serif;font-size:13px;cursor:pointer">רענן &#8635;</button>
+      <button id="qRefreshBtn" onclick="loadQuestions()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:20px;font-family:'Heebo',sans-serif;font-size:13px;cursor:pointer">רענן &#8635;</button>
     </div>
   </div>
   <div id="qDeck" style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:0 28px;min-height:0"></div>
@@ -694,8 +696,14 @@ function T(key) {
 }
 
 function setLang(lang) {
+  var prevLang = LANG;
   LANG = lang;
   S.lang = lang;
+  // Clear cached activity so it regenerates in new language
+  if (prevLang !== lang) {
+    S.activity = null;
+    S.dailyLearning = null;
+  }
   save();
   applyLang();
 }
@@ -754,15 +762,17 @@ function applyLang() {
   el = document.getElementById('loadMsg'); if(el) el.textContent = T('loadingMsg');
 
   // Home
-  el = document.querySelector('#dinnerCard div:first-child'); if(el) el.innerHTML = T('dinnerLabel');
+  el = document.getElementById('dinnerLabel'); if(el) el.innerHTML = T('dinnerLabel');
   el = document.querySelector('#dinnerCard button'); if(el) el.innerHTML = T('moreQBtn');
+  el = document.getElementById('homeTitle'); if(el) el.textContent=(LANG==='en'?'Hi, ':'שלום, ')+(S.parent.name||'')+' \uD83D\uDC4B';
   el = document.querySelector('#learningCard .a-learn-label'); if(el) el.innerHTML = T('learningLabel');
   el = document.getElementById('actLabel'); if(el) el.textContent = T('actLabel');
-  el = document.querySelector('#actCard .btn-green'); if(el) el.innerHTML = T('actBtn');
+  el = document.getElementById('actBtn'); if(el) el.innerHTML = T('actBtn');
   el = document.querySelector('#home .home-body > .btn'); if(el) el.innerHTML = T('refreshBtn');
 
   // Questions
   el = document.querySelector('#questions h1'); if(el) el.textContent = T('qTitle');
+  el = document.getElementById('qRefreshBtn'); if(el) el.textContent = T('qRefresh');
 
   // Journal
   el = document.querySelector('#journal h1'); if(el) el.textContent = T('jTitle');
@@ -873,8 +883,10 @@ function sanitize(str) {
 function updateHome(){
   loadDinnerQuestion();
   loadDailyLearning();
-  var el=document.getElementById('homeTitle'); if(el) el.textContent='שלום, '+(S.parent.name||'')+' \uD83D\uDC4B';
+  var el=document.getElementById('homeTitle'); if(el) el.textContent=(LANG==='en'?'Hi, ':'שלום, ')+(S.parent.name||'')+' \uD83D\uDC4B';
   var st=document.getElementById('homeStreak'); if(st) st.textContent=T('streakTxt')(S.streak);
+  var al=document.getElementById('actLabel'); if(al) al.textContent=T('actLabel');
+  var rb=document.querySelector('#home .home-body > .btn'); if(rb) rb.innerHTML=T('refreshBtn');
   var act=S.activity;
   if(act){
     var em=document.getElementById('actEmoji'); var ti=document.getElementById('actTitle'); var de=document.getElementById('actDesc');
@@ -887,6 +899,9 @@ function updateHome(){
 function updateDetail(){
   var act=S.activity; if(!act) return;
   var em=document.getElementById('dEmoji'); var ti=document.getElementById('dTitle'); var wy=document.getElementById('dWhy'); var st=document.getElementById('dSteps');
+  var whyLbl=document.querySelector('#actdetail .card:first-of-type div:first-child'); if(whyLbl) whyLbl.textContent=LANG==='en'?'Why is this good?':'למה זה טוב?';
+  var stepsLbl=document.querySelector('#actdetail .card:nth-of-type(2) div:first-child'); if(stepsLbl) stepsLbl.textContent=LANG==='en'?'Steps':'שלבים';
+  var doneBtn=document.querySelector('#actdetail .btn-green'); if(doneBtn) doneBtn.innerHTML=LANG==='en'?'\u2705 We did it!':'\u2705 עשינו את זה!';
   if(em) em.textContent=act.emoji||'\uD83C\uDF3F';
   if(ti) ti.textContent=sanitize(act.title);
   if(wy) wy.textContent=sanitize(act.why);
@@ -938,7 +953,9 @@ function doShare(){
   else { var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert('הטקסט הועתק!'); }
 }
 
-function getNewActivity(){ go('loading'); }
+function getNewActivity(){
+  S.activity = null; save(); go('loading');
+}
 
 var qList=[], qIndex=0;
 var qTips=['פותח דמיון ומגלה עולמות פנימיים \uD83D\uDCA1','מחזק קשר ואמון \uD83D\uDC9A','שאלה שכיף לענות עליה ביחד \u2728','יוצר זיכרון משמעותי \uD83C\uDF3F','מפתח חשיבה ויצירתיות \uD83D\uDD25','מעמיק הבנה הדדית \uD83C\uDF0A','פותח לב ומחבר לבבות \uD83C\uDF3B','מחזק ביטחון עצמי \u2B50'];
@@ -961,8 +978,8 @@ function buildQCards(){
   finCard.style.cssText='position:absolute;width:240px;height:calc(100% - 60px);border-radius:28px;background:linear-gradient(160deg,#2D5016,#3A6B1E);box-shadow:0 16px 48px rgba(0,0,0,.2);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;z-index:1;transform:'+getCardTransform(qList.length);
   finCard.innerHTML='<div style="font-size:42px;font-weight:900;color:#fff;letter-spacing:-1px">bon<span style="color:#C4A882">dy</span></div>'
     +'<div style="font-size:11px;color:rgba(255,255,255,.5);letter-spacing:3px;margin-top:4px;margin-bottom:28px">שאלות לפתוח את הלב</div>'
-    +'<div style="font-size:16px;color:#fff;font-weight:700;margin-bottom:8px">סיימתם! \uD83C\uDF89</div>'
-    +'<div style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:28px">שאלות חדשות יגיעו בשבוע הבא.<br>רוצים מאגר בלתי נגמר?</div>'
+    +'<div style="font-size:16px;color:#fff;font-weight:700;margin-bottom:8px">'+(LANG==="en"?"All done! \uD83C\uDF89":"סיימתם! \uD83C\uDF89")+"</div>"
+    +'<div style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:28px">'+(LANG==="en"?"New questions next week.<br>Want unlimited questions?":"שאלות חדשות יגיעו בשבוע הבא.<br>רוצים מאגר בלתי נגמר?")+"</div>"
     +'<button onclick="showPremium()" style="background:#C4A882;color:#1A1410;border:none;border-radius:16px;padding:14px;font-size:14px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;width:100%;margin-bottom:10px">\u2B50 שדרג לפרמיום</button>'
     +'<button onclick="loadQuestions()" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:16px;padding:12px;font-size:13px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;width:100%">\u21BA שאלות מחדש</button>';
   deck.appendChild(finCard);
@@ -972,12 +989,12 @@ function buildQCards(){
     card.id='qcard'+i;
     card.style.cssText='position:absolute;width:240px;height:calc(100% - 60px);background:#fff;border-radius:28px;box-shadow:0 16px 48px rgba(0,0,0,.14);overflow:hidden;display:flex;flex-direction:column;transform-origin:bottom center;transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .4s;transform:'+getCardTransform(i)+';opacity:'+(i<3?1:0)+';z-index:'+(qList.length-i);
     card.innerHTML='<div style="padding:28px 24px 14px;text-align:center;border-bottom:1px solid #F0E8DE;flex-shrink:0"><div style="font-size:30px;font-weight:900;color:#2D5016;letter-spacing:-1px;line-height:1">bon<span style="color:#C4A882">dy</span></div><div style="font-size:9px;color:#C4A882;letter-spacing:2px;margin-top:3px">שאלות לפתוח את הלב</div></div>'
-      +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 28px;text-align:center"><div style="font-size:22px;font-weight:700;color:#1A1410;line-height:1.55">'+qList[i]+'</div></div>'
+      +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 28px;text-align:center"><div style="font-size:'+(qList[i].length > 80 ? '16' : qList[i].length > 50 ? '19' : '22')+'px;font-weight:700;color:#1A1410;line-height:1.55">'+qList[i]+'</div></div>'
       +'<div style="background:#F5F0E8;margin:0 16px 16px;border-radius:14px;padding:12px 16px;font-size:12px;color:#8B7B6B;text-align:center;flex-shrink:0">'+qTips[i%qTips.length]+'</div>';
     deck.appendChild(card);
     if(dots){ var dot=document.createElement('div'); dot.id='qdot'+i; dot.style.cssText='width:'+(i===qIndex?'20':'8')+'px;height:8px;border-radius:4px;background:'+(i===qIndex?'#2D5016':'rgba(196,168,130,.4)')+';transition:all .3s'; dots.insertBefore(dot, dots.firstChild); }
   }
-  if(ctr) ctr.textContent='שאלה 1 מתוך '+qList.length;
+  if(ctr) ctr.textContent=LANG==='en' ? 'Question 1 of '+qList.length : 'שאלה 1 מתוך '+qList.length;
   setupQSwipe();
 }
 
@@ -990,7 +1007,7 @@ function dismissTopCard(){
     var fin=document.getElementById('qcardFin');
     if(fin){ fin.style.transition='transform .4s cubic-bezier(.4,0,.2,1)'; fin.style.transform=getCardTransform(0); }
     qIndex++; updateQDots();
-    var ctr=document.getElementById('qCounter'); if(ctr) ctr.textContent='סיום!';
+    var ctr=document.getElementById('qCounter'); if(ctr) ctr.textContent=LANG==='en'?'Done!':'סיום!';
     var dots=document.getElementById('qDots'); if(dots) dots.innerHTML='';
     return;
   }
@@ -1001,7 +1018,7 @@ function dismissTopCard(){
   }
   var fin2=document.getElementById('qcardFin'); if(fin2) fin2.style.transform=getCardTransform(qList.length-qIndex+1);
   updateQDots();
-  var ctr2=document.getElementById('qCounter'); if(ctr2) ctr2.textContent='שאלה '+(qIndex+1)+' מתוך '+qList.length;
+  var ctr2=document.getElementById('qCounter'); if(ctr2) ctr2.textContent=LANG==='en' ? 'Question '+(qIndex+1)+' of '+qList.length : 'שאלה '+(qIndex+1)+' מתוך '+qList.length;
 }
 
 function updateQDots(){
@@ -1056,7 +1073,7 @@ function showPremium(){ go('premium'); }
 function showAddChild(){ showPremium(); }
 function updateJournal(){
   var el=document.getElementById('jList'); if(!el) return;
-  if(!S.memories.length){ el.innerHTML='<div style="text-align:center;padding:40px"><div style="font-size:48px;margin-bottom:16px">\uD83C\uDF31</div><div style="font-size:17px;font-weight:700;color:#1A1410;margin-bottom:8px">עוד אין זיכרונות</div><div style="font-size:14px;color:#8B7B6B;margin-bottom:24px">כל פעילות שתעשו ביחד תישמר כאן</div><button onclick="go(\'actdetail\')" style="background:#2D5016;color:#fff;border:none;border-radius:14px;padding:14px 28px;font-size:15px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer">\u2728 צור זיכרון משמעותי</button></div>'; return; }
+  if(!S.memories.length){ var emptyTxt=LANG==='en'?'No memories yet':'עוד אין זיכרונות'; var emptySubTxt=LANG==='en'?'Every activity you do together will be saved here':'כל פעילות שתעשו ביחד תישמר כאן'; var emptyBtn=LANG==='en'?'\u2728 Create a meaningful memory':'\u2728 צור זיכרון משמעותי'; el.innerHTML='<div style="text-align:center;padding:40px"><div style="font-size:48px;margin-bottom:16px">\uD83C\uDF31</div><div style="font-size:17px;font-weight:700;color:#1A1410;margin-bottom:8px">'+emptyTxt+'</div><div style="font-size:14px;color:#8B7B6B;margin-bottom:24px">'+emptySubTxt+'</div><button onclick="go(\'actdetail\')" style="background:#2D5016;color:#fff;border:none;border-radius:14px;padding:14px 28px;font-size:15px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer">'+emptyBtn+'</button></div>'; return; }
   el.innerHTML='';
   S.memories.forEach(function(m){ var d=document.createElement('div'); d.style='background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)'; d.innerHTML='<div style="font-size:32px">'+m.emoji+'</div><div><div style="font-size:15px;font-weight:700;color:#1A1410">'+m.title+'</div><div style="font-size:12px;color:#8B7B6B">'+m.date+'</div></div>'; el.appendChild(d); });
 }
