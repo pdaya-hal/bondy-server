@@ -253,6 +253,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
       <div style="font-size:15px;font-weight:700;color:#2D5016;line-height:1.6;margin-bottom:8px;font-style:italic" id="learnQuote"></div>
       <div style="font-size:13px;color:#8B7B6B;line-height:1.6;margin-bottom:12px" id="learnTranslation"></div>
 
+```
   <!-- Expandable section -->
   <div id="learnExpanded" style="display:none;border-top:1px solid #EDE5D8;padding-top:12px;margin-bottom:12px">
     <div style="font-size:13px;color:#1A1410;line-height:1.7;margin-bottom:12px" id="learnExplanation"></div>
@@ -280,6 +281,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
   <button id="actBtn" class="btn btn-green" onclick="go('actdetail')">בוא נעשה את זה! &larr;</button>
 </div>
 <button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">&#128260; רוצים פעילות מחזקת אחרת?</button>
+```
 
   </div>
 </div>
@@ -318,7 +320,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 
 <div id="actdetail" class="screen">
   <div class="home-head" style="position:relative">
-    <div onclick="go('home')" style="position:absolute;top:52px;right:16px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;color:#fff;cursor:pointer">&larr; חזרה</div>
+    <div onclick="go('home')" style="position:absolute;top:52px;right:16px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;color:#fff;cursor:pointer">&larr; <span id="backBtnTxt">חזרה</span></div>
     <div style="font-size:48px;margin-bottom:8px" id="dEmoji">&#127807;</div>
     <h1 id="dTitle">פעילות</h1>
   </div>
@@ -347,7 +349,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 <div id="profile" class="screen">
   <div style="background:#2D5016;padding:48px 22px 20px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <div onclick="go('home')" style="background:rgba(255,255,255,.2);border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#fff;cursor:pointer">&larr; חזרה</div>
+      <div id="profBackBtn" onclick="go('home')" style="background:rgba(255,255,255,.2);border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#fff;cursor:pointer">&larr; <span id="backBtnTxt">חזרה</span></div>
     </div>
     <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:4px" id="profName">פרופיל</div>
     <div style="font-size:14px;color:rgba(255,255,255,.65)" id="profSub"></div>
@@ -818,6 +820,7 @@ function applyLang() {
   el = document.getElementById('profPremiumLabel'); if(el) el.innerHTML = T('premiumLabel');
   el = document.getElementById('profPremiumSub'); if(el) el.textContent = T('premiumSub');
   el = document.getElementById('addChildBtn'); if(el) el.textContent = T('addChildBtn') + ' ⭐';
+  el = document.getElementById('backBtnTxt'); if(el) el.textContent = (LANG==='en'?'Back':'חזרה');
 }
 // ===== END LANGUAGE SYSTEM =====
 
@@ -984,7 +987,9 @@ function getNewActivity(){
 
 var qList=[], qIndex=0;
 var qTips=['פותח דמיון ומגלה עולמות פנימיים \uD83D\uDCA1','מחזק קשר ואמון \uD83D\uDC9A','שאלה שכיף לענות עליה ביחד \u2728','יוצר זיכרון משמעותי \uD83C\uDF3F','מפתח חשיבה ויצירתיות \uD83D\uDD25','מעמיק הבנה הדדית \uD83C\uDF0A','פותח לב ומחבר לבבות \uD83C\uDF3B','מחזק ביטחון עצמי \u2B50'];
-var qFallback=['אם היית יכול לטייל לכל מקום בעולם — לאן היית הולך?','מה הדבר הכי מצחיק שקרה לך השבוע?','אם היית בלתי נראה ליום אחד — מה היית עושה?','מה הדבר שאתה הכי גאה בו בעצמך?','אם יכולת להמציא כלל אחד לעולם — מה היה הכלל?','איזה כוח-על היית הכי רוצה לקבל ולמה?','מה החלום הכי מוזר שחלמת?','אם היית יכול לשנות משהו אחד בעולם — מה היה?'];
+var qFallbackHe = ['אם היית יכול לטייל לכל מקום בעולם — לאן היית הולך?','מה הדבר הכי מצחיק שקרה לך השבוע?','אם היית בלתי נראה ליום אחד — מה היית עושה?','מה הדבר שאתה הכי גאה בו בעצמך?','אם יכולת להמציא כלל אחד לעולם — מה היה הכלל?','איזה כוח-על היית הכי רוצה לקבל ולמה?','מה החלום הכי מוזר שחלמת?','אם היית יכול לשנות משהו אחד בעולם — מה היה?'];
+var qFallbackEn = ['If you could travel anywhere in the world, where would you go?','What was the funniest thing that happened to you this week?','If you were invisible for one day, what would you do?','What is something you are really proud of about yourself?','If you could invent one rule for the whole world, what would it be?','What superpower would you most want and why?','What is the strangest dream you have ever had?','If you could change one thing about the world, what would it be?'];
+function getQFallback(){ return LANG==='en' ? qFallbackEn : qFallbackHe; }
 var qTouchX=0, qTouchY=0, qDragging=false;
 
 function getCardTransform(depth){
@@ -1017,7 +1022,7 @@ function buildQCards(){
       +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 28px;text-align:center"><div style="font-size:'+(qList[i].length > 80 ? '16' : qList[i].length > 50 ? '19' : '22')+'px;font-weight:700;color:#1A1410;line-height:1.55">'+qList[i]+'</div></div>'
       +'<div style="background:#F5F0E8;margin:0 16px 16px;border-radius:14px;padding:12px 16px;font-size:12px;color:#8B7B6B;text-align:center;flex-shrink:0">'+qTips[i%qTips.length]+'</div>';
     deck.appendChild(card);
-    if(dots){ var dot=document.createElement('div'); dot.id='qdot'+i; dot.style.cssText='width:'+(i===qIndex?'20':'8')+'px;height:8px;border-radius:4px;background:'+(i===qIndex?'#2D5016':'rgba(196,168,130,.4)')+';transition:all .3s'; dots.insertBefore(dot, dots.firstChild); }
+    if(dots){ var dot=document.createElement('div'); dot.id='qdot'+i; dot.style.cssText='width:'+(i===qIndex?'20':'8')+'px;height:8px;border-radius:4px;background:'+(i===qIndex?'#2D5016':'rgba(196,168,130,.4)')+';transition:all .3s'; if(LANG==='en'){ dots.appendChild(dot); } else { if(LANG==='en'){ dots.appendChild(dot); } else { dots.insertBefore(dot, dots.firstChild); } } }
   }
   if(ctr) ctr.textContent=LANG==='en' ? 'Question 1 of '+qList.length : 'שאלה 1 מתוך '+qList.length;
   setupQSwipe();
@@ -1026,7 +1031,7 @@ function buildQCards(){
 function dismissTopCard(){
   var topCard=document.getElementById('qcard'+qIndex); if(!topCard) return;
   topCard.style.transition='transform .4s cubic-bezier(.4,0,.2,1),opacity .35s';
-  topCard.style.transform='translateX(110%) rotate(12deg) scale(0.85)';
+  topCard.style.transform=LANG==='en'?'translateX(-110%) rotate(-12deg) scale(0.85)':'translateX(110%) rotate(12deg) scale(0.85)';
   topCard.style.opacity='0';
   if(qIndex>=qList.length-1){
     var fin=document.getElementById('qcardFin');
@@ -1053,12 +1058,19 @@ function updateQDots(){
 function setupQSwipe(){
   var deck=document.getElementById('qDeck'); if(!deck) return;
   deck.ontouchstart=function(e){ qTouchX=e.touches[0].clientX; qTouchY=e.touches[0].clientY; qDragging=true; };
-  deck.addEventListener('touchmove',function(e){ if(!qDragging) return; var dx=e.touches[0].clientX-qTouchX; var dy=e.touches[0].clientY-qTouchY; if(Math.abs(dx)>Math.abs(dy)){ e.preventDefault(); var top=document.getElementById('qcard'+qIndex); if(top) top.style.transform='translateX('+dx+'px) rotate('+(dx*0.03)+'deg)'; } },{passive:false});
-  deck.ontouchend=function(e){ if(!qDragging) return; qDragging=false; var dx=e.changedTouches[0].clientX-qTouchX; var top=document.getElementById('qcard'+qIndex); if(Math.abs(dx)>80){ if(dx>0){ dismissTopCard(); } else { if(qIndex>0){ qIndex--; buildQCards(); } else { if(top){ top.style.transition='transform .3s'; top.style.transform=getCardTransform(0); } } } } else { if(top){ top.style.transition='transform .3s'; top.style.transform=getCardTransform(0); } } };
+  deck.addEventListener('touchmove',function(e){ if(!qDragging) return; var dx=e.touches[0].clientX-qTouchX; var dy=e.touches[0].clientY-qTouchY; if(Math.abs(dx)>Math.abs(dy)){ e.preventDefault(); var top=document.getElementById('qcard'+qIndex); var dragDx = LANG==='en' ? -dx : dx; if(top) top.style.transform='translateX('+dx+'px) rotate('+(dragDx*0.03)+'deg)'; } },{passive:false});
+  deck.ontouchend=function(e){ if(!qDragging) return; qDragging=false; var dx=e.changedTouches[0].clientX-qTouchX; var top=document.getElementById('qcard'+qIndex);
+    var isForward = LANG==='en' ? dx<0 : dx>0;
+    var isBack = LANG==='en' ? dx>0 : dx<0;
+    if(Math.abs(dx)>80){
+      if(isForward){ dismissTopCard(); }
+      else if(isBack){ if(qIndex>0){ qIndex--; buildQCards(); } else { if(top){ top.style.transition='transform .3s'; top.style.transform=getCardTransform(0); } } }
+    } else { if(top){ top.style.transition='transform .3s'; top.style.transform=getCardTransform(0); } }
+  };
 }
 
-async function loadQuestions(){
-  qIndex=0; qList=qFallback; buildQCards();
+async async function loadQuestions(){
+  qIndex=0; qList=getQFallback(); buildQCards();
   var result=await callServer('/api/questions',{childName:S.child.name,childAge:S.child.age,childGender:S.child.gender,childInterests:S.child.interests||[],parentName:S.parent.name,parentGender:S.parent.gender,lang:S.lang||'he'});
   if(result&&result.questions&&result.questions.length){ if(qIndex===0){ qList=result.questions; buildQCards(); } }
 }
@@ -1067,10 +1079,11 @@ function updateProfile(){
   updateReminderUI();
   var pn=document.getElementById('profName'); var ps=document.getElementById('profSub'); var ppn=document.getElementById('profParentName'); var ppg=document.getElementById('profParentGender'); var pc=document.getElementById('profChildren');
   if(pn) pn.textContent=S.parent.name||'פרופיל';
-  if(ps) ps.textContent=(S.parent.gender==='mom'?'אמא':'אבא')+' של '+(S.child.name||'');
+  if(ps) ps.textContent=(LANG==='en'?(S.parent.gender==='mom'?'Mom of ':'Dad of '):(S.parent.gender==='mom'?'אמא של ':'אבא של '))+(S.child.name||'');
   if(ppn) ppn.textContent=S.parent.name||'';
-  if(ppg) ppg.textContent=S.parent.gender==='mom'?'\uD83D\uDC69 אמא':'\uD83D\uDC68 אבא';
-  if(pc) pc.innerHTML='<div style="display:flex;align-items:center;gap:12px;padding:8px 0"><div style="font-size:28px">'+(S.child.gender==='girl'?'\uD83D\uDC67':'\uD83D\uDC66')+'</div><div><div style="font-size:15px;font-weight:700;color:#1A1410">'+(S.child.name||'')+'</div><div style="font-size:12px;color:#8B7B6B">גיל '+(S.child.age||'')+'</div></div></div>';
+  if(ppg) ppg.textContent=S.parent.gender==='mom'?(LANG==='en'?'\uD83D\uDC69 Mom':'\uD83D\uDC69 אמא'):(LANG==='en'?'\uD83D\uDC68 Dad':'\uD83D\uDC68 אבא');
+  var ageWord = LANG==='en' ? 'Age ' : 'גיל ';
+  if(pc) pc.innerHTML='<div style="display:flex;align-items:center;gap:12px;padding:8px 0"><div style="font-size:28px">'+(S.child.gender==='girl'?'\uD83D\uDC67':'\uD83D\uDC66')+'</div><div><div style="font-size:15px;font-weight:700;color:#1A1410">'+(S.child.name||'')+'</div><div style="font-size:12px;color:#8B7B6B">'+ageWord+(S.child.age||'')+'</div></div></div>';
 }
 
 function getDinnerQuestions(){ return T('dinnerQuestions'); }
