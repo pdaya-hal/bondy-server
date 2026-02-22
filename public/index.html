@@ -136,15 +136,15 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 <!-- OB2 -->
 
 <div id="ob2" class="screen ob">
-  <div class="ob-title">מה אתה אוהב?</div>
-  <div class="label">בחר כמה שרוצה</div>
+  <div class="ob-title" id="ob2Title">מה אתה אוהב?</div>
+  <div class="label" id="ob2Label">בחר כמה שרוצה</div>
   <div class="opts grid">
-    <button class="opt" onclick="togInt(this,'hike')"><span class="opt-emoji">&#9968;&#65039;</span>טיולים</button>
-    <button class="opt" onclick="togInt(this,'cook')"><span class="opt-emoji">&#127859;</span>בישול</button>
-    <button class="opt" onclick="togInt(this,'sport')"><span class="opt-emoji">&#9917;</span>ספורט</button>
-    <button class="opt" onclick="togInt(this,'art')"><span class="opt-emoji">&#127912;</span>אמנות</button>
-    <button class="opt" onclick="togInt(this,'science')"><span class="opt-emoji">&#128300;</span>מדע</button>
-    <button class="opt" onclick="togInt(this,'music')"><span class="opt-emoji">&#127925;</span>מוזיקה</button>
+    <button class="opt" id="pi-hike" onclick="togInt(this,'hike')"><span class="opt-emoji">&#9968;&#65039;</span><span class="pi-label">טיולים</span></button>
+    <button class="opt" id="pi-cook" onclick="togInt(this,'cook')"><span class="opt-emoji">&#127859;</span><span class="pi-label">בישול</span></button>
+    <button class="opt" id="pi-sport" onclick="togInt(this,'sport')"><span class="opt-emoji">&#9917;</span><span class="pi-label">ספורט</span></button>
+    <button class="opt" id="pi-art" onclick="togInt(this,'art')"><span class="opt-emoji">&#127912;</span><span class="pi-label">אמנות</span></button>
+    <button class="opt" id="pi-science" onclick="togInt(this,'science')"><span class="opt-emoji">&#128300;</span><span class="pi-label">מדע</span></button>
+    <button class="opt" id="pi-music" onclick="togInt(this,'music')"><span class="opt-emoji">&#127925;</span><span class="pi-label">מוזיקה</span></button>
   </div>
   <button class="btn btn-green" onclick="saveOb2()">המשך &larr;</button>
 </div>
@@ -158,7 +158,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
     <button class="opt sel" id="cgBoy" onclick="selCG(this,'boy')">&#128102; בן</button>
     <button class="opt" id="cgGirl" onclick="selCG(this,'girl')">&#128103; בת</button>
   </div>
-  <div class="label">גיל</div>
+  <div class="label" id="ob3AgeLabel">גיל</div>
   <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px">
     <button class="opt" style="padding:12px 4px;font-size:13px" onclick="selAge(this,'5-6')">5-6</button>
     <button class="opt" style="padding:12px 4px;font-size:13px" onclick="selAge(this,'7-8')">7-8</button>
@@ -167,17 +167,17 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
     <button class="opt" style="padding:12px 4px;font-size:13px" onclick="selAge(this,'13-14')">13-14</button>
     <button class="opt" style="padding:12px 4px;font-size:13px" onclick="selAge(this,'15-16')">15-16</button>
   </div>
-  <div class="label" style="margin-top:8px">מה הילד/ה אוהב/ת? (אופציונלי)</div>
+  <div class="label" id="ob3InterestsLabel" style="margin-top:8px">מה הילד/ה אוהב/ת? (אופציונלי)</div>
   <div class="opts grid" id="childInts">
-    <button class="opt" onclick="togChildInt(this,'build')"><span class="opt-emoji">&#128296;</span>בנייה</button>
-    <button class="opt" onclick="togChildInt(this,'hike')"><span class="opt-emoji">&#9968;&#65039;</span>טיולים</button>
-    <button class="opt" onclick="togChildInt(this,'stories')"><span class="opt-emoji">&#128214;</span>סיפורים</button>
-    <button class="opt" onclick="togChildInt(this,'sport')"><span class="opt-emoji">&#9917;</span>ספורט</button>
-    <button class="opt" onclick="togChildInt(this,'art')"><span class="opt-emoji">&#127912;</span>אמנות</button>
-    <button class="opt" onclick="togChildInt(this,'cook')"><span class="opt-emoji">&#127859;</span>בישול</button>
-    <button class="opt" onclick="togChildInt(this,'music')"><span class="opt-emoji">&#127925;</span>מוזיקה</button>
-    <button class="opt" onclick="togChildInt(this,'animals')"><span class="opt-emoji">&#128062;</span>חיות</button>
-    <button class="opt" onclick="togChildInt(this,'science')"><span class="opt-emoji">&#128300;</span>מדע</button>
+    <button class="opt" id="ci-build" onclick="togChildInt(this,'build')"><span class="opt-emoji">&#128296;</span><span class="ci-label">בנייה</span></button>
+    <button class="opt" id="ci-hike" onclick="togChildInt(this,'hike')"><span class="opt-emoji">&#9968;&#65039;</span><span class="ci-label">טיולים</span></button>
+    <button class="opt" id="ci-stories" onclick="togChildInt(this,'stories')"><span class="opt-emoji">&#128214;</span><span class="ci-label">סיפורים</span></button>
+    <button class="opt" id="ci-sport" onclick="togChildInt(this,'sport')"><span class="opt-emoji">&#9917;</span><span class="ci-label">ספורט</span></button>
+    <button class="opt" id="ci-art" onclick="togChildInt(this,'art')"><span class="opt-emoji">&#127912;</span><span class="ci-label">אמנות</span></button>
+    <button class="opt" id="ci-cook" onclick="togChildInt(this,'cook')"><span class="opt-emoji">&#127859;</span><span class="ci-label">בישול</span></button>
+    <button class="opt" id="ci-music" onclick="togChildInt(this,'music')"><span class="opt-emoji">&#127925;</span><span class="ci-label">מוזיקה</span></button>
+    <button class="opt" id="ci-animals" onclick="togChildInt(this,'animals')"><span class="opt-emoji">&#128062;</span><span class="ci-label">חיות</span></button>
+    <button class="opt" id="ci-science" onclick="togChildInt(this,'science')"><span class="opt-emoji">&#128300;</span><span class="ci-label">מדע</span></button>
   </div>
   <button class="btn btn-green" onclick="saveOb3()">המשך &larr;</button>
 </div>
@@ -253,6 +253,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
       <div style="font-size:15px;font-weight:700;color:#2D5016;line-height:1.6;margin-bottom:8px;font-style:italic" id="learnQuote"></div>
       <div style="font-size:13px;color:#8B7B6B;line-height:1.6;margin-bottom:12px" id="learnTranslation"></div>
 
+```
   <!-- Expandable section -->
   <div id="learnExpanded" style="display:none;border-top:1px solid #EDE5D8;padding-top:12px;margin-bottom:12px">
     <div style="font-size:13px;color:#1A1410;line-height:1.7;margin-bottom:12px" id="learnExplanation"></div>
@@ -280,6 +281,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
   <button id="actBtn" class="btn btn-green" onclick="go('actdetail')">בוא נעשה את זה! &larr;</button>
 </div>
 <button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">&#128260; רוצים פעילות מחזקת אחרת?</button>
+```
 
   </div>
 </div>
@@ -354,33 +356,33 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
   </div>
   <div style="padding:20px 22px 88px;overflow-y:auto;flex:1">
     <div class="card" style="margin-bottom:12px">
-      <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">אני</div>
+      <div id="profMeLabel" style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">אני</div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <span style="color:#1A1410;font-size:15px" id="profParentName"></span>
         <span style="color:#8B7B6B;font-size:13px" id="profParentGender"></span>
       </div>
     </div>
     <div class="card" style="margin-bottom:12px">
-      <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הילדים שלי</div>
+      <div id="profKidsLabel" style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הילדים שלי</div>
       <div id="profChildren"></div>
       <div style="border:1px dashed #C4A882;border-radius:10px;padding:10px 14px;margin-top:8px;display:flex;align-items:center;gap:8px;cursor:pointer" onclick="showAddChild()">
         <div style="font-size:14px;color:#C4A882">&#10133;</div>
-        <div style="font-size:13px;color:#8B7B6B">הוסף ילד/ה נוסף <span style="color:#C4A882;font-size:11px">&#11088; פרמיום</span></div>
+        <div id="addChildBtn" style="font-size:13px;color:#8B7B6B">הוסף ילד/ה נוסף <span style="color:#C4A882;font-size:11px">&#11088; פרמיום</span></div>
       </div>
     </div>
     <div class="card" style="margin-bottom:12px">
-      <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הגדרות</div>
+      <div id="profSettingsLabel" style="font-size:13px;color:#8B7B6B;margin-bottom:12px;font-weight:700">הגדרות</div>
       <div onclick="toggleReminder()" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #EDE5D8;cursor:pointer">
         <div>
-          <div style="color:#1A1410;font-size:15px">&#128276; תזכורת לארוחת ערב</div>
-          <div style="color:#8B7B6B;font-size:12px;margin-top:2px" id="reminderStatus">לא מופעל</div>
+          <div id="profReminderLabel" style="color:#1A1410;font-size:15px">&#128276; תזכורת לארוחת ערב</div>
+          <div id="reminderStatus" style="color:#8B7B6B;font-size:12px;margin-top:2px">לא מופעל</div>
         </div>
         <div id="reminderToggle" style="width:44px;height:26px;border-radius:13px;background:#EDE5D8;position:relative;transition:background .3s">
           <div id="reminderThumb" style="position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.2);transition:transform .3s"></div>
         </div>
       </div>
       <div id="reminderTimeRow" style="display:none;padding:12px 0;border-bottom:1px solid #EDE5D8">
-        <div style="color:#8B7B6B;font-size:13px;margin-bottom:8px">שעת התזכורת</div>
+        <div id="reminderTimeLabel" style="color:#8B7B6B;font-size:13px;margin-bottom:8px">שעת התזכורת</div>
         <input type="time" id="reminderTime" value="18:30" onchange="saveReminderTime()" style="border:2px solid #EDE5D8;border-radius:10px;padding:8px 12px;font-size:15px;font-family:Heebo,sans-serif;color:#1A1410;background:#fff">
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #EDE5D8">
@@ -392,11 +394,11 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
         </div>
       </div>
       <div onclick="confirmReset()" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #EDE5D8;cursor:pointer">
-        <span style="color:#1A1410;font-size:15px">&#128260; התחל מחדש</span>
+        <span id="profResetLabel" style="color:#1A1410;font-size:15px">&#128260; התחל מחדש</span>
         <span style="color:#C4A882;font-size:18px">&larr;</span>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;cursor:pointer" onclick="showPremium()">
-        <span style="color:#1A1410;font-size:15px">&#11088; שדרג לפרמיום</span>
+        <span id="profPremiumLabel" style="color:#1A1410;font-size:15px">&#11088; שדרג לפרמיום</span>
         <span style="color:#C4A882;font-size:12px;font-weight:700">חינם חודש ראשון</span>
       </div>
     </div>
@@ -733,14 +735,31 @@ function applyLang() {
   var tr4 = document.getElementById('tr4'); if(tr4){ tr4.children[0].textContent = T('tr4Title'); tr4.children[1].textContent = T('tr4Sub'); }
 
   // OB2
-  el = document.querySelector('#ob2 .ob-title'); if(el) el.textContent = T('ob2Title');
-  el = document.querySelector('#ob2 .label'); if(el) el.textContent = T('ob2Label');
+  el = document.getElementById('ob2Title'); if(el) el.textContent = T('ob2Title');
+  el = document.getElementById('ob2Label'); if(el) el.textContent = T('ob2Label');
 
   // OB3
   el = document.querySelector('#ob3 .ob-title'); if(el) el.textContent = T('ob3Title');
   el = document.getElementById('cName'); if(el) el.placeholder = T('ob3Placeholder');
   el = document.getElementById('cgBoy'); if(el) el.innerHTML = T('ob3Boy');
   el = document.getElementById('cgGirl'); if(el) el.innerHTML = T('ob3Girl');
+  el = document.getElementById('ob3AgeLabel'); if(el) el.textContent = T('ob3AgeLabel');
+  el = document.getElementById('ob3InterestsLabel'); if(el) el.textContent = T('ob3InterestsLabel');
+  // Child interest labels
+  var ciMap = {build:'ciBuild',hike:'ciHike',stories:'ciStories',sport:'ciSport',art:'ciArt',cook:'ciCook',music:'ciMusic',animals:'ciAnimals',science:'ciScience'};
+  Object.keys(ciMap).forEach(function(k){
+    var btn = document.getElementById('ci-'+k);
+    if(btn){ var lbl=btn.querySelector('.ci-label'); if(lbl) lbl.textContent=T(ciMap[k]); }
+  });
+  // Parent interest labels
+  var piMap = {hike:'intHike',cook:'intCook',sport:'intSport',art:'intArt',science:'intScience',music:'intMusic'};
+  Object.keys(piMap).forEach(function(k){
+    var btn = document.getElementById('pi-'+k);
+    if(btn){ var lbl=btn.querySelector('.pi-label'); if(lbl) lbl.textContent=T(piMap[k]); }
+  });
+  // OB2 title and label
+  el = document.getElementById('ob2Title'); if(el) el.textContent = T('ob2Title');
+  el = document.getElementById('ob2Label'); if(el) el.textContent = T('ob2Label');
 
   // OB4
   el = document.querySelector('#ob4 .ob-title'); if(el) el.textContent = T('ob4Title');
@@ -791,6 +810,16 @@ function applyLang() {
   // Lang toggle in profile
   el = document.getElementById('langToggleHe'); if(el) el.style.fontWeight = LANG === 'he' ? '900' : '400';
   el = document.getElementById('langToggleEn'); if(el) el.style.fontWeight = LANG === 'en' ? '900' : '400';
+  // Profile labels
+  el = document.getElementById('profMeLabel'); if(el) el.textContent = T('meLabel');
+  el = document.getElementById('profKidsLabel'); if(el) el.textContent = T('kidsLabel');
+  el = document.getElementById('profSettingsLabel'); if(el) el.textContent = T('settingsLabel');
+  el = document.getElementById('profReminderLabel'); if(el) el.innerHTML = T('reminderLabel');
+  el = document.getElementById('reminderTimeLabel'); if(el) el.textContent = T('reminderTimeLabel');
+  el = document.getElementById('profResetLabel'); if(el) el.innerHTML = T('resetLabel');
+  el = document.getElementById('profPremiumLabel'); if(el) el.innerHTML = T('premiumLabel');
+  el = document.getElementById('profPremiumSub'); if(el) el.textContent = T('premiumSub');
+  el = document.getElementById('addChildBtn'); if(el) el.textContent = T('addChildBtn') + ' ⭐';
 }
 // ===== END LANGUAGE SYSTEM =====
 
@@ -1062,7 +1091,7 @@ function updateReminderUI(){
   var toggle=document.getElementById('reminderToggle'); var thumb=document.getElementById('reminderThumb'); var status=document.getElementById('reminderStatus'); var timeRow=document.getElementById('reminderTimeRow'); var timeInput=document.getElementById('reminderTime');
   if(toggle) toggle.style.background=on?'#2D5016':'#EDE5D8';
   if(thumb) thumb.style.transform=on?'translateX(-18px)':'translateX(0)';
-  if(status) status.textContent=on?('מופעל \u00B7 '+((S.reminder&&S.reminder.time)||'18:30')):'לא מופעל';
+  if(status) status.textContent=on?(T('reminderOn')((S.reminder&&S.reminder.time)||'18:30')):T('reminderOff');
   if(timeRow) timeRow.style.display=on?'block':'none';
   if(timeInput&&S.reminder&&S.reminder.time) timeInput.value=S.reminder.time;
 }
