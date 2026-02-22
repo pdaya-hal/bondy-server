@@ -76,8 +76,22 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
   <div class="tagline a2">חיזוק קשר הורה-ילד</div>
   <div class="headline a3">הילד שלך לא צריך<br>עוד מסך.<br><strong>הוא צריך אותך.</strong></div>
   <div style="width:100%">
-    <button class="btn btn-primary" onclick="go('ob1')">בואו נתחיל במסע &larr;</button>
-    <button class="btn btn-secondary" onclick="go('ob1')">יש לי כבר חשבון</button>
+    <button class="btn btn-primary" onclick="go('langselect')">בואו נתחיל במסע &larr;</button>
+    <button class="btn btn-secondary" onclick="go('langselect')">יש לי כבר חשבון</button>
+  </div>
+</div>
+
+<!-- LANG SELECT -->
+
+<div id="langselect" class="screen" style="background:#2D5016;align-items:center;justify-content:center;padding:40px;text-align:center">
+  <div class="logo a1">bon<span>dy</span></div>
+  <div style="margin-top:48px;width:100%">
+    <button onclick="chooseLang('he')" style="width:100%;padding:20px;background:#FAF7F2;color:#2D5016;border:none;border-radius:16px;font-size:20px;font-weight:900;font-family:Heebo,sans-serif;cursor:pointer;margin-bottom:14px;direction:rtl">
+      🇮🇱 עברית
+    </button>
+    <button onclick="chooseLang('en')" style="width:100%;padding:20px;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:16px;font-size:20px;font-weight:900;font-family:Heebo,sans-serif;cursor:pointer;direction:ltr">
+      🇺🇸 English
+    </button>
   </div>
 </div>
 
@@ -362,6 +376,14 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
         <div style="color:#8B7B6B;font-size:13px;margin-bottom:8px">שעת התזכורת</div>
         <input type="time" id="reminderTime" value="18:30" onchange="saveReminderTime()" style="border:2px solid #EDE5D8;border-radius:10px;padding:8px 12px;font-size:15px;font-family:Heebo,sans-serif;color:#1A1410;background:#fff">
       </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #EDE5D8">
+        <span style="color:#1A1410;font-size:15px">&#127758; Language / &#1513;&#1508;&#1492;</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span id="langToggleHe" onclick="setLang('he')" style="cursor:pointer;font-size:14px;color:#2D5016;font-weight:900">עב</span>
+          <span style="color:#EDE5D8">|</span>
+          <span id="langToggleEn" onclick="setLang('en')" style="cursor:pointer;font-size:14px;color:#2D5016;font-weight:400">EN</span>
+        </div>
+      </div>
       <div onclick="confirmReset()" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #EDE5D8;cursor:pointer">
         <span style="color:#1A1410;font-size:15px">&#128260; התחל מחדש</span>
         <span style="color:#C4A882;font-size:18px">&larr;</span>
@@ -436,11 +458,332 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 
 <script>
 var SERVER = 'https://bondy-server-production.up.railway.app';
+
+// ===== LANGUAGE SYSTEM =====
+var LANG = 'he'; // 'he' or 'en'
+
+var STRINGS = {
+  he: {
+    // Splash
+    tagline: 'חיזוק קשר הורה-ילד',
+    headline: 'הילד שלך לא צריך<br>עוד מסך.<br><strong>הוא צריך אותך.</strong>',
+    startBtn: 'בואו נתחיל במסע ←',
+    hasAccount: 'יש לי כבר חשבון',
+    // OB1
+    ob1Title: 'היי! איך קוראים לך?',
+    ob1Placeholder: 'השם שלך...',
+    ob1Label: 'את/ה...',
+    ob1Dad: '👨 אבא',
+    ob1Mom: '👩 אמא',
+    // OB5
+    ob5Title: 'ספרו לנו על האווירה בבית',
+    tr1Title: '☀️ כיפת השמיים',
+    tr1Sub: 'יהדות כתרבות וזהות, בלי חובות',
+    tr2Title: '🕯️ מסורתי חם',
+    tr2Sub: 'שומרים מה שמרגיש נכון, מחברים בין עולמות',
+    tr3Title: '📖 שורשים',
+    tr3Sub: 'תורה ומצוות כדרך חיים',
+    tr4Title: '✨ סקרן לגלות',
+    tr4Sub: 'לא מוגדר, פתוח, רוצה להתחבר למשהו עמוק',
+    // OB2
+    ob2Title: 'מה אתה אוהב?',
+    ob2Label: 'בחר כמה שרוצה',
+    intHike: 'טיולים', intCook: 'בישול', intSport: 'ספורט',
+    intArt: 'אמנות', intScience: 'מדע', intMusic: 'מוזיקה',
+    // OB3
+    ob3Title: 'ספר לי על הילד שלך',
+    ob3Placeholder: 'שם הילד/ה...',
+    ob3Boy: '👦 בן', ob3Girl: '👧 בת',
+    ob3AgeLabel: 'גיל',
+    ob3InterestsLabel: 'מה הילד/ה אוהב/ת? (אופציונלי)',
+    ciBuild: 'בנייה', ciHike: 'טיולים', ciStories: 'סיפורים',
+    ciSport: 'ספורט', ciArt: 'אמנות', ciCook: 'בישול',
+    ciMusic: 'מוזיקה', ciAnimals: 'חיות', ciScience: 'מדע',
+    // OB4
+    ob4Title: 'איך הקשר ביניכם?',
+    rel1: '🏔️ מצוין - קרובים מאוד',
+    rel2: '🛤️ טוב - יכול להיות טוב יותר',
+    rel3: '🌱 קשה - רוצה לשפר',
+    // OB6
+    ob6Title: 'כמה זמן יש לכם?',
+    ob6Label: 'נתאים את הפעילויות לקצב שלכם',
+    t1Title: '⚡ 10-15 דקות',
+    t1Sub: 'אנחנו עסוקים, רוצים משהו מהיר ומחבר',
+    t2Title: '🌿 חצי שעה',
+    t2Sub: 'יש לנו קצת זמן לחוויה משותפת',
+    t3Title: '🌳 שעה ויותר',
+    t3Sub: 'בואו נשקיע, רוצים חוויה עמוקה',
+    // Loading
+    loadingTitle: 'Bondy מחזק<br>את הקשר שלכם',
+    loadingMsg: 'מחזק קשרים...',
+    // Home
+    streakTxt: function(n){ return 'שבוע ' + n + ' ברצף 🔥'; },
+    dinnerLabel: '💬 שאלה לארוחת ערב',
+    moreQBtn: 'עוד שאלות ←',
+    learningLabel: '📖 לימוד יומי',
+    learnExpandBtn: 'העמק ▼',
+    learnCollapseBtn: 'צמצם ▲',
+    learnDiscLabel: '💬 שאלה לשיחה',
+    learnSefariaBtn: 'המשך ללמוד בספריא',
+    actLabel: 'פעילות השבוע',
+    actBtn: 'בוא נעשה את זה! ←',
+    refreshBtn: '🔄 רוצים פעילות מחזקת אחרת?',
+    // Questions
+    qTitle: 'שאלות לפתוח את הלב',
+    qRefresh: 'רענן ↻',
+    // Journal
+    jTitle: 'זיכרונות',
+    jEmpty1: 'הדרך מתחילה כאן',
+    jEmpty2: 'כל פעילות שתעשו יחד<br>תישמר כאן לזיכרון',
+    jEmptyBtn: '✨ התחילו עם הפעילות הראשונה',
+    // Act detail
+    whyLabel: 'למה זה טוב?',
+    stepsLabel: 'שלבים',
+    doneBtn: '✅ עשינו את זה!',
+    // Profile
+    meLabel: 'אני',
+    kidsLabel: 'הילדים שלי',
+    addChildBtn: 'הוסף ילד/ה נוסף',
+    settingsLabel: 'הגדרות',
+    reminderLabel: '🔔 תזכורת לארוחת ערב',
+    reminderOff: 'לא מופעל',
+    reminderOn: function(t){ return 'מופעל · ' + t; },
+    reminderTimeLabel: 'שעת התזכורת',
+    resetLabel: '🔄 התחל מחדש',
+    premiumLabel: '⭐ שדרג לפרמיום',
+    premiumSub: 'בואו נשקיע בקשר',
+    langLabel: '🌐 שפה / Language',
+    // Nav
+    navHome: 'בית', navJournal: 'זיכרונות', navQuestions: 'שאלות',
+    // Continue btn
+    continueBtn: 'המשך ←',
+    startJourneyBtn: 'בואו נתחיל! 🚀',
+    // Share
+    shareBtn: '📤 שתף את הרגע',
+    shareBack: 'חזרה לבית',
+    shareTagline: 'חיזוק קשר הורה-ילד',
+    shareDone: 'עשינו את זה ביחד! 💚',
+    // Premium
+    premiumTitle: 'Bondy פרמיום',
+    premiumSubtitle: 'חיזוק הקשר עם הילד שלך<br>בלי הגבלות',
+    premiumPrice: 'חינם חודש ראשון · אחר כך 29₪/חודש',
+    premiumWhats: 'מה כלול',
+    premiumCta: 'בואו נשקיע בקשר ←',
+    premiumCancel: 'ניתן לביטול בכל עת',
+    premiumLater: 'אולי אחר כך',
+    f1Title: 'הוספת ילדים נוספים', f1Sub: 'פעילויות מותאמות אישית לכל ילד',
+    f2Title: 'שאלות ללא הגבלה', f2Sub: 'מאגר בלתי נגמר לפתוח את הלב',
+    f3Title: 'פעילויות מתקדמות', f3Sub: 'מותאמות לגיל ולאישיות הילד',
+    f4Title: 'פעילויות מבוססות מיקום', f4Sub: 'פארקים, מוזיאונים ומקומות קרובים',
+    f5Title: 'תזכורות חכמות', f5Sub: 'התראות על פעילויות, שאלות ורגעים מיוחדים',
+    f6Title: 'לימוד יומי מותאם עבורכם', f6Sub: 'קטע לימוד שיחזק את הסקרנות ויבנה קשר על בסיס לימוד משותף',
+    // Dinner questions
+    dinnerQuestions: ['מה היה הרגע הכי טוב שלך היום?','אם היית יכול לשנות משהו מהיום — מה היה?','מה למדת היום שלא ידעת אתמול?','מי גרם לך לחייך היום?',"אם היום היה סרט — איזה ז'אנר הוא היה?",'מה הדבר שאתה הכי מצפה לו מחר?','מה היה הדבר הכי מאתגר שעשית היום?'],
+  },
+  en: {
+    tagline: 'Strengthening the parent-child bond',
+    headline: 'Your child doesn\'t need<br>another screen.<br><strong>They need you.</strong>',
+    startBtn: 'Let\'s begin ←',
+    hasAccount: 'I already have an account',
+    ob1Title: 'Hi! What\'s your name?',
+    ob1Placeholder: 'Your name...',
+    ob1Label: 'You are...',
+    ob1Dad: '👨 Dad',
+    ob1Mom: '👩 Mom',
+    ob5Title: 'Tell us about your home vibe',
+    tr1Title: '☀️ Cultural & Open',
+    tr1Sub: 'Jewish identity without obligations',
+    tr2Title: '🕯️ Warmly Traditional',
+    tr2Sub: 'Keeping what feels right, bridging worlds',
+    tr3Title: '📖 Rooted',
+    tr3Sub: 'Torah and mitzvot as a way of life',
+    tr4Title: '✨ Curious Explorer',
+    tr4Sub: 'Open, undefined, looking to connect deeply',
+    ob2Title: 'What do you enjoy?',
+    ob2Label: 'Choose as many as you like',
+    intHike: 'Hiking', intCook: 'Cooking', intSport: 'Sports',
+    intArt: 'Art', intScience: 'Science', intMusic: 'Music',
+    ob3Title: 'Tell me about your child',
+    ob3Placeholder: 'Child\'s name...',
+    ob3Boy: '👦 Boy', ob3Girl: '👧 Girl',
+    ob3AgeLabel: 'Age',
+    ob3InterestsLabel: 'What does your child enjoy? (optional)',
+    ciBuild: 'Building', ciHike: 'Hiking', ciStories: 'Stories',
+    ciSport: 'Sports', ciArt: 'Art', ciCook: 'Cooking',
+    ciMusic: 'Music', ciAnimals: 'Animals', ciScience: 'Science',
+    ob4Title: 'How is your relationship?',
+    rel1: '🏔️ Great — very close',
+    rel2: '🛤️ Good — could be better',
+    rel3: '🌱 Challenging — want to improve',
+    ob6Title: 'How much time do you have?',
+    ob6Label: 'We\'ll tailor activities to your pace',
+    t1Title: '⚡ 10-15 minutes',
+    t1Sub: 'We\'re busy, want something quick and connecting',
+    t2Title: '🌿 Half an hour',
+    t2Sub: 'We have a bit of time for a shared experience',
+    t3Title: '🌳 An hour or more',
+    t3Sub: 'Let\'s invest in a deep experience',
+    loadingTitle: 'Bondy is strengthening<br>your connection',
+    loadingMsg: 'Building bonds...',
+    streakTxt: function(n){ return 'Week ' + n + ' streak 🔥'; },
+    dinnerLabel: '💬 Dinner conversation starter',
+    moreQBtn: 'More questions ←',
+    learningLabel: '📖 Daily learning',
+    learnExpandBtn: 'Expand ▼',
+    learnCollapseBtn: 'Collapse ▲',
+    learnDiscLabel: '💬 Discussion question',
+    learnSefariaBtn: 'Continue learning on Sefaria',
+    actLabel: 'This week\'s activity',
+    actBtn: 'Let\'s do it! ←',
+    refreshBtn: '🔄 Want a different activity?',
+    qTitle: 'Questions to open the heart',
+    qRefresh: 'Refresh ↻',
+    jTitle: 'Memories',
+    jEmpty1: 'The journey starts here',
+    jEmpty2: 'Every activity you do together<br>will be saved here',
+    jEmptyBtn: '✨ Start with your first activity',
+    whyLabel: 'Why is this good?',
+    stepsLabel: 'Steps',
+    doneBtn: '✅ We did it!',
+    meLabel: 'Me',
+    kidsLabel: 'My children',
+    addChildBtn: 'Add another child',
+    settingsLabel: 'Settings',
+    reminderLabel: '🔔 Dinner reminder',
+    reminderOff: 'Off',
+    reminderOn: function(t){ return 'On · ' + t; },
+    reminderTimeLabel: 'Reminder time',
+    resetLabel: '🔄 Start over',
+    premiumLabel: '⭐ Upgrade to premium',
+    premiumSub: 'Let\'s invest in the relationship',
+    langLabel: '🌐 Language / שפה',
+    navHome: 'Home', navJournal: 'Memories', navQuestions: 'Questions',
+    continueBtn: 'Continue ←',
+    startJourneyBtn: 'Let\'s start! 🚀',
+    shareBtn: '📤 Share the moment',
+    shareBack: 'Back home',
+    shareTagline: 'Strengthening the parent-child bond',
+    shareDone: 'We did it together! 💚',
+    premiumTitle: 'Bondy Premium',
+    premiumSubtitle: 'Strengthen your bond with your child<br>without limits',
+    premiumPrice: 'Free first month · then $7.99/month',
+    premiumWhats: 'What\'s included',
+    premiumCta: 'Let\'s invest in the relationship ←',
+    premiumCancel: 'Cancel anytime',
+    premiumLater: 'Maybe later',
+    f1Title: 'Add more children', f1Sub: 'Personalized activities for each child',
+    f2Title: 'Unlimited questions', f2Sub: 'Endless conversation starters',
+    f3Title: 'Advanced activities', f3Sub: 'Tailored to age and personality',
+    f4Title: 'Location-based activities', f4Sub: 'Parks, museums and nearby places',
+    f5Title: 'Smart reminders', f5Sub: 'Alerts for activities, questions and special moments',
+    f6Title: 'Daily personalized learning', f6Sub: 'A learning passage that builds curiosity and connection',
+    dinnerQuestions: ['What was the best moment of your day?','If you could change one thing about today, what would it be?','What did you learn today that you didn\'t know yesterday?','Who made you smile today?','If today were a movie, what genre would it be?','What are you most looking forward to tomorrow?','What was the most challenging thing you did today?'],
+  }
+};
+
+function T(key) {
+  var s = STRINGS[LANG] || STRINGS.he;
+  return (s[key] !== undefined) ? s[key] : (STRINGS.he[key] || key);
+}
+
+function setLang(lang) {
+  LANG = lang;
+  S.lang = lang;
+  save();
+  applyLang();
+}
+
+function applyLang() {
+  var isHe = LANG === 'he';
+  document.documentElement.setAttribute('dir', isHe ? 'rtl' : 'ltr');
+  document.documentElement.setAttribute('lang', isHe ? 'he' : 'en');
+
+  // Splash
+  var el;
+  el = document.querySelector('.tagline'); if(el) el.innerHTML = T('tagline');
+  el = document.querySelector('.headline'); if(el) el.innerHTML = T('headline');
+  el = document.querySelector('#splash .btn-primary'); if(el) el.innerHTML = T('startBtn');
+  el = document.querySelector('#splash .btn-secondary'); if(el) el.innerHTML = T('hasAccount');
+
+  // OB1
+  el = document.querySelector('#ob1 .ob-title'); if(el) el.textContent = T('ob1Title');
+  el = document.getElementById('pName'); if(el) el.placeholder = T('ob1Placeholder');
+  el = document.querySelector('#ob1 .label'); if(el) el.textContent = T('ob1Label');
+  el = document.getElementById('optDad'); if(el) el.innerHTML = T('ob1Dad');
+  el = document.getElementById('optMom'); if(el) el.innerHTML = T('ob1Mom');
+
+  // OB5
+  el = document.querySelector('#ob5 .ob-title'); if(el) el.textContent = T('ob5Title');
+  var tr1 = document.getElementById('tr1'); if(tr1){ tr1.children[0].textContent = T('tr1Title'); tr1.children[1].textContent = T('tr1Sub'); }
+  var tr2 = document.getElementById('tr2'); if(tr2){ tr2.children[0].textContent = T('tr2Title'); tr2.children[1].textContent = T('tr2Sub'); }
+  var tr3 = document.getElementById('tr3'); if(tr3){ tr3.children[0].textContent = T('tr3Title'); tr3.children[1].textContent = T('tr3Sub'); }
+  var tr4 = document.getElementById('tr4'); if(tr4){ tr4.children[0].textContent = T('tr4Title'); tr4.children[1].textContent = T('tr4Sub'); }
+
+  // OB2
+  el = document.querySelector('#ob2 .ob-title'); if(el) el.textContent = T('ob2Title');
+  el = document.querySelector('#ob2 .label'); if(el) el.textContent = T('ob2Label');
+
+  // OB3
+  el = document.querySelector('#ob3 .ob-title'); if(el) el.textContent = T('ob3Title');
+  el = document.getElementById('cName'); if(el) el.placeholder = T('ob3Placeholder');
+  el = document.getElementById('cgBoy'); if(el) el.innerHTML = T('ob3Boy');
+  el = document.getElementById('cgGirl'); if(el) el.innerHTML = T('ob3Girl');
+
+  // OB4
+  el = document.querySelector('#ob4 .ob-title'); if(el) el.textContent = T('ob4Title');
+  el = document.getElementById('r1'); if(el) el.textContent = T('rel1');
+  el = document.getElementById('r2'); if(el) el.textContent = T('rel2');
+  el = document.getElementById('r3'); if(el) el.textContent = T('rel3');
+
+  // OB6
+  el = document.querySelector('#ob6 .ob-title'); if(el) el.textContent = T('ob6Title');
+  el = document.querySelector('#ob6 .label'); if(el) el.textContent = T('ob6Label');
+  var t1 = document.getElementById('t1'); if(t1){ t1.children[0].textContent = T('t1Title'); t1.children[1].textContent = T('t1Sub'); }
+  var t2 = document.getElementById('t2'); if(t2){ t2.children[0].textContent = T('t2Title'); t2.children[1].textContent = T('t2Sub'); }
+  var t3 = document.getElementById('t3'); if(t3){ t3.children[0].textContent = T('t3Title'); t3.children[1].textContent = T('t3Sub'); }
+
+  // Loading
+  el = document.querySelector('#loading .a2'); if(el) el.innerHTML = T('loadingTitle');
+  el = document.getElementById('loadMsg'); if(el) el.textContent = T('loadingMsg');
+
+  // Home
+  el = document.querySelector('#dinnerCard div:first-child'); if(el) el.innerHTML = T('dinnerLabel');
+  el = document.querySelector('#dinnerCard button'); if(el) el.innerHTML = T('moreQBtn');
+  el = document.querySelector('#learningCard .a-learn-label'); if(el) el.innerHTML = T('learningLabel');
+  el = document.getElementById('actLabel'); if(el) el.textContent = T('actLabel');
+  el = document.querySelector('#actCard .btn-green'); if(el) el.innerHTML = T('actBtn');
+  el = document.querySelector('#home .home-body > .btn'); if(el) el.innerHTML = T('refreshBtn');
+
+  // Questions
+  el = document.querySelector('#questions h1'); if(el) el.textContent = T('qTitle');
+
+  // Journal
+  el = document.querySelector('#journal h1'); if(el) el.textContent = T('jTitle');
+
+  // Nav
+  el = document.querySelector('#navHome span'); if(el) el.textContent = T('navHome');
+  el = document.querySelector('#navJournal span'); if(el) el.textContent = T('navJournal');
+  el = document.querySelector('#navQuestions span'); if(el) el.textContent = T('navQuestions');
+
+  // All continue buttons
+  document.querySelectorAll('.ob .btn-green:not(#ob6 .btn-green)').forEach(function(btn){
+    if(btn.getAttribute('onclick') && btn.getAttribute('onclick').indexOf('saveOb6') === -1) {
+      btn.innerHTML = T('continueBtn');
+    }
+  });
+  el = document.querySelector('#ob6 .btn-green'); if(el) el.innerHTML = T('startJourneyBtn');
+
+  // Lang toggle in profile
+  el = document.getElementById('langToggleHe'); if(el) el.style.fontWeight = LANG === 'he' ? '900' : '400';
+  el = document.getElementById('langToggleEn'); if(el) el.style.fontWeight = LANG === 'en' ? '900' : '400';
+}
+// ===== END LANGUAGE SYSTEM =====
+
 var gSel = 'dad', ageSel = '9-10', rSel = 'great', cgSel = 'boy', tradSel = 'secular', interests = [];
 var DEF = {
   parent:{name:'',gender:'dad',interests:[],tradition:'secular',timeAvail:'short'},
   child:{name:'',age:'9-10',gender:'boy',relation:'great',interests:[]},
-  streak:1, activity:null, memories:[]
+  streak:1, activity:null, memories:[], lang:'he'
 };
 var S = JSON.parse(JSON.stringify(DEF));
 try {
@@ -492,6 +835,10 @@ function selTrad(el,val){
   ['tr1','tr2','tr3','tr4'].forEach(function(id){ var e=document.getElementById(id); if(e) e.classList.remove('sel'); });
   el.classList.add('sel');
 }
+function chooseLang(lang) {
+  setLang(lang);
+  go('ob1');
+}
 function saveOb5(){ S.parent.tradition=tradSel; save(); go('ob2'); }
 var timeSel = 'short';
 function selTime(el,val){
@@ -507,7 +854,7 @@ async function callServer(endpoint,data){
 
 async function generateActivity(){
   var p=S.parent, c=S.child;
-  var result=await callServer('/api/activity',{parentName:p.name,parentGender:p.gender,interests:p.interests,tradition:p.tradition,timeAvail:p.timeAvail||'short',childName:c.name,childAge:c.age,childGender:c.gender,childInterests:c.interests||[],relation:c.relation,pastActivities:S.memories.map(function(m){ return m.title; })});
+  var result=await callServer('/api/activity',{parentName:p.name,parentGender:p.gender,interests:p.interests,tradition:p.tradition,timeAvail:p.timeAvail||'short',lang:S.lang||'he',childName:c.name,childAge:c.age,childGender:c.gender,childInterests:c.interests||[],relation:c.relation,pastActivities:S.memories.map(function(m){ return m.title; })});
   if(result&&result.activity) S.activity=result.activity;
   save(); go('home');
 }
@@ -520,7 +867,7 @@ function updateHome(){
   loadDinnerQuestion();
   loadDailyLearning();
   var el=document.getElementById('homeTitle'); if(el) el.textContent='שלום, '+(S.parent.name||'')+' \uD83D\uDC4B';
-  var st=document.getElementById('homeStreak'); if(st) st.textContent='שבוע '+S.streak+' ברצף \uD83D\uDD25';
+  var st=document.getElementById('homeStreak'); if(st) st.textContent=T('streakTxt')(S.streak);
   var act=S.activity;
   if(act){
     var em=document.getElementById('actEmoji'); var ti=document.getElementById('actTitle'); var de=document.getElementById('actDesc');
@@ -643,7 +990,7 @@ function setupQSwipe(){
 
 async function loadQuestions(){
   qIndex=0; qList=qFallback; buildQCards();
-  var result=await callServer('/api/questions',{childName:S.child.name,childAge:S.child.age,childGender:S.child.gender,childInterests:S.child.interests||[],parentName:S.parent.name,parentGender:S.parent.gender});
+  var result=await callServer('/api/questions',{childName:S.child.name,childAge:S.child.age,childGender:S.child.gender,childInterests:S.child.interests||[],parentName:S.parent.name,parentGender:S.parent.gender,lang:S.lang||'he'});
   if(result&&result.questions&&result.questions.length){ if(qIndex===0){ qList=result.questions; buildQCards(); } }
 }
 
@@ -657,8 +1004,8 @@ function updateProfile(){
   if(pc) pc.innerHTML='<div style="display:flex;align-items:center;gap:12px;padding:8px 0"><div style="font-size:28px">'+(S.child.gender==='girl'?'\uD83D\uDC67':'\uD83D\uDC66')+'</div><div><div style="font-size:15px;font-weight:700;color:#1A1410">'+(S.child.name||'')+'</div><div style="font-size:12px;color:#8B7B6B">גיל '+(S.child.age||'')+'</div></div></div>';
 }
 
-var dinnerQuestions=['מה היה הרגע הכי טוב שלך היום?','אם היית יכול לשנות משהו מהיום — מה היה?','מה למדת היום שלא ידעת אתמול?','מי גרם לך לחייך היום?',"אם היום היה סרט — איזה ז'אנר הוא היה?",'מה הדבר שאתה הכי מצפה לו מחר?','מה היה הדבר הכי מאתגר שעשית היום?'];
-function loadDinnerQuestion(){ var el=document.getElementById('dinnerQ'); if(!el) return; el.textContent=dinnerQuestions[new Date().getDay()%dinnerQuestions.length]; }
+function getDinnerQuestions(){ return T('dinnerQuestions'); }
+function loadDinnerQuestion(){ var el=document.getElementById('dinnerQ'); if(!el) return; var dq=getDinnerQuestions(); el.textContent=dq[new Date().getDay()%dq.length]; }
 
 function toggleReminder(){
   var on=S.reminder&&S.reminder.on;
@@ -731,6 +1078,8 @@ function toggleLearnExpand() {
 
 fetch(SERVER+'/api/health').catch(function(){});
 document.addEventListener('DOMContentLoaded', function() {
+  LANG = S.lang || 'he';
+  applyLang();
   var startScreen = (S.parent.name&&S.child.name&&S.activity) ? 'home' : (S.parent.name&&S.child.name ? 'loading' : 'splash');
   go(startScreen);
 });
