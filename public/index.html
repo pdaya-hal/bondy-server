@@ -318,24 +318,24 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 
 <div id="actdetail" class="screen">
   <div class="home-head" style="position:relative">
-    <div onclick="go('home')" style="position:absolute;top:52px;right:16px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;color:#fff;cursor:pointer">&larr; <span id="backBtnTxt">חזרה</span></div>
-    <div style="font-size:48px;margin-bottom:8px" id="dEmoji">&#127807;</div>
-    <h1 id="dTitle">פעילות</h1>
+    <div onclick="go('home')" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;color:#fff;cursor:pointer;z-index:2">&larr; <span id="backBtnTxt">חזרה</span></div>
+    <div style="font-size:48px;margin-bottom:8px;margin-top:28px" id="dEmoji">&#127807;</div>
+    <h1 id="dTitle" style="font-size:clamp(18px,5vw,26px);line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">פעילות</h1>
   </div>
   <div style="padding:20px 22px 88px;overflow-y:auto;flex:1">
     <div class="card">
-      <div style="font-size:13px;color:#8B7B6B;margin-bottom:4px">למה זה טוב?</div>
+      <div id="dWhyLabel" style="font-size:13px;color:#8B7B6B;margin-bottom:4px">למה זה טוב?</div>
       <div style="font-size:15px;color:#1A1410" id="dWhy"></div>
     </div>
     <div class="card" id="dMaterialsCard" style="display:none;background:linear-gradient(135deg,#FAF7F2,#F0E8DC);border:1.5px solid #EDE5D8">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
         <span style="font-size:16px">🎒</span>
-        <div style="font-size:13px;color:#8B7B6B;font-weight:700" id="dMaterialsLabel">תכינו מראש</div>
+        <div style="font-size:13px;color:#8B7B6B;font-weight:700" id="dMaterialsLabel">חומרים נדרשים</div>
       </div>
       <div id="dMaterials" style="display:flex;flex-wrap:wrap;gap:8px"></div>
     </div>
     <div class="card">
-      <div style="font-size:13px;color:#8B7B6B;margin-bottom:12px">שלבים</div>
+      <div id="dStepsLabel" style="font-size:13px;color:#8B7B6B;margin-bottom:12px">שלבים</div>
       <div id="dSteps"></div>
     </div>
     <button class="btn btn-green" onclick="saveMemory()">&#9989; עשינו את זה!</button>
@@ -453,7 +453,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 <div id="sharescreen" class="screen">
   <div class="share-card" id="shareCard">
     <div style="font-size:36px;font-weight:900;color:#2D5016;letter-spacing:-1px;margin-bottom:4px">bon<span style="color:#C4A882">dy</span></div>
-    <div style="font-size:11px;color:#8B7B6B;letter-spacing:3px;margin-bottom:24px">חיזוק קשר הורה-ילד</div>
+    <div id="shareSubtitle" style="font-size:11px;color:#8B7B6B;letter-spacing:3px;margin-bottom:24px">חיזוק קשר הורה-ילד</div>
     <div style="font-size:48px;margin-bottom:12px" id="shareEmoji">&#127807;</div>
     <div style="font-size:20px;font-weight:900;color:#1A1410;margin-bottom:12px" id="shareTitle"></div>
     <div style="font-size:14px;color:#8B7B6B;margin-bottom:20px;line-height:1.5" id="shareName"></div>
@@ -824,6 +824,8 @@ function applyLang() {
   el = document.getElementById('backBtnTxt'); if(el) el.textContent = (LANG==='en'?'Back':'חזרה');
   el = document.getElementById('profBackBtnTxt'); if(el) el.textContent = (LANG==='en'?'Back':'חזרה');
   el = document.getElementById('sharBackBtn'); if(el) el.textContent = (LANG==='en'?'Back to home':'חזרה לבית');
+  el = document.getElementById('shareSubtitle'); if(el) el.textContent = (LANG==='en'?'STRENGTHENING THE PARENT-CHILD BOND':'חיזוק קשר הורה-ילד');
+  var shareBtn=document.querySelector('#sharescreen .btn-primary'); if(shareBtn) shareBtn.innerHTML='\uD83D\uDCE4 '+(LANG==='en'?'Share this moment':'שתף את הרגע');
   // Premium screen
   el = document.getElementById('premTitle'); if(el) el.textContent = 'Bondy '+(LANG==='en'?'Premium':'פרמיום');
   el = document.getElementById('premSubtitle'); if(el) el.innerHTML = LANG==='en'?'Strengthen your bond with your child<br>without limits':'חיזוק הקשר עם הילד שלך<br>בלי הגבלות';
@@ -940,8 +942,8 @@ function updateHome(){
 function updateDetail(){
   var act=S.activity; if(!act) return;
   var em=document.getElementById('dEmoji'); var ti=document.getElementById('dTitle'); var wy=document.getElementById('dWhy'); var st=document.getElementById('dSteps');
-  var whyLbl=document.querySelector('#actdetail .card:first-of-type div:first-child'); if(whyLbl) whyLbl.textContent=LANG==='en'?'Why is this good?':'למה זה טוב?';
-  var stepsLbl=document.querySelector('#actdetail .card:nth-of-type(2) div:first-child'); if(stepsLbl) stepsLbl.textContent=LANG==='en'?'Steps':'שלבים';
+  var whyLbl=document.getElementById('dWhyLabel'); if(whyLbl) whyLbl.textContent=LANG==='en'?'Why is this good?':'למה זה טוב?';
+  var stepsLbl=document.getElementById('dStepsLabel'); if(stepsLbl) stepsLbl.textContent=LANG==='en'?'Steps':'שלבים';
   var doneBtn=document.querySelector('#actdetail .btn-green'); if(doneBtn) doneBtn.innerHTML=LANG==='en'?'\u2705 We did it!':'\u2705 עשינו את זה!';
   if(em) em.textContent=act.emoji||'\uD83C\uDF3F';
   if(ti) ti.textContent=sanitize(act.title);
@@ -983,15 +985,25 @@ function saveMemory(){
   var em=document.getElementById('shareEmoji'); var ti=document.getElementById('shareTitle'); var sn=document.getElementById('shareName');
   if(em) em.textContent=act.emoji||'\uD83C\uDF3F';
   if(ti) ti.textContent=act.title||'';
-  if(sn) sn.textContent=S.parent.name+' ו'+S.child.name+' עשו את זה ביחד \uD83D\uDC9A';
+  if(sn) sn.textContent=LANG==='en'?(S.parent.name+' and '+S.child.name+' did it together \uD83D\uDC9A'):(S.parent.name+' ו'+S.child.name+' עשו את זה ביחד \uD83D\uDC9A');
   go('sharescreen');
 }
 
 function doShare(){
   var act=S.activity||{};
-  var text='עשינו ביחד את הפעילות "'+( act.title||'')+'" עם Bondy!\n\nBondy - חיזוק קשר הורה-ילד\nbondy-server-production.up.railway.app';
-  if(navigator.share){ navigator.share({title:'Bondy - '+(act.title||''),text:text}); }
-  else { var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert('הטקסט הועתק!'); }
+  var text=LANG==='en'
+    ?('We did "'+( act.title||'')+'" together with Bondy!\n\nBondy - Strengthening the parent-child bond\nbondy-server-production.up.railway.app')
+    :('עשינו ביחד את הפעילות "'+( act.title||'')+'" עם Bondy!\n\nBondy - חיזוק קשר הורה-ילד\nbondy-server-production.up.railway.app');
+  if(navigator.share){
+    navigator.share({title:'Bondy - '+(act.title||''),text:text}).catch(function(){
+      navigator.clipboard && navigator.clipboard.writeText(text).then(function(){ alert(LANG==='en'?'Copied!':'הועתק!'); });
+    });
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){ alert(LANG==='en'?'Copied to clipboard!':'הטקסט הועתק!'); });
+  } else {
+    var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    alert(LANG==='en'?'Copied!':'הועתק!');
+  }
 }
 
 function getNewActivity(){
@@ -1186,7 +1198,18 @@ function renderLearning(l) {
   el = document.getElementById('learnTranslation'); if(el) el.textContent = l.quote_translation || '';
   el = document.getElementById('learnExplanation'); if(el) el.textContent = l.explanation || '';
   el = document.getElementById('learnQuestion'); if(el) el.textContent = l.discussion_question || '';
-  el = document.getElementById('learnSefaria'); if(el) el.href = l.sefaria_url || 'https://www.sefaria.org';
+  var sefariaUrl = l.sefaria_url || '';
+  var sefariaEl = document.getElementById('learnSefaria');
+  if(sefariaEl){
+    // Validate URL starts with sefaria.org
+    if(sefariaUrl && sefariaUrl.match(/sefaria\.org/)){
+      sefariaEl.href = sefariaUrl;
+      sefariaEl.style.display = '';
+    } else {
+      sefariaEl.href = 'https://www.sefaria.org';
+      sefariaEl.style.display = sefariaUrl ? '' : 'none';
+    }
+  }
 }
 
 function toggleLearnExpand() {
