@@ -281,6 +281,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 </div>
 <button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">&#128260; רוצים פעילות מחזקת אחרת?</button>
 
+
   </div>
 </div>
 
@@ -1007,7 +1008,10 @@ function doShare(){
 }
 
 function getNewActivity(){
-  S.activity = null; save(); go('loading');
+  S.previousActivity = S.activity ? {title: S.activity.title, emoji: S.activity.emoji} : null;
+  S.activity = null;
+  save();
+  go('loading');
 }
 
 var qList=[], qIndex=0;
