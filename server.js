@@ -18,8 +18,16 @@ app.post("/api/activity", async (req, res) => {
     const pastStr = pastCount > 0 ? "פעילויות שכבר עשו - אל תחזור עליהן: " + pastActivities.join(", ") + ". " : "";
     const prevStr = previousActivity
       ? (isEn
-        ? "IMPORTANT: The previous activity was \"" + previousActivity.title + "\". You MUST suggest a completely different type of activity - different category, different skills, different format. Do NOT suggest anything similar."
-        : "חשוב: הפעילות הקודמת הייתה \"" + previousActivity.title + "\". חובה להציע פעילות מסוג שונה לחלוטין - קטגוריה שונה, כישורים שונים, פורמט שונה. אסור להציע משהו דומה.")
+        ? "CRITICAL INSTRUCTION: The previous activity was \"" + previousActivity.title + "\". You MUST choose a COMPLETELY DIFFERENT category. " +
+          "If previous was music/singing → choose cooking, sports, art, or crafts. " +
+          "If previous was art/drawing → choose music, cooking, sports, or games. " +
+          "If previous was cooking → choose music, art, sports, or building. " +
+          "The new activity must feel NOTHING like the previous one. Different room, different skills, different mood."
+        : "הנחיה קריטית: הפעילות הקודמת הייתה \"" + previousActivity.title + "\". חובה לבחור קטגוריה שונה לחלוטין. " +
+          "אם הקודמת הייתה מוזיקה/שירה → בחר בישול, ספורט, אמנות או יצירה. " +
+          "אם הקודמת הייתה ציור/אמנות → בחר מוזיקה, בישול, ספורט או משחקים. " +
+          "אם הקודמת הייתה בישול → בחר מוזיקה, אמנות, ספורט או בנייה. " +
+          "הפעילות החדשה חייבת להרגיש שונה לחלוטין — חדר אחר, כישורים אחרים, מצב רוח אחר.")
       : "";
 
     const parentLabel = isEn ? (parentGender === "mom" ? "Mom" : "Dad") : (parentGender === "mom" ? "אמא" : "אבא");
@@ -88,21 +96,19 @@ app.post("/api/activity", async (req, res) => {
       genderNote,
       childGenderNote,
       "",
-      "",
       "עקרונות פעילות מחברת:",
       "- שיחה בתוך הפעילות, לא רק עשייה — שאלות שיוצרות קשר",
       "- רגע שבו הילד/ה מרגיש/ה נשמע/ת ורצוי/ה",
       "- סיום עם תחושת הצלחה משותפת",
-      isEn ? "- Refer to parent as '" + parentLabel + " " + (parentName||"") + "', not just by first name. Example: '" + parentLabel + " and " + (childName||"child") + "'" : "- " + parentLabel + " " + (parentName||"") + " (לא רק שם פרטי) — לדוגמה: '" + parentLabel + " ו" + (childName||"הילד") + "'",
+      isEn ? "- Refer to parent as '" + parentLabel + "', not by first name. Example: '" + parentLabel + " and " + (childName||"child") + "'" : "- " + parentLabel + " (לא שם פרטי) — לדוגמה: '" + parentLabel + " ו" + (childName||"הילד") + "'",
       timeInstruction,
       "",
-      isEn ? "English only. Nature emojis only. Return ONLY valid JSON:" : "",
       "חומרים מותרים בלבד (מה שיש בכל בית):",
-      "✅ מותר: נייר, עפרונות/צבעים, קרטון מקופסאות, כלי מטבח בסיסיים, ספרים, כריות, שמיכות, חוטים/גומיות, קלטת, חותכן, מספריים, אוכל בסיסי שיש בבית.",
+      "✅ מותר: נייר, עפרונות/צבעים, קרטון מקופסאות, כלי מטבח בסיסיים, ספרים, כריות, שמיכות, חוטים/גומיות, קלטת, מספריים, אוכל בסיסי שיש בבית.",
       "❌ אסור: זרעים, עציצים, חומרים מיוחדים, כלי עבודה, ציוד שקונים בחנות, כל דבר שדורש קנייה מראש.",
-      "אם הפעילות דורשת חומרים — בחר פעילות אחרת שלא דורשת.",
       "",
       isEn ? "English only. Nature emojis only. Return ONLY valid JSON:" : "עברית בלבד. אמוג'י טבע בלבד. החזר JSON תקני בלבד:",
+      "IMPORTANT: The 'description' field must start with an inviting sentence like 'אתם הולכים ל...' or 'You're about to...' followed by 1-2 sentences describing what you'll do together. Do NOT mention parent/child names in description.",
       '{"emoji":"","title":"","description":"","why":"","duration":"","materials":["",""],"steps":["","","",""],"questions":["","",""],"tip":"","dailyQuestion":""}'
     ];
 
