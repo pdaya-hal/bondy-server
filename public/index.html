@@ -215,19 +215,24 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 
 <div id="ob6" class="screen ob">
   <div class="ob-title">כמה זמן משותף יש לכם בשבוע?</div>
-  <div class="label" style="margin-bottom:16px">אנחנו מאמינים שזמן שבועי משותף — אפילו קצר — יכול לתרום המון לחיזוק הקשר שלכם</div>
+  <div class="label" style="margin-bottom:16px">זמן שבועי משותף — אפילו קצר — יכול לשנות את הקשר שלכם לטובה</div>
   <div class="opts" style="flex-direction:column;gap:12px">
     <button class="opt sel" id="t1" onclick="selTime(this,'short')" style="text-align:right;padding:16px 18px">
-      <div style="font-size:16px;font-weight:700;color:#2D5016">&#9889; 10-15 דקות</div>
+      <div style="font-size:16px;font-weight:700;color:#2D5016">&#9889; 10-15 דקות, פעם בשבוע</div>
       <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">אנחנו עסוקים, רוצים משהו מהיר ומחבר</div>
     </button>
     <button class="opt" id="t2" onclick="selTime(this,'medium')" style="text-align:right;padding:16px 18px">
-      <div style="font-size:16px;font-weight:700;color:#2D5016">&#127807; חצי שעה</div>
+      <div style="font-size:16px;font-weight:700;color:#2D5016">&#127807; חצי שעה, פעם בשבוע</div>
       <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">יש לנו קצת זמן לחוויה משותפת</div>
     </button>
     <button class="opt" id="t3" onclick="selTime(this,'long')" style="text-align:right;padding:16px 18px">
-      <div style="font-size:16px;font-weight:700;color:#2D5016">&#127795; שעה ויותר</div>
+      <div style="font-size:16px;font-weight:700;color:#2D5016">&#127795; שעה ויותר, פעם בשבוע</div>
       <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">בואו נשקיע, רוצים חוויה עמוקה</div>
+    </button>
+    <button class="opt" id="t4" onclick="selTimePremium()" style="text-align:right;padding:16px 18px;border:2px solid #C4A882;position:relative">
+      <div style="position:absolute;top:10px;left:12px;background:#C4A882;color:#1A1410;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px">⭐ פרמיום</div>
+      <div style="font-size:16px;font-weight:700;color:#2D5016">&#128293; 2-3 פעמים בשבוע</div>
+      <div style="font-size:12px;color:#8B7B6B;margin-top:4px;font-weight:400">רוצים להפוך את החיבור לשגרה אמיתית</div>
     </button>
   </div>
   <button class="btn btn-green" style="margin-top:8px" onclick="saveOb6()">בואו נתחיל! &#128640;</button>
@@ -279,6 +284,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
       <div style="font-size:20px;margin-bottom:8px" id="learnEmoji">&#128218;</div>
       <div style="font-size:15px;font-weight:700;color:#2D5016;line-height:1.6;margin-bottom:8px;font-style:italic" id="learnQuote"></div>
       <div style="font-size:13px;color:#8B7B6B;line-height:1.6;margin-bottom:12px" id="learnTranslation"></div>
+
 
   <!-- Expandable section -->
   <div id="learnExpanded" style="display:none;border-top:1px solid #EDE5D8;padding-top:12px;margin-bottom:12px">
@@ -929,6 +935,12 @@ function chooseLang(lang) {
 }
 function saveOb5(){ S.parent.tradition=tradSel; save(); go('ob2'); }
 var timeSel = 'short';
+function selTimePremium(){
+  // Highlight the premium option briefly then go to premium screen
+  document.querySelectorAll('#ob6 .opt').forEach(function(b){ b.classList.remove('sel'); });
+  document.getElementById('t4').classList.add('sel');
+  setTimeout(function(){ showPremium(); }, 300);
+}
 function selTime(el,val){
   timeSel=val;
   ['t1','t2','t3'].forEach(function(id){ var e=document.getElementById(id); if(e) e.classList.remove('sel'); });
