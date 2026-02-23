@@ -253,6 +253,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
       <div style="font-size:15px;font-weight:700;color:#2D5016;line-height:1.6;margin-bottom:8px;font-style:italic" id="learnQuote"></div>
       <div style="font-size:13px;color:#8B7B6B;line-height:1.6;margin-bottom:12px" id="learnTranslation"></div>
 
+```
   <!-- Expandable section -->
   <div id="learnExpanded" style="display:none;border-top:1px solid #EDE5D8;padding-top:12px;margin-bottom:12px">
     <div style="font-size:13px;color:#1A1410;line-height:1.7;margin-bottom:12px" id="learnExplanation"></div>
@@ -280,6 +281,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
   <button id="actBtn" class="btn btn-green" onclick="go('actdetail')">בוא נעשה את זה! &larr;</button>
 </div>
 <button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">&#128260; רוצים פעילות מחזקת אחרת?</button>
+```
 
   </div>
 </div>
@@ -444,7 +446,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
     </div>
     <button onclick="alert('בקרוב! &#128640;')" style="width:100%;padding:18px;background:#2D5016;color:#fff;border:none;border-radius:18px;font-size:17px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;margin-bottom:10px" id="premCta">בואו נשקיע בקשר &larr;</button>
     <div style="text-align:center;font-size:12px;color:#8B7B6B;margin-bottom:4px" id="premCancel">ניתן לביטול בכל עת</div>
-    <button onclick="go('profile')" style="width:100%;padding:14px;background:transparent;color:#8B7B6B;border:none;font-size:15px;font-family:Heebo,sans-serif;cursor:pointer">אולי אחר כך</button>
+    <button onclick="go('profile')" style="width:100%;padding:14px;background:transparent;color:#8B7B6B;border:none;font-size:15px;font-family:Heebo,sans-serif;cursor:pointer" id="premLater">אולי אחר כך</button>
   </div>
 </div>
 
@@ -869,7 +871,7 @@ function go(id){
   if(gn) gn.style.display = ['home','journal','questions'].indexOf(id)!==-1 ? 'flex' : 'none';
   if(id==='home') updateHome();
   if(id==='loading') setTimeout(generateActivity, 300);
-  if(id==='questions'){ if(!qList.length) loadQuestions(); }
+  if(id==='questions'){ loadQuestions(); }
   if(id==='journal') updateJournal();
   if(id==='actdetail') updateDetail();
   if(id==='profile') updateProfile();
@@ -1035,7 +1037,7 @@ function buildQCards(){
       +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 28px;text-align:center"><div style="font-size:'+(qList[i].length > 80 ? '16' : qList[i].length > 50 ? '19' : '22')+'px;font-weight:700;color:#1A1410;line-height:1.55">'+qList[i]+'</div></div>'
       +'<div style="background:#F5F0E8;margin:0 16px 16px;border-radius:14px;padding:12px 16px;font-size:12px;color:#8B7B6B;text-align:center;flex-shrink:0">'+getQTips()[i%getQTips().length]+'</div>';
     deck.appendChild(card);
-    if(dots){ var dot=document.createElement('div'); dot.id='qdot'+i; dot.style.cssText='width:'+(i===qIndex?'20':'8')+'px;height:8px;border-radius:4px;background:'+(i===qIndex?'#2D5016':'rgba(196,168,130,.4)')+';transition:all .3s'; if(LANG==='en'){ dots.appendChild(dot); } else { dots.insertBefore(dot, dots.firstChild); } }
+    if(dots){ var dot=document.createElement('div'); dot.id='qdot'+i; dot.style.cssText='width:'+(i===qIndex?'20':'8')+'px;height:8px;border-radius:4px;background:'+(i===qIndex?'#2D5016':'rgba(196,168,130,.4)')+';transition:all .3s'; dots.insertBefore(dot, dots.firstChild); }
   }
   if(ctr) ctr.textContent=LANG==='en' ? 'Question 1 of '+qList.length : 'שאלה 1 מתוך '+qList.length;
   setupQSwipe();
@@ -1107,13 +1109,18 @@ function updateDots(){
   }
 }
 async function loadQuestions(){
-  qIndex=0; qList=getQFallback(); buildQCards();
+  qIndex=0;
+  var deck=document.getElementById('qDeck');
+  var loadingMsg = LANG==='en' ? 'Building questions...' : 'בונה שאלות...';
+  if(deck) deck.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px"><div style="width:40px;height:40px;border:3px solid #EDE5D8;border-top-color:#2D5016;border-radius:50%;animation:spin 0.8s linear infinite"></div><div style="color:#8B7B6B;font-size:14px">'+loadingMsg+'</div></div>';
   var result=await callServer('/api/questions',{childName:S.child.name,childAge:S.child.age,childGender:S.child.gender,childInterests:S.child.interests||[],parentName:S.parent.name,parentGender:S.parent.gender,lang:S.lang||'he'});
-  if(result&&result.questions&&result.questions.length){ if(qIndex===0){ qList=result.questions; buildQCards(); } }
+  if(result&&result.questions&&result.questions.length){ qList=result.questions; } else { qList=getQFallback(); }
+  buildQCards();
 }
 
 function updateProfile(){
   updateReminderUI();
+  var bbt=document.getElementById('backBtnTxt'); if(bbt) bbt.textContent=(LANG==='en'?'Back':'חזרה');
   var pn=document.getElementById('profName'); var ps=document.getElementById('profSub'); var ppn=document.getElementById('profParentName'); var ppg=document.getElementById('profParentGender'); var pc=document.getElementById('profChildren');
   if(pn) pn.textContent=S.parent.name||'פרופיל';
   if(ps) ps.textContent=(LANG==='en'?(S.parent.gender==='mom'?'Mom of ':'Dad of '):(S.parent.gender==='mom'?'אמא של ':'אבא של '))+(S.child.name||'');
@@ -1144,7 +1151,7 @@ function updateReminderUI(){
   if(timeInput&&S.reminder&&S.reminder.time) timeInput.value=S.reminder.time;
 }
 function confirmReset(){ if(confirm('בטוח שרוצה להתחיל מחדש? כל הנתונים יימחקו.')){ try{ localStorage.removeItem('bondy2'); }catch(e){} location.reload(); } }
-function showPremium(){ go('premium'); }
+function showPremium(){ go('premium'); applyLang(); }
 function showAddChild(){ showPremium(); }
 function updateJournal(){
   var el=document.getElementById('jList'); if(!el) return;
