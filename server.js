@@ -96,6 +96,12 @@ app.post("/api/activity", async (req, res) => {
       genderNote,
       childGenderNote,
       "",
+      "שפה ועיצוב:",
+      "- שפה יהודית חמה, חינוכית וביתית — לא דתית כבדה, לא נוצרית.",
+      "- מילים אסורות לחלוטין: מיסיון, משימה (כ'mission'), מסע, טקס (בהקשר נוצרי), קודש (בהקשר לא יהודי).",
+      "- מילים מועדפות: פעילות, חוויה, רגע, זיכרון, שיחה, יצירה, משחק, בנייה, סיפור, מסורת, ערכים, קשר, לב.",
+      "- כותרת הפעילות: מילים פשוטות וחמות — לא שמות דרמטיים.",
+      "",
       "עקרונות פעילות מחברת:",
       "- שיחה בתוך הפעילות, לא רק עשייה — שאלות שיוצרות קשר",
       "- רגע שבו הילד/ה מרגיש/ה נשמע/ת ורצוי/ה",
@@ -123,11 +129,11 @@ app.post("/api/activity", async (req, res) => {
     const text = (d.content && d.content[0]) ? d.content[0].text : "";
     const activity = JSON.parse(text.replace(/```json|```/g, "").trim());
 
-    // Detect Arabic characters - if found, retry once with stricter instruction
+    // Detect Arabic characters - if found, retry once
     const arabicRegex = /[\u0600-\u06FF]/;
     if(arabicRegex.test(JSON.stringify(activity))){
       console.warn("Arabic detected in activity response, retrying...");
-      const retryLines = [...lines, "\n⚠️ CRITICAL: Your previous response contained Arabic characters. Hebrew and Arabic look similar but are DIFFERENT languages. Use ONLY Hebrew (עברית) script. No Arabic (عربي) whatsoever."];
+      const retryLines = [...lines, "\n⚠️ CRITICAL: Your previous response contained Arabic characters. Use ONLY Hebrew (עברית) script. No Arabic (عربي) whatsoever."];
       const r2 = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
