@@ -935,14 +935,7 @@ function updateHome(){
     var em=document.getElementById('actEmoji'); var ti=document.getElementById('actTitle'); var de=document.getElementById('actDesc');
     if(em) em.textContent=act.emoji||'\uD83C\uDF3F';
     if(ti) ti.textContent=sanitize(act.title);
-    if(de){
-      // Show warm "you're going to..." text instead of "Dad X and child Y"
-      var parentRole = S.parent.gender==='mom'?(LANG==='en'?'Mom':'אמא'):(LANG==='en'?'Dad':'אבא');
-      var goingTo = LANG==='en'
-        ? (parentRole+' and '+S.child.name+' are going to create together 💚')
-        : ('אתם הולכים ליצור ביחד 💚');
-      de.textContent = goingTo;
-    }
+    if(de) de.textContent = sanitize(act.description);
   }
 }
 
