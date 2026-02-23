@@ -920,9 +920,9 @@ function togInt(el,val){ el.classList.toggle('sel'); var idx=interests.indexOf(v
 function selAge(el,val){ ageSel=val; el.parentElement.querySelectorAll('.opt').forEach(function(b){ b.classList.remove('sel'); }); el.classList.add('sel'); }
 function selRel(el,val){ rSel=val; ['r1','r2','r3'].forEach(function(id){ document.getElementById(id).classList.remove('sel'); }); el.classList.add('sel'); }
 
-function saveOb1(){ var n=document.getElementById('pName').value.trim(); if(!n){ alert('נא להזין שם'); return; } S.parent.name=n; S.parent.gender=gSel; save(); go('ob5'); }
-function saveOb2(){ S.parent.interests=interests.slice(); save(); go('ob3'); }
-function saveOb3(){ var n=document.getElementById('cName').value.trim(); if(!n){ alert('נא להזין שם'); return; } S.child.name=n; S.child.age=ageSel; S.child.gender=cgSel; S.child.interests=childInterests.slice(); save(); go('ob4'); }
+function saveOb1(){ var n=document.getElementById('pName').value.trim(); if(!n){ alert('נא להזין שם'); return; } S.parent.name=n; S.parent.gender=gSel; S.onboardingStep='ob5'; save(); go('ob5'); }
+function saveOb2(){ S.parent.interests=interests.slice(); S.onboardingStep='ob3'; save(); go('ob3'); }
+function saveOb3(){ var n=document.getElementById('cName').value.trim(); if(!n){ alert('נא להזין שם'); return; } S.child.name=n; S.child.age=ageSel; S.child.gender=cgSel; S.child.interests=childInterests.slice(); save(); S.onboardingStep='ob4'; S.onboardingStep='ob4'; save(); go('ob4'); }
 function saveOb4(){ S.child.relation=rSel; save(); go('ob6'); }
 function selTrad(el,val){
   tradSel=val;
@@ -933,12 +933,12 @@ function chooseLang(lang) {
   setLang(lang);
   go('ob1');
 }
-function saveOb5(){ S.parent.tradition=tradSel; save(); go('ob2'); }
+function saveOb5(){ S.parent.tradition=tradSel; S.onboardingStep='ob6'; save(); go('ob6'); }
 var timeSel = 'short';
 function selTimePremium(){
-  // Highlight the premium option briefly then go to premium screen
   document.querySelectorAll('#ob6 .opt').forEach(function(b){ b.classList.remove('sel'); });
   document.getElementById('t4').classList.add('sel');
+  S.premiumFrom = 'ob6';
   setTimeout(function(){ showPremium(); }, 300);
 }
 function selTime(el,val){
@@ -946,7 +946,7 @@ function selTime(el,val){
   ['t1','t2','t3'].forEach(function(id){ var e=document.getElementById(id); if(e) e.classList.remove('sel'); });
   el.classList.add('sel');
 }
-function saveOb6(){ S.parent.timeAvail=timeSel; save(); go('loading'); }
+function saveOb6(){ S.parent.timeAvail=timeSel; S.onboardingStep=null; save(); go('loading'); }
 
 async function callServer(endpoint,data){
   try { var r=await fetch(SERVER+endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); return await r.json(); } catch(e){ return null; }
@@ -1201,7 +1201,15 @@ function updateReminderUI(){
   if(timeInput&&S.reminder&&S.reminder.time) timeInput.value=S.reminder.time;
 }
 function confirmReset(){ if(confirm('בטוח שרוצה להתחיל מחדש? כל הנתונים יימחקו.')){ try{ localStorage.removeItem('bondy2'); }catch(e){} location.reload(); } }
-function showPremium(){ go('premium'); applyLang(); }
+function showPremium(from){
+  if(from) S.premiumFrom = from;
+  go('premium'); applyLang();
+}
+function closePremium(){
+  var from = S.premiumFrom || 'home';
+  S.premiumFrom = null;
+  go(from);
+}
 function showAddChild(){ showPremium(); }
 function updateJournal(){
   var el=document.getElementById('jList'); if(!el) return;
@@ -1267,7 +1275,18 @@ fetch(SERVER+'/api/health').catch(function(){});
 document.addEventListener('DOMContentLoaded', function() {
   LANG = S.lang || 'he';
   applyLang();
-  var startScreen = (S.parent.name&&S.child.name&&S.activity) ? 'home' : (S.parent.name&&S.child.name ? 'loading' : 'splash');
+  var startScreen;
+  if(S.parent.name && S.child.name && S.activity){
+    startScreen = 'home';
+  } else if(S.parent.name && S.child.name){
+    startScreen = 'loading';
+  } else if(S.onboardingStep){
+    startScreen = S.onboardingStep; // Resume mid-onboarding
+  } else if(S.parent.name){
+    startScreen = 'ob3'; // Has parent name, go to child step
+  } else {
+    startScreen = 'splash';
+  }
   go(startScreen);
 });
 </script>
