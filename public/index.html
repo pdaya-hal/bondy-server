@@ -1017,12 +1017,10 @@ function buildQCards(){
     +'<div style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:28px">'+(LANG==="en"?"New questions next week.<br>Want unlimited questions?":"שאלות חדשות יגיעו בשבוע הבא.<br>רוצים מאגר בלתי נגמר?")+"</div>"
     +'<button onclick="showPremium()" style="background:#C4A882;color:#1A1410;border:none;border-radius:16px;padding:14px;font-size:14px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;width:100%;margin-bottom:10px">\u2B50 '+(LANG==='en'?'Upgrade to Premium':'שדרג לפרמיום')+'</button>'
     +'<button onclick="loadQuestions()" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:16px;padding:12px;font-size:13px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;width:100%">\u21BA '+(LANG==='en'?'New questions':'שאלות מחדש')+'</button>';
-  deck.appendChild(finCard);
-
   for(var i=qList.length-1;i>=0;i--){
     var card=document.createElement('div');
     card.id='qcard'+i;
-    card.style.cssText='position:absolute;width:240px;height:calc(100% - 60px);background:#fff;border-radius:28px;box-shadow:0 16px 48px rgba(0,0,0,.14);overflow:hidden;display:flex;flex-direction:column;transform-origin:bottom center;transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .4s;transform:'+getCardTransform(i)+';opacity:'+(i<3?1:0)+';z-index:'+(qList.length-i);
+    card.style.cssText='position:absolute;width:240px;height:calc(100% - 60px);background:#fff;border-radius:28px;box-shadow:0 16px 48px rgba(0,0,0,.14);overflow:hidden;display:flex;flex-direction:column;transform-origin:bottom center;transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .4s;transform:'+getCardTransform(i)+';opacity:'+(i<3?1:0)+';z-index:'+(qList.length-i+1);
     card.innerHTML='<div style="padding:28px 24px 14px;text-align:center;border-bottom:1px solid #F0E8DE;flex-shrink:0"><div style="font-size:30px;font-weight:900;color:#2D5016;letter-spacing:-1px;line-height:1">bon<span style="color:#C4A882">dy</span></div><div style="font-size:9px;color:#C4A882;letter-spacing:2px;margin-top:3px">'+(LANG==="en"?"OPEN THE HEART":"שאלות לפתוח את הלב")+'</div></div>'
       +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 28px;text-align:center"><div style="font-size:'+(qList[i].length > 80 ? '16' : qList[i].length > 50 ? '19' : '22')+'px;font-weight:700;color:#1A1410;line-height:1.55">'+qList[i]+'</div></div>'
       +'<div style="background:#F5F0E8;margin:0 16px 16px;border-radius:14px;padding:12px 16px;font-size:12px;color:#8B7B6B;text-align:center;flex-shrink:0">'+qTips[i%qTips.length]+'</div>';
