@@ -288,12 +288,12 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 
 <div id="questions" class="screen" style="background:#FAF7F2;padding-bottom:72px">
   <div class="home-head">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div>
-        <h1>שאלות לפתוח את הלב</h1>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <div style="flex:1;min-width:0">
+        <h1 id="qTitle" style="font-size:clamp(14px,4.5vw,22px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0">שאלות לפתוח את הלב</h1>
         <div style="font-size:13px;color:rgba(255,255,255,.6)" id="qCounter"></div>
       </div>
-      <button id="qRefreshBtn" onclick="loadQuestions()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:20px;font-family:'Heebo',sans-serif;font-size:13px;cursor:pointer">רענן &#8635;</button>
+      <button id="qRefreshBtn" onclick="loadQuestions()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 12px;border-radius:20px;font-family:'Heebo',sans-serif;font-size:12px;cursor:pointer;flex-shrink:0;white-space:nowrap">רענן &#8635;</button>
     </div>
   </div>
   <div id="qDeck" style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:0 28px;min-height:0"></div>
@@ -347,7 +347,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 <div id="profile" class="screen">
   <div style="background:#2D5016;padding:48px 22px 20px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <div id="profBackBtn" onclick="go('home')" style="background:rgba(255,255,255,.2);border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#fff;cursor:pointer">&larr; <span id="backBtnTxt">חזרה</span></div>
+      <div id="profBackBtn" onclick="go('home')" style="background:rgba(255,255,255,.2);border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;color:#fff;cursor:pointer">&larr; <span id="profBackBtnTxt">חזרה</span></div>
     </div>
     <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:4px" id="profName">פרופיל</div>
     <div style="font-size:14px;color:rgba(255,255,255,.65)" id="profSub"></div>
@@ -822,6 +822,7 @@ function applyLang() {
   el = document.getElementById('profPremiumSub'); if(el) el.textContent = (LANG==='en'?'Free first month':'חינם חודש ראשון');
   el = document.getElementById('addChildBtn'); if(el) el.textContent = T('addChildBtn') + ' ⭐';
   el = document.getElementById('backBtnTxt'); if(el) el.textContent = (LANG==='en'?'Back':'חזרה');
+  el = document.getElementById('profBackBtnTxt'); if(el) el.textContent = (LANG==='en'?'Back':'חזרה');
   el = document.getElementById('sharBackBtn'); if(el) el.textContent = (LANG==='en'?'Back to home':'חזרה לבית');
   // Premium screen
   el = document.getElementById('premTitle'); if(el) el.textContent = 'Bondy '+(LANG==='en'?'Premium':'פרמיום');
@@ -1114,7 +1115,7 @@ async function loadQuestions(){
 
 function updateProfile(){
   updateReminderUI();
-  var bbt=document.getElementById('backBtnTxt'); if(bbt) bbt.textContent=(LANG==='en'?'Back':'חזרה');
+  var bbt=document.getElementById('profBackBtnTxt'); if(bbt) bbt.textContent=(LANG==='en'?'Back':'חזרה');
   var pn=document.getElementById('profName'); var ps=document.getElementById('profSub'); var ppn=document.getElementById('profParentName'); var ppg=document.getElementById('profParentGender'); var pc=document.getElementById('profChildren');
   if(pn) pn.textContent=S.parent.name||'פרופיל';
   if(ps) ps.textContent=(LANG==='en'?(S.parent.gender==='mom'?'Mom of ':'Dad of '):(S.parent.gender==='mom'?'אמא של ':'אבא של '))+(S.child.name||'');
