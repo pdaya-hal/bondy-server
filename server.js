@@ -12,10 +12,15 @@ const supabase = createClient(process.env.SUPABASE_URL || "", process.env.SUPABA
 
 app.post("/api/activity", async (req, res) => {
   try {
-    const { parentName, parentGender, interests, tradition, timeAvail, lang, childName, childAge, childGender, childInterests, relation, pastActivities } = req.body;
+    const { parentName, parentGender, interests, tradition, timeAvail, lang, childName, childAge, childGender, childInterests, relation, pastActivities, previousActivity } = req.body;
     const isEn = lang === "en";
     const pastCount = (pastActivities && pastActivities.length) ? pastActivities.length : 0;
     const pastStr = pastCount > 0 ? "פעילויות שכבר עשו - אל תחזור עליהן: " + pastActivities.join(", ") + ". " : "";
+    const prevStr = previousActivity
+      ? (isEn
+        ? "IMPORTANT: The previous activity was \"" + previousActivity.title + "\". You MUST suggest a completely different type of activity - different category, different skills, different format. Do NOT suggest anything similar."
+        : "חשוב: הפעילות הקודמת הייתה \"" + previousActivity.title + "\". חובה להציע פעילות מסוג שונה לחלוטין - קטגוריה שונה, כישורים שונים, פורמט שונה. אסור להציע משהו דומה.")
+      : "";
 
     const parentLabel = isEn ? (parentGender === "mom" ? "Mom" : "Dad") : (parentGender === "mom" ? "אמא" : "אבא");
     const childLabel = isEn ? (childGender === "girl" ? "girl" : "boy") : (childGender === "girl" ? "בת" : "בן");
@@ -69,30 +74,33 @@ app.post("/api/activity", async (req, res) => {
     const lines = [
       isEn ? "You are Bondy, an app for strengthening the parent-child bond. Design a short, practical, connecting activity in English." : "אתה Bondy, אפליקציה לחיזוק קשר הורה-ילד. תכנן פעילות קצרה, ישימה ומחברת בעברית.",
       "",
-      isEn ? "Family details:" : "פרטי המשפחה:",
-      "Parent: " + parentLabel + " " + (parentName||"") + " | gender: " + (parentGender === "mom" ? "female" : "male"),
-      "Parent interests: " + (interests||[]).join(", "),
-      "Child: " + (childName||"") + " | " + childLabel + " | age " + (childAge||"8"),
-      "Child interests: " + (childInterests||[]).join(", "),
-      "Relationship: " + (relation||"good"),
+      "פרטי המשפחה:",
+      "הורה: " + parentLabel + " " + (parentName||"") + " | מגדר: " + (parentGender === "mom" ? "נקבה" : "זכר"),
+      "תחומי עניין של ההורה: " + (interests||[]).join(", "),
+      "ילד/ה: " + (childName||"") + " | " + childLabel + " | גיל " + (childAge||"8"),
+      "תחומי עניין של הילד/ה: " + (childInterests||[]).join(", "),
+      "מצב הקשר: " + (relation||"good"),
       pastStr,
+      prevStr,
       "",
       difficultyInstruction,
       "",
       genderNote,
       childGenderNote,
       "",
+      "",
       "עקרונות פעילות מחברת:",
       "- שיחה בתוך הפעילות, לא רק עשייה — שאלות שיוצרות קשר",
       "- רגע שבו הילד/ה מרגיש/ה נשמע/ת ורצוי/ה",
       "- סיום עם תחושת הצלחה משותפת",
-      "- " + parentLabel + " " + (parentName||"") + " — " + (isEn ? "use full title+name, e.g. '" + parentLabel + " and " + (childName||"child") + "'" : "לא רק שם פרטי, לדוגמה: '" + parentLabel + " ו" + (childName||"הילד") + "'"),
+      isEn ? "- Refer to parent as '" + parentLabel + " " + (parentName||"") + "', not just by first name. Example: '" + parentLabel + " and " + (childName||"child") + "'" : "- " + parentLabel + " " + (parentName||"") + " (לא רק שם פרטי) — לדוגמה: '" + parentLabel + " ו" + (childName||"הילד") + "'",
       timeInstruction,
       "",
-      isEn ? "Allowed materials ONLY (things found in every home):" : "חומרים מותרים בלבד (מה שיש בכל בית):",
-      "✅ " + (isEn ? "Allowed: paper, pencils/crayons, cardboard boxes, basic kitchen items, books, pillows, blankets, string/rubber bands, tape, scissors, basic pantry food." : "מותר: נייר, עפרונות/צבעים, קרטון מקופסאות, כלי מטבח בסיסיים, ספרים, כריות, שמיכות, חוטים/גומיות, קלטת, מספריים, אוכל בסיסי שיש בבית."),
-      "❌ " + (isEn ? "Not allowed: seeds, plants, special tools, craft supplies that need to be purchased, anything requiring a store trip." : "אסור: זרעים, עציצים, חומרים מיוחדים, כלי עבודה, ציוד שקונים בחנות, כל דבר שדורש קנייה מראש."),
-      isEn ? "If the activity requires unavailable materials — choose a different activity." : "אם הפעילות דורשת חומרים — בחר פעילות אחרת שלא דורשת.",
+      isEn ? "English only. Nature emojis only. Return ONLY valid JSON:" : "",
+      "חומרים מותרים בלבד (מה שיש בכל בית):",
+      "✅ מותר: נייר, עפרונות/צבעים, קרטון מקופסאות, כלי מטבח בסיסיים, ספרים, כריות, שמיכות, חוטים/גומיות, קלטת, חותכן, מספריים, אוכל בסיסי שיש בבית.",
+      "❌ אסור: זרעים, עציצים, חומרים מיוחדים, כלי עבודה, ציוד שקונים בחנות, כל דבר שדורש קנייה מראש.",
+      "אם הפעילות דורשת חומרים — בחר פעילות אחרת שלא דורשת.",
       "",
       isEn ? "English only. Nature emojis only. Return ONLY valid JSON:" : "עברית בלבד. אמוג'י טבע בלבד. החזר JSON תקני בלבד:",
       '{"emoji":"","title":"","description":"","why":"","duration":"","materials":["",""],"steps":["","","",""],"questions":["","",""],"tip":"","dailyQuestion":""}'
@@ -117,16 +125,16 @@ app.post("/api/activity", async (req, res) => {
 
 app.post("/api/questions", async (req, res) => {
   try {
-    const { childAge, childName, childGender, childInterests, parentGender, lang: qLang } = req.body;
-    const isEnQ = qLang === "en";
-    const parentLabel = isEnQ ? (parentGender === "mom" ? "Mom" : "Dad") : (parentGender === "mom" ? "אמא" : "אבא");
-    const childLabel = isEnQ ? (childGender === "girl" ? "girl" : "boy") : (childGender === "girl" ? "בת" : "בן");
+    const { childAge, childName, childGender, childInterests, parentGender, lang } = req.body;
+    const isEn = lang === "en";
+    const parentLabel = isEn ? (parentGender === "mom" ? "Mom" : "Dad") : (parentGender === "mom" ? "אמא" : "אבא");
+    const childLabel = isEn ? (childGender === "girl" ? "girl" : "boy") : (childGender === "girl" ? "בת" : "בן");
     const lines = [
-      isEnQ ? "Create 8 fun conversation questions in English for a parent and child." : "צור 8 שאלות שיחה כיפיות בעברית להורה וילד/ה.",
-      "Parent: " + parentLabel + ". Child: " + (childName||"") + " (" + childLabel + ", age " + (childAge||"8") + ").",
-      "Child interests: " + (childInterests||[]).join(", ") + ".",
-      isEnQ ? "Mix: dreams, imagination, values, funny scenarios, memories." : "שלב: חלומות, דמיון, ערכים, תרחישים מצחיקים, זיכרונות.",
-      isEnQ ? "English only. No other languages." : "עברית בלבד ללא יוצא מן הכלל.",
+      isEn ? "Create 8 fun conversation questions in English for a parent and child." : "צור 8 שאלות שיחה כיפיות בעברית להורה וילד/ה.",
+      "הורה: " + parentLabel + ". ילד/ה: " + (childName||"") + " (" + childLabel + ", גיל " + (childAge||"8") + ").",
+      "תחומי עניין: " + (childInterests||[]).join(", ") + ".",
+      "שלב: חלומות, דמיון, ערכים, תרחישים מצחיקים, זיכרונות.",
+      isEn ? "English only. No other languages." : "עברית בלבד ללא יוצא מן הכלל.",
       'Return ONLY a JSON array of 8 strings: ["q1","q2",...]'
     ];
     const r = await fetch("https://api.anthropic.com/v1/messages", {
@@ -147,9 +155,10 @@ app.post("/api/questions", async (req, res) => {
 
 app.post("/api/daily-learning", async (req, res) => {
   try {
-    const { tradition, childAge, childName, childGender, parentGender } = req.body;
-    const parentLabel = parentGender === "mom" ? "אמא" : "אבא";
-    const childLabel = childGender === "girl" ? "בת" : "בן";
+    const { tradition, childAge, childName, childGender, parentGender, lang } = req.body;
+    const isEn = lang === "en";
+    const parentLabel = isEn ? (parentGender === "mom" ? "Mom" : "Dad") : (parentGender === "mom" ? "אמא" : "אבא");
+    const childLabel = isEn ? (childGender === "girl" ? "girl" : "boy") : (childGender === "girl" ? "בת" : "בן");
 
     const sourceMap = {
       secular:     "פרקי אבות - בחר משנה עם מסר אנושי אוניברסלי. פירוש: פשוט, מודרני, ללא שפה דתית.",
