@@ -312,6 +312,7 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 </div>
 <button class="btn" style="background:rgba(45,80,22,.08);color:#2D5016" onclick="getNewActivity()">&#128260; רוצים פעילות מחזקת אחרת?</button>
 
+
   </div>
 </div>
 
@@ -472,9 +473,9 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
         <div style="font-size:22px;flex-shrink:0">&#128218;</div>
         <div><div id="f6Title" style="font-weight:700;color:#1A1410;font-size:15px">לימוד יומי מותאם עבורכם</div><div id="f6Sub" style="font-size:13px;color:#8B7B6B">קטע לימוד שיחזק את הסקרנות ויבסס את הקשר שלכם על בסיס לימוד משותף</div></div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid #f0ebe4">
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 0">
         <div style="font-size:22px;flex-shrink:0">🔁</div>
-        <div><div id="f7Title" style="font-weight:700;color:#1A1410;font-size:15px">מפגשים מרובים בשבוע</div><div id="f7Sub" style="font-size:13px;color:#8B7B6B">בחרו 2, 3 או יותר מפגשים בשבוע — לפי הקצב שמתאים לכם</div></div>
+        <div><div id="f7Title" style="font-weight:700;color:#1A1410;font-size:15px">פעילויות בונדי בקצב שלכם</div><div id="f7Sub" style="font-size:13px;color:#8B7B6B">אפשרויות ליותר מפגשי בונדי והשקעה בקשר בהתאמה אישית אליכם</div></div>
       </div>
     </div>
     <button onclick="alert('בקרוב! &#128640;')" style="width:100%;padding:18px;background:#2D5016;color:#fff;border:none;border-radius:18px;font-size:17px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;margin-bottom:10px" id="premCta">בואו נשקיע בקשר &larr;</button>
@@ -869,7 +870,7 @@ function applyLang() {
   el = document.getElementById('premPrice'); if(el) el.innerHTML = LANG==='en'?'Free first month &middot; then $7.99/month':'חינם חודש ראשון &middot; אחר כך 29&#8362;/חודש';
   el = document.getElementById('premWhats'); if(el) el.textContent = LANG==='en'?"What's included":"מה כלול";
   var feats = {f1:['Add more children','Personalized activities for each child','הוספת ילדים נוספים','פעילויות מותאמות אישית לכל ילד'],f2:['Unlimited questions','Endless conversation starters','שאלות ללא הגבלה','מאגר בלתי נגמר לפתוח את הלב'],f3:['Advanced activities','Tailored to age and personality','פעילויות מתקדמות','מותאמות לגיל ולאישיות הילד'],f4:['Location-based activities','Parks, museums and nearby places','פעילויות מבוססות מיקום','פארקים, מוזיאונים ומקומות קרובים'],f5:['Smart reminders','Alerts for activities and special moments','תזכורות חכמות','התראות על פעילויות, שאלות ורגעים מיוחדים'],f6:['Daily personalized learning','Builds curiosity and strengthens your bond through shared learning','לימוד יומי מותאם עבורכם','קטע לימוד שיחזק את הסקרנות ויבסס את הקשר שלכם על בסיס לימוד משותף'],
-    f7:['Multiple weekly sessions','Choose 2, 3 or more meetups per week — at your own pace','מפגשים מרובים בשבוע','בחרו 2, 3 או יותר מפגשים בשבוע — לפי הקצב שמתאים לכם'],
+    f7:['Bondy at your own pace','More Bondy sessions and deeper connection — tailored to you','פעילויות בונדי בקצב שלכם','אפשרויות ליותר מפגשי בונדי והשקעה בקשר בהתאמה אישית אליכם'],
     f7:['Multiple sessions per week','Choose 2, 3 or more weekly meetups — at your own pace','מפגשים מרובים בשבוע','בחרו כמה פעמים בשבוע להיפגש — 2, 3 או יותר — לפי הקצב שלכם']};
   Object.keys(feats).forEach(function(k){ var f=feats[k]; var t=document.getElementById(k+'Title'); var s=document.getElementById(k+'Sub'); if(t) t.textContent=LANG==='en'?f[0]:f[2]; if(s) s.textContent=LANG==='en'?f[1]:f[3]; });
   el = document.getElementById('premCta'); if(el) el.innerHTML = LANG==='en'?"Let's invest in the relationship &larr;":"בואו נשקיע בקשר &larr;";
@@ -1024,6 +1025,7 @@ function updateDetail(){
 }
 
 function saveMemory(){
+  S.activityRequests = 0; // Reset counter on completion
   var act=S.activity; if(!act) return;
   S.memories.unshift({emoji:act.emoji||'\uD83C\uDFAF',title:act.title||'פעילות',date:new Date().toLocaleDateString('he-IL')});
   save();
@@ -1052,6 +1054,14 @@ function doShare(){
 }
 
 function getNewActivity(){
+  // Freemium gate: after 3 "new activity" requests, suggest premium
+  S.activityRequests = (S.activityRequests || 0) + 1;
+  if(S.activityRequests > 3 && !S.isPremium){
+    save();
+    S.premiumFrom = 'home';
+    showPremium();
+    return;
+  }
   S.previousActivity = S.activity ? {title: S.activity.title, emoji: S.activity.emoji} : null;
   S.activity = null;
   save();
@@ -1211,10 +1221,16 @@ function showPremium(from){
   go('premium'); applyLang();
 }
 function closePremium(){
-  var from = S.premiumFrom || (S.onboardingStep || 'home');
   S.premiumFrom = null;
   save();
-  go(from);
+  // If onboarding not complete, resume it
+  if(S.onboardingStep && !(S.parent.name && S.child.name)){
+    go(S.onboardingStep);
+  } else if(S.onboardingStep === 'ob6' && !(S.parent.timeAvail)){
+    go('ob6');
+  } else {
+    go('home');
+  }
 }
 function showAddChild(){ showPremium(); }
 function updateJournal(){
