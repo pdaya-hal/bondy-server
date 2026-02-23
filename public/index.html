@@ -914,7 +914,7 @@ async function callServer(endpoint,data){
 
 async function generateActivity(){
   var p=S.parent, c=S.child;
-  var result=await callServer('/api/activity',{parentName:p.name,parentGender:p.gender,interests:p.interests,tradition:p.tradition,timeAvail:p.timeAvail||'short',lang:S.lang||'he',childName:c.name,childAge:c.age,childGender:c.gender,childInterests:c.interests||[],relation:c.relation,pastActivities:S.memories.map(function(m){ return m.title; })});
+  var result=await callServer('/api/activity',{parentName:p.name,parentGender:p.gender,interests:p.interests,tradition:p.tradition,timeAvail:p.timeAvail||'short',lang:S.lang||'he',childName:c.name,childAge:c.age,childGender:c.gender,childInterests:c.interests||[],relation:c.relation,pastActivities:S.memories.map(function(m){ return m.title; }),previousActivity:S.previousActivity||null});
   if(result&&result.activity) S.activity=result.activity;
   save(); go('home');
 }
@@ -935,7 +935,14 @@ function updateHome(){
     var em=document.getElementById('actEmoji'); var ti=document.getElementById('actTitle'); var de=document.getElementById('actDesc');
     if(em) em.textContent=act.emoji||'\uD83C\uDF3F';
     if(ti) ti.textContent=sanitize(act.title);
-    if(de) de.textContent=sanitize(act.description);
+    if(de){
+      // Show warm "you're going to..." text instead of "Dad X and child Y"
+      var parentRole = S.parent.gender==='mom'?(LANG==='en'?'Mom':'אמא'):(LANG==='en'?'Dad':'אבא');
+      var goingTo = LANG==='en'
+        ? (parentRole+' and '+S.child.name+' are going to create together 💚')
+        : ('אתם הולכים ליצור ביחד 💚');
+      de.textContent = goingTo;
+    }
   }
 }
 
