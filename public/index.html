@@ -20,16 +20,21 @@ button, input, select, textarea { font-family: 'Heebo', sans-serif !important; }
 .puzzle-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:90px;height:90px;margin:0 auto 28px}
 .puzzle-piece{border-radius:6px;background:rgba(255,255,255,.15);transform:scale(0);animation:piece-in .4s cubic-bezier(.34,1.56,.64,1) forwards}
 .puzzle-piece.filled{background:#C4A882}
-@keyframes piece-in{to{transform:scale(1)}}
-.puzzle-piece:nth-child(1){animation-delay:.0s}
-.puzzle-piece:nth-child(2){animation-delay:.1s}
-.puzzle-piece:nth-child(3){animation-delay:.2s}
-.puzzle-piece:nth-child(4){animation-delay:.3s}
-.puzzle-piece:nth-child(5){animation-delay:.4s}
-.puzzle-piece:nth-child(6){animation-delay:.5s}
-.puzzle-piece:nth-child(7){animation-delay:.6s}
-.puzzle-piece:nth-child(8){animation-delay:.7s}
-.puzzle-piece:nth-child(9){animation-delay:.8s;background:#fff}
+@keyframes piece-pulse{
+  0%{transform:scale(0);opacity:.2}
+  50%{transform:scale(1);opacity:1}
+  85%{transform:scale(1);opacity:1}
+  100%{transform:scale(0);opacity:.2}
+}
+.puzzle-piece:nth-child(1){animation:piece-pulse 2.7s ease-in-out -.0s infinite}
+.puzzle-piece:nth-child(2){animation:piece-pulse 2.7s ease-in-out -.3s infinite}
+.puzzle-piece:nth-child(3){animation:piece-pulse 2.7s ease-in-out -.6s infinite}
+.puzzle-piece:nth-child(4){animation:piece-pulse 2.7s ease-in-out -.9s infinite}
+.puzzle-piece:nth-child(5){animation:piece-pulse 2.7s ease-in-out -1.2s infinite}
+.puzzle-piece:nth-child(6){animation:piece-pulse 2.7s ease-in-out -1.5s infinite}
+.puzzle-piece:nth-child(7){animation:piece-pulse 2.7s ease-in-out -1.8s infinite}
+.puzzle-piece:nth-child(8){animation:piece-pulse 2.7s ease-in-out -2.1s infinite}
+.puzzle-piece:nth-child(9){animation:piece-pulse 2.7s ease-in-out -2.4s infinite;background:#fff}
 ::-webkit-scrollbar { display: none; }
 * { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
