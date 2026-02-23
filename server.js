@@ -122,6 +122,23 @@ app.post("/api/activity", async (req, res) => {
     const d = await r.json();
     const text = (d.content && d.content[0]) ? d.content[0].text : "";
     const activity = JSON.parse(text.replace(/```json|```/g, "").trim());
+
+    // Detect Arabic characters - if found, retry once with stricter instruction
+    const arabicRegex = /[\u0600-\u06FF]/;
+    if(arabicRegex.test(JSON.stringify(activity))){
+      console.warn("Arabic detected in activity response, retrying...");
+      const retryLines = [...lines, "\n⚠️ CRITICAL: Your previous response contained Arabic characters. Hebrew and Arabic look similar but are DIFFERENT languages. Use ONLY Hebrew (עברית) script. No Arabic (عربي) whatsoever."];
+      const r2 = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
+        body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1200, messages: [{ role: "user", content: retryLines.join("\n") }] })
+      });
+      const d2 = await r2.json();
+      const text2 = (d2.content && d2.content[0]) ? d2.content[0].text : "";
+      const activity2 = JSON.parse(text2.replace(/```json|```/g, "").trim());
+      return res.json({ success: true, activity: activity2 });
+    }
+
     res.json({ success: true, activity });
   } catch (e) {
     console.error("activity error:", e.message);
@@ -152,6 +169,26 @@ app.post("/api/questions", async (req, res) => {
     const text = (d.content && d.content[0]) ? d.content[0].text : "";
     const result = JSON.parse(text.replace(/```json|```/g, "").trim());
     const qs = Array.isArray(result) ? result : (result.questions || []);
+
+    // Detect Arabic and retry
+    const arabicRegex = /[\u0600-\u06FF]/;
+    if(arabicRegex.test(JSON.stringify(qs))){
+      console.warn("Arabic detected in questions, retrying...");
+      const r2 = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
+        body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 800, messages: [
+          { role: "user", content: lines.join("\n") },
+          { role: "assistant", content: text },
+          { role: "user", content: "⚠️ Your response contained Arabic characters. Rewrite ALL questions in Hebrew (עברית) only. No Arabic (عربي)." }
+        ]})
+      });
+      const d2 = await r2.json();
+      const text2 = (d2.content && d2.content[0]) ? d2.content[0].text : "";
+      const result2 = JSON.parse(text2.replace(/```json|```/g, "").trim());
+      return res.json({ success: true, questions: Array.isArray(result2) ? result2 : (result2.questions || qs) });
+    }
+
     res.json({ success: true, questions: qs });
   } catch (e) {
     console.error("questions error:", e.message);
