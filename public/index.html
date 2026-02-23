@@ -17,7 +17,19 @@ button, input, select, textarea { font-family: 'Heebo', sans-serif !important; }
 .a2{animation:fadeUp .45s ease .18s both}
 .a3{animation:fadeUp .45s ease .3s both}
 .a4{animation:fadeUp .45s ease .42s both}
-.spin{width:64px;height:64px;border:3px solid rgba(255,255,255,.15);border-top-color:#C4A882;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 28px}
+.puzzle-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:90px;height:90px;margin:0 auto 28px}
+.puzzle-piece{border-radius:6px;background:rgba(255,255,255,.15);transform:scale(0);animation:piece-in .4s cubic-bezier(.34,1.56,.64,1) forwards}
+.puzzle-piece.filled{background:#C4A882}
+@keyframes piece-in{to{transform:scale(1)}}
+.puzzle-piece:nth-child(1){animation-delay:.0s}
+.puzzle-piece:nth-child(2){animation-delay:.1s}
+.puzzle-piece:nth-child(3){animation-delay:.2s}
+.puzzle-piece:nth-child(4){animation-delay:.3s}
+.puzzle-piece:nth-child(5){animation-delay:.4s}
+.puzzle-piece:nth-child(6){animation-delay:.5s}
+.puzzle-piece:nth-child(7){animation-delay:.6s}
+.puzzle-piece:nth-child(8){animation-delay:.7s}
+.puzzle-piece:nth-child(9){animation-delay:.8s;background:#fff}
 ::-webkit-scrollbar { display: none; }
 * { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
@@ -219,7 +231,17 @@ body { font-family:'Heebo',sans-serif; background:#FAF7F2; margin:0; padding:0; 
 <!-- LOADING -->
 
 <div id="loading" class="screen" style="background:#2D5016;align-items:center;justify-content:center;text-align:center;padding:40px">
-  <div class="spin a1"></div>
+  <div class="puzzle-grid a1" id="puzzleGrid">
+    <div class="puzzle-piece"></div>
+    <div class="puzzle-piece"></div>
+    <div class="puzzle-piece"></div>
+    <div class="puzzle-piece"></div>
+    <div class="puzzle-piece filled"></div>
+    <div class="puzzle-piece"></div>
+    <div class="puzzle-piece"></div>
+    <div class="puzzle-piece"></div>
+    <div class="puzzle-piece"></div>
+  </div>
   <div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:10px;line-height:1.4" class="a2">Bondy מחזק<br>את הקשר שלכם</div>
   <div style="font-size:14px;color:rgba(255,255,255,.6)" id="loadMsg">מחזק קשרים...</div>
 </div>
